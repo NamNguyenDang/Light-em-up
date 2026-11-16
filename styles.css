@@ -116,3 +116,23 @@ select,input:not([type=checkbox]),textarea{min-height:44px}
 .skip-link{position:absolute;left:1rem;top:1rem;z-index:20;transform:translateY(-200%);padding:.75rem 1rem;background:#fff4d5;color:#07121c}
 .skip-link:focus{transform:none}#stories-title:focus{outline:3px solid #fff4d5;outline-offset:4px}
 #community-status{font-size:.875rem;color:#c7d3d5}
+
+/* FR-10: compact, calmer typography and the same candle artwork as the brand. */
+.intro{padding-block:1.5rem 1.75rem}
+.intro h1{font-family:Georgia,serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:400;font-style:normal;line-height:1.2;letter-spacing:normal;max-width:100%;margin:0 auto .75rem;text-wrap:wrap}
+.intro p{font-family:system-ui,sans-serif;font-size:1.125rem;line-height:1.6;max-width:48ch;margin-inline:auto}
+.intro .eyebrow{font-size:.75rem;letter-spacing:.15em}
+.layout{grid-template-columns:minmax(0,1fr) minmax(18rem,24rem);gap:2rem}
+.welcome-panel{padding:1.5rem;border-radius:1.5rem}
+.join-card h2{display:flex;align-items:flex-start;gap:.75rem;padding:0;margin:0 0 1.5rem;font-family:Georgia,serif;font-size:clamp(1.75rem,2.4vw,2.25rem);font-weight:400;line-height:1.2;letter-spacing:normal;text-wrap:balance}
+.join-card h2>span:first-child{flex:1;min-width:0}
+.heading-candle{display:block;flex:0 0 2rem;width:2rem;margin-top:-.25rem}
+.heading-candle svg{display:block;width:100%;height:auto}
+.join-card .primary{font:600 1.25rem/1.4 system-ui,sans-serif;min-height:3.375rem;padding:.875rem 1.125rem;gap:1rem}
+.join-card .primary span{font:400 1.5rem/1 system-ui,sans-serif}
+.browse-note{font:400 .875rem/1.5 system-ui,sans-serif}
+#login{font-size:.875rem}
+.personal-story-content h3{font-size:1.5rem}.personal-story-content .featured-message{font-size:1.125rem;line-height:1.5}
+.welcome-panel blockquote{font-size:1.25rem;line-height:1.5}
+@media(max-width:60rem){.layout{grid-template-columns:minmax(0,1fr)}.welcome-panel{max-width:30rem}.intro h1{max-width:24ch}}
+@media(max-width:30rem){.welcome-panel{padding:1.25rem 1rem}.join-card h2{font-size:1.75rem}.intro{padding-block:1.5rem}.intro h1{font-size:2rem}}
