@@ -74,7 +74,6 @@ $('#province-select').onchange=e=>selectProvince(e.target.value);
 $('#clear-province').onclick=()=>selectProvince('');
 for(const province of provinces){const option=el('option',`${province.name} · ${province.region}`);option.value=province.name;$('#province-select').append(option);}
 function renderMap(data){
-  for(let level=1;level<=6;level++){const size=lightAppearance(level);$('#scale-dot-'+level).setAttribute('style',`width:${size.diameter}px;height:${size.diameter}px`);}
   renderProvinces(data);
   const map=$('#map'),bounds=map.getBoundingClientRect();
   const scale=Math.min((bounds.width||362)/440,(bounds.height||560)/680);

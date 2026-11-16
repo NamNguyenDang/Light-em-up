@@ -15,8 +15,10 @@ assert root.xpath('//main/section[@id="dashboard"]'), 'Dashboard must stay outsi
 print('PASS: parsed HTML keeps map and welcome as two sibling columns, search inside welcome, stories and dashboard correctly contained.')
 
 assert root.xpath('//lineargradient[@id="province-land-light"]'), 'Land illumination must reference a defined SVG gradient'
-assert len(root.xpath('//section[@class="light-scale"]//li')) == 6
+assert len(root.xpath('//section[@class="light-scale"]//li')) == 0
 
 welcome=children[1]
 assert welcome[0].get('class')=='join-card'
 assert welcome[1].get('id')=='featured-story', 'Own story must immediately follow join controls'
+
+assert root.xpath("//span[@class='brand-candle']//svg//image[@href='assets/candle-color.png']")
