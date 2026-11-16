@@ -95,3 +95,13 @@ reload persistence, moving to Malmö, hiding, total counts, and hover/focus name
 Employment-based kommun thresholds remain independent of basic story visibility.
 The old cluster separation checks in verify.mjs now cover the retained helper
 only, not the current decorative story dots. Browser visual QA remains pending.
+
+
+## Province land illumination
+The runtime suite checks all six levels simultaneously using 1,185 fictional
+eligible users across six provinces. It verifies increasing dot sizes and land
+opacity, glow paths identical to the historical province geometry (including
+even-odd holes), the highest kommun rule without adding separate kommun counts,
+zero-level land remaining dark, and immediate 50→51→50 save/toggle transitions.
+The HTML check verifies the SVG gradient exists and the legend has six entries.
+The fixture is isolated; the 100-profile default demo is unchanged.

@@ -35,16 +35,19 @@ function selectProvince(name){
   provinceFilter=name;cityFilter='';storyPage=0;render();
 }
 function renderProvinces(data){
-  const areas=$('#province-areas');
+  const areas=$('#province-areas'),levels=provinceLightLevels(data);
+  $('#province-glows').replaceChildren();
   for(const [index,province] of provinces.entries()){
     const count=data.filter(p=>provinceFor(p)===province.name).length;
     const selected=provinceFilter===province.name;
-    const attributes={d:province.path,'fill-rule':'evenodd',class:`province-area${selected?' is-selected':''}`,role:'button',tabindex:0,'aria-pressed':String(selected),'aria-label':`${province.name}, ${province.region}: ${count} community stories. Select province.`};
+    const level=levels.get(province.name)||0;
+    if(level)$('#province-glows').append(svgNode('path',{d:province.path,'fill-rule':'evenodd',class:'province-land-glow','data-province':province.name,'data-light-level':level,fill:'url(#province-land-light)',opacity:[0,.06,.12,.2,.29,.4,.52][level]}));
+    const attributes={d:province.path,'fill-rule':'evenodd',class:`province-area${selected?' is-selected':''}`,role:'button',tabindex:0,'aria-pressed':String(selected),'data-province':province.name,'data-light-level':level,'aria-label':`${province.name}, ${province.region}: ${count} community stories; land light level ${level} of 6. Select province.`};
     const existing=areas.children[index];
-    if(existing){for(const [key,value] of Object.entries(attributes))existing.setAttribute(key,String(value));existing.children[0].textContent=`${province.name} · ${province.region} · ${count} stories`;continue;}
+    if(existing){for(const [key,value] of Object.entries(attributes))existing.setAttribute(key,String(value));existing.children[0].textContent=`${province.name} · ${province.region} · ${count} stories · Level ${level}`;continue;}
     const area=svgNode('path',attributes);
-    const title=svgNode('title');title.textContent=`${province.name} · ${province.region} · ${count} stories`;area.append(title);
-    const showName=()=>{$('#province-tooltip').textContent=`${province.name} · ${entries().filter(p=>provinceFor(p)===province.name).length} stories`;};
+    const title=svgNode('title');title.textContent=`${province.name} · ${province.region} · ${count} stories · Level ${level}`;area.append(title);
+    const showName=()=>{$('#province-tooltip').textContent=`${province.name} · Level ${provinceLightLevels(entries()).get(province.name)||0} · ${entries().filter(p=>provinceFor(p)===province.name).length} stories`;};
     const hideName=()=>{$('#province-tooltip').textContent='';};
     area.addEventListener('mouseenter',showName);area.addEventListener('focus',showName);area.addEventListener('mouseleave',hideName);area.addEventListener('blur',hideName);
     const choose=()=>selectProvince(province.name);area.addEventListener('click',choose);area.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose();}});

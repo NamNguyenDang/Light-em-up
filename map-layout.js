@@ -41,3 +41,15 @@ function kommunLights(data) {
   }
   return groups;
 }
+
+// The land follows the strongest kommun represented in that province, not a sum.
+function provinceLightLevels(data) {
+  const municipal=kommunLights(data), levels=new Map();
+  for(const person of data){
+    if(person.visible===false)continue;
+    const province=cityProvince[person.city];
+    if(!province)continue;
+    levels.set(province,Math.max(levels.get(province)||0,municipal.get(kommunKey(person)).level));
+  }
+  return levels;
+}

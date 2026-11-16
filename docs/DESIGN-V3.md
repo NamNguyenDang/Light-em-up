@@ -77,3 +77,12 @@ place, regardless of employment status. Stories sharing a place share its dot
 and count. An own-story ring and map confirmation identify the local addition.
 Saving already triggers the render; location clustering and level-zero dimming
 were removed from this visibility path. Six found-work brightness levels remain.
+
+
+## Approved six-level land lighting
+Each province now receives a warm, translucent gold wash at the highest kommun
+level represented in that province. The wash uses the exact province path,
+preserves terrain beneath it and has no exterior blur. Zero is fully dark.
+Opacity progresses through .06, .12, .20, .29, .40 and .52. Hover and selection
+boundaries remain independent overlays. A six-step legend mirrors the approved
+lighting review image, and province tooltips expose the current land level.

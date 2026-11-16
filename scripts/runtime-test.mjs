@@ -72,3 +72,39 @@ assert(b.nodes['map-points'].children.every(n=>!/own-story-light/.test(n.attribu
 assert.equal(b.nodes['story-total'].textContent,'100 community stories');
 b.nodes['reset'].onclick();
 console.log('PASS: Kiruna immediate save at exact coordinates without Found work; own-light emphasis, reload persistence, location edit, hide and story-total update.');
+
+// Six simultaneous municipal levels must illuminate their containing land paths.
+const lightCases=[['Kiruna','Lappland',5,1],['Umeå','Västerbotten',25,2],['Malmö','Skåne',55,3],['Göteborg','Västergötland',150,4],['Uppsala','Uppland',350,5],['Nyköping','Södermanland',600,6]];
+const eligible=(city,count)=>Array.from({length:count},(_,i)=>({id:city+'-'+i,city,status:'Found work',lit:true,visible:true}));
+function renderFixture(data){b.context.lightFixture=data;b.run('renderMap(lightFixture)');}
+renderFixture(lightCases.flatMap(([city,,count])=>eligible(city,count)));
+assert.equal(b.nodes['province-glows'].children.length,6);
+let priorOpacity=0,priorRadius=0;
+for(const [city,province,count,level] of lightCases){
+ const dot=b.nodes['map-points'].children.find(n=>n.attributes['data-city']===city);
+ const glow=b.nodes['province-glows'].children.find(n=>n.attributes['data-province']===province);
+ const boundary=b.nodes['province-areas'].children.find(n=>n.attributes['data-province']===province);
+ assert.equal(Number(dot.attributes['data-light-level']),level);
+ assert.equal(Number(glow.attributes['data-light-level']),level);
+ assert.equal(Number(boundary.attributes['data-light-level']),level);
+ assert.equal(glow.attributes.d,boundary.attributes.d);assert.equal(glow.attributes['fill-rule'],'evenodd');
+ assert(Number(glow.attributes.opacity)>priorOpacity);priorOpacity=Number(glow.attributes.opacity);
+ const radius=Number(dot.children.find(n=>n.attributes.class==='map-light').attributes.r);
+ assert(radius>priorRadius);priorRadius=radius;
+}
+// Separate kommun counts in one province are never summed to choose land intensity.
+renderFixture([...eligible('Malmö',25),...eligible('Lund',30)]);
+assert.equal(Number(b.nodes['province-glows'].children.find(n=>n.attributes['data-province']==='Skåne').attributes['data-light-level']),2);
+// Removing eligibility removes the land glow, while a lit story still has a dot.
+renderFixture([{city:'Kiruna',status:'Looking for an opportunity',lit:true}]);
+assert.equal(b.nodes['province-glows'].children.length,0);
+assert(b.nodes['map-points'].children[0].children.some(n=>n.attributes.class==='map-light'));
+// Existing save handler also refreshes the land, including downward transitions.
+b.context.landSeed=eligible('Malmö',50);b.run('samples.splice(0,samples.length,...landSeed);render()');
+b.nodes.join.onclick();const landForm=b.nodes['profile-form'];
+landForm.elements.nickname.value='Land glow test';landForm.elements.city.value='Malmö';landForm.elements.status.value='Found work';
+landForm.onsubmit({preventDefault(){}});
+assert.equal(Number(b.nodes['province-glows'].children[0].attributes['data-light-level']),3);
+landForm.elements.lit.checked=false;landForm.onsubmit({preventDefault(){}});
+assert.equal(Number(b.nodes['province-glows'].children[0].attributes['data-light-level']),2);
+console.log('PASS: six simultaneous dot/land levels, increasing land opacity and dot size, province-clipped geometry, highest kommun without summing, level-zero land off, immediate save/toggle land updates.');

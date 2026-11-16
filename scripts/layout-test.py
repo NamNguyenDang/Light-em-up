@@ -13,3 +13,6 @@ assert children[0].xpath('.//svg[@id="map"]')
 assert root.xpath('//section[@id="community"]/section[@class="stories-section"]'), 'Stories must follow the columns'
 assert root.xpath('//main/section[@id="dashboard"]'), 'Dashboard must stay outside the community view'
 print('PASS: parsed HTML keeps map and welcome as two sibling columns, search inside welcome, stories and dashboard correctly contained.')
+
+assert root.xpath('//lineargradient[@id="province-land-light"]'), 'Land illumination must reference a defined SVG gradient'
+assert len(root.xpath('//section[@class="light-scale"]//li')) == 6
