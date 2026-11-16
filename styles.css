@@ -46,3 +46,18 @@ main{max-width:1440px;padding-inline:40px}header{max-width:1440px;padding-inline
 .story-glow{fill:url(#story-light-halo);filter:none}
 
 .brand{display:inline-flex;align-items:center;gap:8px}.brand .brand-candle{display:flex;width:34px;height:50px;flex:0 0 34px;margin:0}.brand-candle svg{display:block;overflow:visible;filter:drop-shadow(0 0 4px #ffb73333)}.brand-candle{display:flex;align-items:center;gap:8px}
+
+/* FR-02: the fixed tooltip remains available while crossing the map. */
+#province-tooltip{pointer-events:auto}
+/* FR-03: visible errors are also associated with their fields. */
+.field-error{color:#ffe2d8;font-size:14px;margin:4px 0 12px}.field-error:empty{display:none}
+[aria-invalid="true"]{border:2px solid #ffb6a3}
+/* FR-04: opaque light/dark pairs remain visible over every land glow. */
+#province-boundaries,#province-selection,#province-focus{pointer-events:none}
+.boundary-dark,.boundary-light,.indicator-dark,.indicator-light{fill:none;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+.boundary-dark{stroke:#07121c;stroke-width:3}.boundary-light{stroke:#fff4d5;stroke-width:1}
+.indicator-dark{stroke:#07121c;stroke-width:8}.indicator-light{stroke:#fff4d5;stroke-width:4}
+#province-focus .indicator-light{stroke-dasharray:6 3}
+.province-area,.province-area:hover,.province-area.is-selected,.province-area:focus-visible{stroke:transparent}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #fff4d5;outline-offset:3px;box-shadow:0 0 0 7px #07121c}
+@media(forced-colors:active){.boundary-dark,.indicator-dark{stroke:Canvas}.boundary-light,.indicator-light{stroke:CanvasText}#province-focus .indicator-light{stroke:Highlight}.province-area{forced-color-adjust:none}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline-color:Highlight}}

@@ -10,7 +10,7 @@ class Element{
  setAttribute(key,value){this.attributes[key]=value;}
  addEventListener(key,fn){this.events[key]=fn;}
  getBoundingClientRect(){return {width:388,height:600};}
- scrollIntoView(){} focus(){} showModal(){this.open=true;} close(){this.open=false;}
+ scrollIntoView(){} focus(){this.focused=true;} showModal(){this.open=true;} close(){this.open=false;}
 }
 const stored=new Map();
 function boot(){
@@ -18,9 +18,10 @@ function boot(){
  const form=nodes['profile-form'];form.elements={};
  for(const m of read('index.html').matchAll(/\bname="([^"]+)"/g))form.elements[m[1]]=new Element('input');
  form.reset=()=>{for(const input of Object.values(form.elements)){input.value='';input.checked=false;}form.elements.visible.checked=form.elements.lit.checked=true;};form.reset();
- const context=vm.createContext({document:{querySelector:s=>{assert(s.startsWith('#'));assert(nodes[s.slice(1)],s);return nodes[s.slice(1)];},querySelectorAll:()=>[],createElement:t=>new Element(t),createElementNS:(_,t)=>new Element(t),createTextNode:t=>({textContent:t}),getElementById:id=>nodes[id]},window:{addEventListener(){}},localStorage:{getItem:k=>stored.get(k)||null,setItem:(k,v)=>stored.set(k,v)},setTimeout:()=>1,clearTimeout(){},confirm:()=>true});
+ const windowEvents={};
+ const context=vm.createContext({document:{querySelector:s=>{assert(s.startsWith('#'));assert(nodes[s.slice(1)],s);return nodes[s.slice(1)];},querySelectorAll:()=>[],createElement:t=>new Element(t),createElementNS:(_,t)=>new Element(t),createTextNode:t=>({textContent:t}),getElementById:id=>nodes[id]},window:{addEventListener:(key,fn)=>windowEvents[key]=fn},localStorage:{getItem:k=>stored.get(k)||null,setItem:(k,v)=>stored.set(k,v)},setTimeout:()=>1,clearTimeout(){},confirm:()=>true});
  for(const name of ['cities.js','provinces.js','demo-data.js','map-layout.js','app.js'])vm.runInContext(read(name),context,{filename:name});
- return {nodes,context,run:s=>vm.runInContext(s,context)};
+ return {nodes,context,windowEvents,run:s=>vm.runInContext(s,context)};
 }
 let b=boot();assert.equal(b.nodes.stories.children.length,12);assert.equal(b.nodes['map-points'].children.length,29);assert.match(b.nodes['page-status'].textContent,/1–12 of 100/);
 for(let i=0;i<8;i++)b.nodes['next-page'].onclick();assert.equal(b.nodes.stories.children.length,4);assert(b.nodes['next-page'].disabled);assert.equal(b.nodes['map-points'].children[0].attributes.role,'img');
@@ -34,14 +35,24 @@ for(const province of b.run('provinces')){
  assert.equal(b.nodes.stories.children.length,Math.min(12,expected));assert.equal(b.nodes.empty.hidden,expected>0);
  assert.equal(b.nodes['province-areas'].children.find(n=>n.attributes['aria-pressed']==='true').attributes['aria-label'].split(',')[0],province.name);
 }
-const hoverArea=b.nodes['province-areas'].children[0];hoverArea.events.mouseenter();assert(b.nodes['province-tooltip'].textContent.includes('stories'));hoverArea.events.mouseleave();assert.equal(b.nodes['province-tooltip'].textContent,'');hoverArea.events.focus();assert(b.nodes['province-tooltip'].textContent);hoverArea.events.blur();assert.equal(b.nodes['province-tooltip'].textContent,'');
+const hoverArea=b.nodes['province-areas'].children[0];
+hoverArea.events.mouseenter();assert(b.nodes['province-tooltip'].textContent.includes('stories'));
+hoverArea.events.mouseleave();assert(b.nodes['province-tooltip'].textContent,'Persists while crossing to tooltip');
+b.windowEvents.keydown({key:'Escape'});assert.equal(b.nodes['province-tooltip'].textContent,'');
+hoverArea.events.mouseenter();b.nodes['province-tooltip'].events.mouseleave();assert.equal(b.nodes['province-tooltip'].textContent,'');
+hoverArea.events.focus();assert(b.nodes['province-tooltip'].textContent);assert.equal(b.nodes['province-focus'].children.length,2);
+b.nodes['map-stage'].events.mouseleave();assert(b.nodes['province-tooltip'].textContent,'Focus keeps tooltip visible');
+hoverArea.events.blur();assert.equal(b.nodes['province-tooltip'].textContent,'');assert.equal(b.nodes['province-focus'].children.length,0);
+assert.equal(b.nodes['province-boundaries'].children.length,50);
+b.run("selectProvince('Skåne')");assert.equal(b.nodes['province-selection'].children.length,2);
 let prevented=false;b.nodes['province-areas'].children[0].events.keydown({key:'Enter',preventDefault(){prevented=true;}});assert(prevented);
 prevented=false;b.nodes['province-areas'].children[1].events.keydown({key:' ',preventDefault(){prevented=true;}});assert(prevented);
 b.nodes['province-select'].onchange({target:{value:'Skåne'}});assert.equal(b.run('provinceFilter'),'Skåne');
 b.nodes['clear-province'].onclick();assert.equal(b.run('provinceFilter'),'');assert.match(b.nodes['page-status'].textContent,/1–12 of 100/);
 b.run("selectProvince('Skåne'); selectCity('Stockholm')");assert.equal(b.run('provinceFilter'),'');
 b.nodes['all-stories'].onclick();
-b.nodes.join.onclick();const form=b.nodes['profile-form'];form.elements.nickname.value='   ';form.onsubmit({preventDefault(){}});assert.match(b.nodes['form-error'].textContent,/nickname/);
+b.nodes.join.onclick();const form=b.nodes['profile-form'];form.elements.nickname.value='   ';form.onsubmit({preventDefault(){}});assert.match(b.nodes['form-error'].textContent,/nickname/);assert.equal(form.elements.nickname.attributes['aria-invalid'],'true');assert(form.elements.nickname.focused);assert.match(b.nodes['nickname-error'].textContent,/nickname/);
+form.elements.nickname.value='Test';form.elements.city.value='No such place';form.onsubmit({preventDefault(){}});assert.equal(form.elements.city.attributes['aria-invalid'],'true');assert.equal(form.elements.nickname.attributes['aria-invalid'],'false');assert.match(b.nodes['city-error'].textContent,/suggestions/);
 form.elements.nickname.value='<b>Hopeful neighbour</b>';form.elements.city.value='Stockholm';form.elements.message.value='Still here.';form.onsubmit({preventDefault(){}});assert.equal(b.run('state.profile.nickname'),'<b>Hopeful neighbour</b>');assert.equal(b.run('entries().length'),101);
 b.run("selectCity('Stockholm')");assert.match(b.nodes['page-status'].textContent,/of 31/);form.elements.lit.checked=false;form.elements.status.value='Found work';form.onsubmit({preventDefault(){}});assert.equal(b.run('state.profile.lit'),false);assert.equal(b.run('state.profile.status'),'Found work');
 form.elements.visible.checked=false;form.onsubmit({preventDefault(){}});assert.equal(b.run('entries().length'),100);assert.match(b.nodes['page-status'].textContent,/of 30/);
