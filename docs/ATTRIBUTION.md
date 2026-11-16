@@ -5,3 +5,9 @@ Natural Earth, public domain, distributed through [datasets/geo-countries](https
 
 ## Swedish places
 [GeoNames](https://www.geonames.org/), via [lutangar/cities.json](https://github.com/lutangar/cities.json), CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ . Sweden-only extraction: 832 source records, coordinates projected to the map, duplicate names disambiguated using source administrative areas. Dataset covers places above its population threshold and some administrative seats, not every Swedish settlement. See CITY-DATA-LICENSE.txt. Data snapshots retrieved 2026-11-16. No endorsement implied.
+
+
+Province names and traditional region membership were checked against Hans
+Högman, “The subdivisions of Sweden into Lands, Provinces and Counties”:
+https://www.hhogman.se/swe_province-county.htm (accessed 16 November 2026).
+Province name anchors and leader lines are illustrative, not surveyed boundaries.

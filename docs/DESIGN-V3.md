@@ -46,3 +46,13 @@ Verification: existing 100-profile checks, local workflow simulation and all
 light thresholds pass. Full rendered browser QA is unverified because the managed
 preview relay is unavailable. This is an implementation of the supplied visual
 direction, not a claim of pixel-for-pixel equivalence.
+
+
+## Province labels and page hierarchy
+The headline now sits above the map. The welcome panel begins alongside the
+map panel on desktop and follows it on small screens. The map displays all
+25 historical landskap, with region-colored labels: Norrland (9), Svealand (6),
+and Götaland (10). Leader lines identify approximate province locations without
+claiming boundary polygons. City names remain in profile search and stories;
+they no longer label map markers. Municipal eligibility and light thresholds
+are unchanged. Province labels are descriptive, not province-level totals.
