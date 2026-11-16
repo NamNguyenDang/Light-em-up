@@ -1,0 +1,15 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const root=new URL('../',import.meta.url);
+const context=vm.createContext({});
+for(const file of ['cities.js','provinces.js','demo-data.js'])vm.runInContext(fs.readFileSync(new URL(file,root),'utf8'),context);
+const run=code=>vm.runInContext(code,context);
+assert.equal(run('provinces.length'),25);
+assert.equal(run('new Set(provinces.map(p=>p.name)).size'),25);
+for(const [region,count] of [['Norrland',9],['Svealand',6],['Götaland',10]])assert.equal(run(`provinces.filter(p=>p.region===${JSON.stringify(region)}).length`),count);
+assert(run('provinces.every(p=>p.path.startsWith("M")&&p.path.includes("Z")&&!/NaN|Infinity/.test(p.path))'));
+assert(run('cities.every(c=>provinces.some(p=>p.name===cityProvince[c.name]))'));
+assert(run('samples.every(p=>cityProvince[p.city])'));
+for(const [city,province] of [['Malmö','Skåne'],['Göteborg','Västergötland'],['Uppsala','Uppland'],['Umeå','Västerbotten'],['Kiruna','Lappland'],['Visby','Gotland'],['Borgholm','Öland']])assert.equal(run(`cityProvince[${JSON.stringify(city)}]`),province);
+console.log('PASS: 25 unique boundary paths, 9/6/10 region membership, all 832 place mappings, all 100 demo profiles, seven representative province assignments.');

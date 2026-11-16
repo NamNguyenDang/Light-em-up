@@ -56,3 +56,13 @@ and Götaland (10). Leader lines identify approximate province locations without
 claiming boundary polygons. City names remain in profile search and stories;
 they no longer label map markers. Municipal eligibility and light thresholds
 are unchanged. Province labels are descriptive, not province-level totals.
+
+
+## Selectable provinces
+Each of the 25 historical province boundary paths is now a pointer and keyboard
+selection target with hover, focus and selected states. Province labels also
+select the same area. A dropdown provides the same choices on small screens.
+Selection filters stories, resets pagination, updates the live selection status,
+and can be cleared. Selecting a city clears province selection, and All Sweden
+clears either filter. Lights are decorative overlays so they do not intercept
+province clicks; kommun brightness calculation is unchanged.

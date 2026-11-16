@@ -1,7 +1,7 @@
 'use strict';
 const KEY='light-em-up-v1';
 
-let state={profile:null,reactions:[],reports:[],opens:0},cityFilter='',storyPage=0;
+let state={profile:null,reactions:[],reports:[],opens:0},cityFilter='',provinceFilter='',storyPage=0;
 const PAGE_SIZE=12;let storageOK=true;
 try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved&&typeof saved==='object'){if(saved.profile&&typeof saved.profile.nickname==='string'&&cities.some(c=>c.name===saved.profile.city))state.profile=saved.profile;state.reactions=Array.isArray(saved.reactions)?saved.reactions.filter(x=>typeof x==='string'):[];state.reports=Array.isArray(saved.reports)?saved.reports.filter(x=>typeof x==='string'):[];state.opens=Number.isSafeInteger(saved.opens)&&saved.opens>=0?saved.opens:0;}}catch{storageOK=false;}
 state.opens++;
@@ -10,7 +10,7 @@ function notify(msg){$('#toast').textContent=msg;clearTimeout(notify.timer);noti
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(state));return true;}catch{storageOK=false;notify('Browser storage is unavailable. Changes last only while this page stays open.');return false;}}
 function entries(){return [...samples,...(state.profile?.visible?[state.profile]:[])];}
 function stat(value,label){const n=el('div',undefined,'stat');n.append(el('strong',String(value)),el('span',label));return n;}
-function render(){const data=entries();$('#stats').replaceChildren(stat(data.filter(p=>p.lit).length,'lights currently lit'),stat(data.length,'visible candles'),stat(new Set(data.map(p=>p.city)).size,'cities represented'));renderMap(data);renderCities();$('#stories-title').textContent=cityFilter?`Encouragement from ${cityFilter}`:'From one person to another';const filtered=data.filter(p=>!cityFilter||p.city===cityFilter);$('#empty').hidden=filtered.length>0;const pages=Math.max(1,Math.ceil(filtered.length/PAGE_SIZE));storyPage=Math.min(storyPage,pages-1);$('#stories').replaceChildren(...filtered.slice(storyPage*PAGE_SIZE,(storyPage+1)*PAGE_SIZE).map(story));$('#page-status').textContent=filtered.length?`${storyPage*PAGE_SIZE+1}–${Math.min((storyPage+1)*PAGE_SIZE,filtered.length)} of ${filtered.length} stories`:'0 stories';$('#prev-page').disabled=storyPage===0;$('#next-page').disabled=storyPage>=pages-1;$('#dashboard-stats').replaceChildren(stat(state.opens,'page opens on this browser'),stat(state.profile?1:0,'local profiles'),stat(state.reactions.length,'local reactions'),stat(state.reports.length,'local demo reports'),stat(data.filter(p=>p.status==='Found work').length,'shared milestones (includes samples)'));$('#my-light').textContent=state.profile?'My light':'Join us';}
+function render(){const data=entries();$('#stats').replaceChildren(stat(data.filter(p=>p.lit).length,'lights currently lit'),stat(data.length,'visible candles'),stat(new Set(data.map(p=>p.city)).size,'cities represented'));renderMap(data);renderCities();$('#stories-title').textContent=provinceFilter?`Encouragement from ${provinceFilter}`:cityFilter?`Encouragement from ${cityFilter}`:'From one person to another';const filtered=data.filter(p=>(!cityFilter||p.city===cityFilter)&&(!provinceFilter||provinceFor(p)===provinceFilter));$('#empty').hidden=filtered.length>0;$('#empty').textContent=provinceFilter?`No stories in ${provinceFilter} yet. Your light could be the first.`:'No stories in this city yet. Your light could be the first.';const pages=Math.max(1,Math.ceil(filtered.length/PAGE_SIZE));storyPage=Math.min(storyPage,pages-1);$('#stories').replaceChildren(...filtered.slice(storyPage*PAGE_SIZE,(storyPage+1)*PAGE_SIZE).map(story));$('#page-status').textContent=filtered.length?`${storyPage*PAGE_SIZE+1}–${Math.min((storyPage+1)*PAGE_SIZE,filtered.length)} of ${filtered.length} stories`:'0 stories';$('#prev-page').disabled=storyPage===0;$('#next-page').disabled=storyPage>=pages-1;$('#dashboard-stats').replaceChildren(stat(state.opens,'page opens on this browser'),stat(state.profile?1:0,'local profiles'),stat(state.reactions.length,'local reactions'),stat(state.reports.length,'local demo reports'),stat(data.filter(p=>p.status==='Found work').length,'shared milestones (includes samples)'));$('#my-light').textContent=state.profile?'My light':'Join us';}
 function story(p){const card=el('article',undefined,'story');const head=el('div',undefined,'story-head');const who=el('div');who.append(el('h3',p.nickname),el('div',p.city,'city'));const candle=el('div',undefined,'story-candle');candle.append(candleGraphic(52,72,!!p.lit),el('span',p.lit?'Lit':'Resting'));head.append(who,candle);card.append(head,el('p',p.message||'Sharing a little presence. Words can come later.','message'),el('div',p.sample?'FICTIONAL SAMPLE STORY':'YOUR LOCAL STORY','sample'));const detail=el('details');detail.append(el('summary','See more'));[['Situation',p.status],['Seeking',p.seeking],['Role',p.role],['Company',p.company]].forEach(([label,value])=>{if(value)detail.append(el('p',`${label}: ${value}`));});if(detail.children.length===1)detail.append(el('p','This person has chosen to share only a nickname, city and encouragement.'));card.append(detail);const reaction=el('button',state.reactions.includes(p.id)?'♥ Encouragement sent':'♡ I’m with you');reaction.disabled=state.reactions.includes(p.id);reaction.onclick=()=>{if(!state.profile){notify('Create your local profile to send encouragement.');openProfile();return;}state.reactions.push(p.id);persist();render();notify('Encouragement saved on this browser.');};const report=el('button','Report');report.onclick=()=>{if(state.reports.includes(p.id)){notify('Already reported in this demo.');return;}state.reports.push(p.id);persist();render();notify('Demo report saved locally. No moderator receives it.');};card.append(reaction,document.createTextNode(' '),report);return card;}
 const form=$('#profile-form');cities.forEach(c=>{const option=el('option');option.value=c.name;$('#city-options').append(option);});
 function openProfile(){form.reset();const p=state.profile;if(p){for(const key of ['nickname','city','message','status','seeking','role','company'])form.elements[key].value=p[key]||'';form.elements.lit.checked=!!p.lit;form.elements.visible.checked=!!p.visible;}else form.elements.city.value='Stockholm';$('#delete-profile').hidden=!p;$('#form-error').textContent='';$('#profile-dialog').showModal();}
@@ -21,7 +21,7 @@ function normalize(value){return value.normalize('NFD').replace(/[\u0300-\u036f]
 function renderCities(){const query=normalize($('#city-search').value.trim());const matches=cities.filter(c=>!query||normalize([c.name,...(c.aliases||[])].join(' ')).includes(query));const preferred=['Stockholm','Göteborg','Malmö','Uppsala','Umeå','Kiruna'];const shown=query?matches.slice(0,18):preferred.map(name=>cities.find(c=>c.name===name)).filter(Boolean);$('#city-results').textContent=query?(matches.length?`${matches.length} matching places${matches.length>18?' · showing the first 18; keep typing to narrow':''}`:'No matching places. Try another spelling.'):'Search 832 places, or choose a popular city.';$('#cities').replaceChildren();shown.forEach(c=>{const b=el('button',c.name);b.setAttribute('aria-pressed',String(cityFilter===c.name));b.onclick=()=>selectCity(c.name);$('#cities').append(b);});}
 $('#city-search').addEventListener('input',renderCities);
 
-function selectCity(name){cityFilter=name;storyPage=0;render();$('#stories-title').scrollIntoView({block:'nearest'});}
+function selectCity(name){provinceFilter='';cityFilter=name;storyPage=0;render();$('#stories-title').scrollIntoView({block:'nearest'});}
 function svgNode(tag,attributes={}){const n=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [key,value]of Object.entries(attributes))n.setAttribute(key,String(value));return n;}
 function candleGraphic(width,height,lit){
   const graphic=svgNode('svg',{viewBox:'550 150 440 710',width,height,'aria-hidden':'true',focusable:'false'});
@@ -29,7 +29,38 @@ function candleGraphic(width,height,lit){
   else{graphic.append(svgNode('path',{d:'M724 530 Q764 522 808 529 L811 704 Q815 743 789 766 Q774 778 770 803 Q765 830 755 821 L752 747 M724 530 L724 666 Q726 691 739 687 Q751 683 749 666 L752 656 Q759 649 770 646 Q783 644 777 626 Q768 611 769 591 L768 537 M767 530 L765 510',fill:'#e7cf9e',stroke:'#755331','stroke-width':7,'stroke-linecap':'round','stroke-linejoin':'round'}));}
   return graphic;
 }
+function provinceFor(person){return cityProvince[person.city]||'';}
+function selectProvince(name){
+  if(name&&!provinces.some(p=>p.name===name))return;
+  provinceFilter=name;cityFilter='';storyPage=0;render();
+}
+function renderProvinces(data){
+  const areas=$('#province-areas');
+  for(const [index,province] of provinces.entries()){
+    const count=data.filter(p=>provinceFor(p)===province.name).length;
+    const selected=provinceFilter===province.name;
+    const attributes={d:province.path,'fill-rule':'evenodd',class:`province-area${selected?' is-selected':''}`,role:'button',tabindex:0,'aria-pressed':String(selected),'aria-label':`${province.name}, ${province.region}: ${count} community stories. Select province.`};
+    const existing=areas.children[index];
+    if(existing){for(const [key,value] of Object.entries(attributes))existing.setAttribute(key,String(value));existing.children[0].textContent=`${province.name} · ${province.region} · ${count} stories`;continue;}
+    const area=svgNode('path',attributes);
+    const title=svgNode('title');title.textContent=`${province.name} · ${province.region} · ${count} stories`;area.append(title);
+    const choose=()=>selectProvince(province.name);area.addEventListener('click',choose);area.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose();}});
+    areas.append(area);
+  }
+  $('#province-select').value=provinceFilter;
+  $('#clear-province').hidden=!provinceFilter;
+  $('#province-status').textContent=provinceFilter?`${provinceFilter} selected · ${data.filter(p=>provinceFor(p)===provinceFilter).length} stories`:'Select a province on the map or from the list.';
+  document.querySelectorAll('.province-label').forEach(label=>{
+    const name=label.getAttribute('aria-label').split(',')[0];
+    label.classList.toggle('is-selected',provinceFilter===name);
+    label.onclick=()=>selectProvince(name);
+  });
+}
+$('#province-select').onchange=e=>selectProvince(e.target.value);
+$('#clear-province').onclick=()=>selectProvince('');
+for(const province of provinces){const option=el('option',`${province.name} · ${province.region}`);option.value=province.name;$('#province-select').append(option);}
 function renderMap(data){
+  renderProvinces(data);
   const map=$('#map'),bounds=map.getBoundingClientRect();
   const scale=Math.min((bounds.width||362)/440,(bounds.height||560)/680);
   const municipal=kommunLights(data);
@@ -39,21 +70,20 @@ function renderMap(data){
     const kommunGroups=[...new Set(group.people.map(kommunKey))].map(name=>municipal.get(name));
     const level=Math.max(...kommunGroups.map(g=>g.level));
     const details=kommunGroups.map(g=>`${g.name}: ${g.count} found work and lit, level ${g.level} of 6`).join('; ');
-    const label=`${details}. ${group.people.length} people across ${group.cities.length} city or cities: ${litCount} lit, ${group.people.length-litCount} resting. Open stories.`;
+    const label=`${details}. ${group.people.length} people across ${group.cities.length} city or cities: ${litCount} lit, ${group.people.length-litCount} resting.`;
     // Clamp the complete hit target into the SVG viewport, including edge cities.
     const x=Math.max(30/scale,Math.min(440-40/scale,group.x));
     const y=Math.max(44/scale,Math.min(680-44/scale,group.y));
-    const g=svgNode('g',{class:`community-marker light-level-${level}`,'data-light-level':level,transform:`translate(${x} ${y}) scale(${1/scale})`,role:'button',tabindex:0,'aria-label':label});
+    const g=svgNode('g',{class:`community-marker light-level-${level}`,'data-light-level':level,transform:`translate(${x} ${y}) scale(${1/scale})`,role:'img','aria-label':label});
     const title=svgNode('title');title.textContent=label;g.append(title,svgNode('rect',{x:-28,y:-40,width:56,height:80,rx:12,class:'marker-target'}));
     // A combined marker previews the highest municipal level, never their summed count.
     if(level)g.append(svgNode('ellipse',{cx:0,cy:-12,rx:9+level*2.5,ry:13+level*3,class:'municipal-glow',opacity:0.12+level*0.09}));
     const light=svgNode('circle',{cx:0,cy:0,r:level?2+level*.6:2,class:level?'map-light':'map-light resting-light'});g.append(light);
     const badge=svgNode('g',{class:'marker-count'});badge.append(svgNode('rect',{x:5,y:-34,width:group.people.length>99?32:27,height:22,rx:11}));
     const text=svgNode('text',{x:group.people.length>99?21:18.5,y:-19,'text-anchor':'middle'});text.textContent=group.people.length;badge.append(text);g.append(badge);
-    const open=()=>{if(group.cities.length===1){selectCity(group.cities[0].name);return;}$('#cluster-summary').textContent=`${group.people.length} community members nearby (includes fictional demo profiles). Glow previews the highest kommun level. ${details}. Choose a city to read their stories.`;$('#cluster-cities').replaceChildren();for(const city of group.cities){const people=group.people.filter(p=>p.city===city.name),lit=people.filter(p=>p.lit).length;const local=[...new Set(people.map(kommunKey))].map(name=>municipal.get(name));const volume=local.map(g=>`${g.name}: ${g.count} found work + lit · level ${g.level}/6`).join('; ');const button=el('button',`${city.name} · ${people.length} people · ${lit} lit · ${volume}`);button.onclick=()=>{$('#cluster-dialog').close();selectCity(city.name);};$('#cluster-cities').append(button);}$('#cluster-dialog').showModal();};
-    g.addEventListener('click',open);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});$('#map-points').append(g);
+    $('#map-points').append(g);
   }
-  $('#map-selection').textContent=cityFilter?`Showing stories from ${cityFilter}. ${[...municipal.values()].filter(g=>data.some(p=>p.city===cityFilter&&kommunKey(p)===g.name)).map(g=>`${g.name}: ${g.count} found work + lit · light level ${g.level}/6`).join('; ')}`:`${data.length} visible profiles · ${groups.length} map groups`;
+  $('#map-selection').textContent=provinceFilter?`Showing stories from ${provinceFilter}.`:cityFilter?`Showing stories from ${cityFilter}. ${[...municipal.values()].filter(g=>data.some(p=>p.city===cityFilter&&kommunKey(p)===g.name)).map(g=>`${g.name}: ${g.count} found work + lit · light level ${g.level}/6`).join('; ')}`:`${data.length} visible profiles · ${groups.length} map groups`;
 }
 $('#prev-page').onclick=()=>{storyPage=Math.max(0,storyPage-1);render();$('#stories-title').scrollIntoView({block:'nearest'});};
 $('#next-page').onclick=()=>{storyPage++;render();$('#stories-title').scrollIntoView({block:'nearest'});};

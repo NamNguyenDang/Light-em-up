@@ -62,3 +62,17 @@ field, but existing profiles and the 832-place catalog only contain `city`.
 Those records fall back to the selected place. A verified place-to-kommun
 mapping is needed before claiming official municipality-wide totals.
 Visual browser QA remains outstanding; runtime checks use a DOM simulation.
+
+
+## Province selection
+The runtime suite loads provinces.js and tests all 25 boundary controls for
+click selection, aria-pressed state, correct story counts and empty states.
+It also exercises Enter/Space activation, province dropdown selection, clear,
+and city selection clearing the province filter. Province assignment uses the
+selected city point within the source polygons, not nearest-centroid guessing.
+This is a place-point lookup: a city or municipality crossing a historical
+province boundary cannot be divided from a city-only profile.
+
+Run `node scripts/province-test.mjs` to verify all 25 province paths, regional
+membership, all 832 place assignments, all 100 demo profiles and representative
+known province matches.

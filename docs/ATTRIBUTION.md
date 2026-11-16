@@ -11,3 +11,7 @@ Province names and traditional region membership were checked against Hans
 Högman, “The subdivisions of Sweden into Lands, Provinces and Counties”:
 https://www.hhogman.se/swe_province-county.htm (accessed 16 November 2026).
 Province name anchors and leader lines are illustrative, not surveyed boundaries.
+
+
+Selectable historical province boundaries: Per Liedman / Lantmäteriet, CC0 1.0.
+See [province data source and transformations](PROVINCE-DATA.md).

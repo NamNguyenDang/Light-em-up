@@ -19,12 +19,27 @@ function boot(){
  for(const m of read('index.html').matchAll(/\bname="([^"]+)"/g))form.elements[m[1]]=new Element('input');
  form.reset=()=>{for(const input of Object.values(form.elements)){input.value='';input.checked=false;}form.elements.visible.checked=form.elements.lit.checked=true;};form.reset();
  const context=vm.createContext({document:{querySelector:s=>{assert(s.startsWith('#'));assert(nodes[s.slice(1)],s);return nodes[s.slice(1)];},querySelectorAll:()=>[],createElement:t=>new Element(t),createElementNS:(_,t)=>new Element(t),createTextNode:t=>({textContent:t}),getElementById:id=>nodes[id]},window:{addEventListener(){}},localStorage:{getItem:k=>stored.get(k)||null,setItem:(k,v)=>stored.set(k,v)},setTimeout:()=>1,clearTimeout(){},confirm:()=>true});
- for(const name of ['cities.js','demo-data.js','map-layout.js','app.js'])vm.runInContext(read(name),context,{filename:name});
+ for(const name of ['cities.js','provinces.js','demo-data.js','map-layout.js','app.js'])vm.runInContext(read(name),context,{filename:name});
  return {nodes,context,run:s=>vm.runInContext(s,context)};
 }
 let b=boot();assert.equal(b.nodes.stories.children.length,12);assert.equal(b.nodes['map-points'].children.length,4);assert.match(b.nodes['page-status'].textContent,/1–12 of 100/);
-for(let i=0;i<8;i++)b.nodes['next-page'].onclick();assert.equal(b.nodes.stories.children.length,4);assert(b.nodes['next-page'].disabled);assert.equal(b.nodes['map-points'].children[0].attributes.role,'button');
-const marker=b.nodes['map-points'].children.find(n=>n.events.click);marker.events.click();assert(b.nodes['cluster-dialog'].open||b.run('cityFilter')!=='');
+for(let i=0;i<8;i++)b.nodes['next-page'].onclick();assert.equal(b.nodes.stories.children.length,4);assert(b.nodes['next-page'].disabled);assert.equal(b.nodes['map-points'].children[0].attributes.role,'img');
+assert.equal(b.nodes['province-areas'].children.length,25);
+for(const province of b.run('provinces')){
+ const area=b.nodes['province-areas'].children.find(n=>n.attributes['aria-label'].startsWith(province.name+','));
+ assert(area,province.name);assert.equal(area.attributes.tabindex,'0');assert.equal(area.attributes.role,'button');
+ area.events.click();assert.equal(b.run('provinceFilter'),province.name);assert.equal(b.run('cityFilter'),'');
+ assert.equal(b.run('storyPage'),0);assert.match(b.nodes['stories-title'].textContent,new RegExp(province.name));
+ const expected=b.run(`entries().filter(p=>provinceFor(p)===${JSON.stringify(province.name)}).length`);
+ assert.equal(b.nodes.stories.children.length,Math.min(12,expected));assert.equal(b.nodes.empty.hidden,expected>0);
+ assert.equal(b.nodes['province-areas'].children.find(n=>n.attributes['aria-pressed']==='true').attributes['aria-label'].split(',')[0],province.name);
+}
+let prevented=false;b.nodes['province-areas'].children[0].events.keydown({key:'Enter',preventDefault(){prevented=true;}});assert(prevented);
+prevented=false;b.nodes['province-areas'].children[1].events.keydown({key:' ',preventDefault(){prevented=true;}});assert(prevented);
+b.nodes['province-select'].onchange({target:{value:'Skåne'}});assert.equal(b.run('provinceFilter'),'Skåne');
+b.nodes['clear-province'].onclick();assert.equal(b.run('provinceFilter'),'');assert.match(b.nodes['page-status'].textContent,/1–12 of 100/);
+b.run("selectProvince('Skåne'); selectCity('Stockholm')");assert.equal(b.run('provinceFilter'),'');
+b.nodes['all-stories'].onclick();
 b.nodes.join.onclick();const form=b.nodes['profile-form'];form.elements.nickname.value='   ';form.onsubmit({preventDefault(){}});assert.match(b.nodes['form-error'].textContent,/nickname/);
 form.elements.nickname.value='<b>Hopeful neighbour</b>';form.elements.city.value='Stockholm';form.elements.message.value='Still here.';form.onsubmit({preventDefault(){}});assert.equal(b.run('state.profile.nickname'),'<b>Hopeful neighbour</b>');assert.equal(b.run('entries().length'),101);
 b.run("selectCity('Stockholm')");assert.match(b.nodes['page-status'].textContent,/of 31/);form.elements.lit.checked=false;form.elements.status.value='Found work';form.onsubmit({preventDefault(){}});assert.equal(b.run('state.profile.lit'),false);assert.equal(b.run('state.profile.status'),'Found work');
@@ -33,4 +48,4 @@ const support=b.nodes.stories.children[0].children[4];support.onclick();assert.e
 b=boot();assert.equal(b.run('state.profile.visible'),false);assert.equal(b.run('state.reactions.length'),1);assert.equal(b.run('state.profile.status'),'Found work');
 b.nodes['all-stories'].onclick();assert.match(b.nodes['page-status'].textContent,/1–12 of 100/);
 b.nodes['reset'].onclick();assert.equal(b.run('state.profile'),null);assert.equal(b.run('state.reactions.length'),0);assert.equal(b.run('samples.length'),100);
-console.log('PASS: application startup, 100-profile pagination, cluster activation, nickname validation, create/edit/hide, independent candle/status, support deduplication, reload persistence, reset. DOM simulation only.');
+console.log('PASS: application startup, 100-profile pagination, 25 province boundaries, click/keyboard/dropdown selection, filtering/clear, nickname validation, create/edit/hide, independent candle/status, support deduplication, reload persistence, reset. DOM simulation only.');
