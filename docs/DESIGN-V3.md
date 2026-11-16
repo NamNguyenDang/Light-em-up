@@ -66,3 +66,14 @@ Selection filters stories, resets pagination, updates the live selection status,
 and can be cleared. Selecting a city clears province selection, and All Sweden
 clears either filter. Lights are decorative overlays so they do not intercept
 province clicks; kommun brightness calculation is unchanged.
+
+
+## Approved image preview
+The approved review image sets the desktop composition: centered headline above
+a framed map on the left and a compact welcome card to its right. Province
+names appear in a tooltip on pointer hover or keyboard focus, with no permanent
+labels or leader lines. Lit stories appear as warm points at each selected
+place, regardless of employment status. Stories sharing a place share its dot
+and count. An own-story ring and map confirmation identify the local addition.
+Saving already triggers the render; location clustering and level-zero dimming
+were removed from this visibility path. Six found-work brightness levels remain.

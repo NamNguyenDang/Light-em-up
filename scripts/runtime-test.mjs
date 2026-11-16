@@ -22,7 +22,7 @@ function boot(){
  for(const name of ['cities.js','provinces.js','demo-data.js','map-layout.js','app.js'])vm.runInContext(read(name),context,{filename:name});
  return {nodes,context,run:s=>vm.runInContext(s,context)};
 }
-let b=boot();assert.equal(b.nodes.stories.children.length,12);assert.equal(b.nodes['map-points'].children.length,4);assert.match(b.nodes['page-status'].textContent,/1–12 of 100/);
+let b=boot();assert.equal(b.nodes.stories.children.length,12);assert.equal(b.nodes['map-points'].children.length,29);assert.match(b.nodes['page-status'].textContent,/1–12 of 100/);
 for(let i=0;i<8;i++)b.nodes['next-page'].onclick();assert.equal(b.nodes.stories.children.length,4);assert(b.nodes['next-page'].disabled);assert.equal(b.nodes['map-points'].children[0].attributes.role,'img');
 assert.equal(b.nodes['province-areas'].children.length,25);
 for(const province of b.run('provinces')){
@@ -34,6 +34,7 @@ for(const province of b.run('provinces')){
  assert.equal(b.nodes.stories.children.length,Math.min(12,expected));assert.equal(b.nodes.empty.hidden,expected>0);
  assert.equal(b.nodes['province-areas'].children.find(n=>n.attributes['aria-pressed']==='true').attributes['aria-label'].split(',')[0],province.name);
 }
+const hoverArea=b.nodes['province-areas'].children[0];hoverArea.events.mouseenter();assert(b.nodes['province-tooltip'].textContent.includes('stories'));hoverArea.events.mouseleave();assert.equal(b.nodes['province-tooltip'].textContent,'');hoverArea.events.focus();assert(b.nodes['province-tooltip'].textContent);hoverArea.events.blur();assert.equal(b.nodes['province-tooltip'].textContent,'');
 let prevented=false;b.nodes['province-areas'].children[0].events.keydown({key:'Enter',preventDefault(){prevented=true;}});assert(prevented);
 prevented=false;b.nodes['province-areas'].children[1].events.keydown({key:' ',preventDefault(){prevented=true;}});assert(prevented);
 b.nodes['province-select'].onchange({target:{value:'Skåne'}});assert.equal(b.run('provinceFilter'),'Skåne');
@@ -49,3 +50,25 @@ b=boot();assert.equal(b.run('state.profile.visible'),false);assert.equal(b.run('
 b.nodes['all-stories'].onclick();assert.match(b.nodes['page-status'].textContent,/1–12 of 100/);
 b.nodes['reset'].onclick();assert.equal(b.run('state.profile'),null);assert.equal(b.run('state.reactions.length'),0);assert.equal(b.run('samples.length'),100);
 console.log('PASS: application startup, 100-profile pagination, 25 province boundaries, click/keyboard/dropdown selection, filtering/clear, nickname validation, create/edit/hide, independent candle/status, support deduplication, reload persistence, reset. DOM simulation only.');
+
+// Regression: a Kiruna story must appear immediately, without an employment milestone.
+b.nodes.join.onclick();
+let kirunaForm=b.nodes['profile-form'];
+kirunaForm.elements.nickname.value='Northern test';kirunaForm.elements.city.value='Kiruna';kirunaForm.elements.message.value='A new beginning';kirunaForm.elements.status.value='';
+kirunaForm.onsubmit({preventDefault(){}});
+const kiruna=()=>b.nodes['map-points'].children.find(n=>n.attributes['data-city']==='Kiruna');
+assert(kiruna());assert.match(kiruna().attributes.class,/own-story-light/);assert.equal(kiruna().attributes['data-light-level'],'0');
+assert.equal(kiruna().attributes['data-story-count'],String(b.run("entries().filter(p=>p.city==='Kiruna').length")));
+assert.match(kiruna().attributes.transform,/translate\(278.68 79.08\)/);
+assert(kiruna().children.some(n=>n.attributes.class==='map-light'));
+assert.match(b.nodes['map-update'].textContent,/Your story is on the map · Kiruna/);
+assert.equal(b.nodes['story-total'].textContent,'101 community stories');
+b=boot();assert.match(kiruna().attributes.class,/own-story-light/);
+b.nodes.join.onclick();kirunaForm=b.nodes['profile-form'];kirunaForm.elements.city.value='Malmö';kirunaForm.onsubmit({preventDefault(){}});
+assert(!/own-story-light/.test(kiruna().attributes.class));
+assert.match(b.nodes['map-points'].children.find(n=>n.attributes['data-city']==='Malmö').attributes.class,/own-story-light/);
+kirunaForm.elements.visible.checked=false;kirunaForm.onsubmit({preventDefault(){}});
+assert(b.nodes['map-points'].children.every(n=>!/own-story-light/.test(n.attributes.class)));
+assert.equal(b.nodes['story-total'].textContent,'100 community stories');
+b.nodes['reset'].onclick();
+console.log('PASS: Kiruna immediate save at exact coordinates without Found work; own-light emphasis, reload persistence, location edit, hide and story-total update.');

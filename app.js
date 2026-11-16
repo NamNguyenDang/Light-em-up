@@ -44,17 +44,16 @@ function renderProvinces(data){
     if(existing){for(const [key,value] of Object.entries(attributes))existing.setAttribute(key,String(value));existing.children[0].textContent=`${province.name} · ${province.region} · ${count} stories`;continue;}
     const area=svgNode('path',attributes);
     const title=svgNode('title');title.textContent=`${province.name} · ${province.region} · ${count} stories`;area.append(title);
+    const showName=()=>{$('#province-tooltip').textContent=`${province.name} · ${entries().filter(p=>provinceFor(p)===province.name).length} stories`;};
+    const hideName=()=>{$('#province-tooltip').textContent='';};
+    area.addEventListener('mouseenter',showName);area.addEventListener('focus',showName);area.addEventListener('mouseleave',hideName);area.addEventListener('blur',hideName);
     const choose=()=>selectProvince(province.name);area.addEventListener('click',choose);area.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose();}});
     areas.append(area);
   }
   $('#province-select').value=provinceFilter;
   $('#clear-province').hidden=!provinceFilter;
   $('#province-status').textContent=provinceFilter?`${provinceFilter} selected · ${data.filter(p=>provinceFor(p)===provinceFilter).length} stories`:'Select a province on the map or from the list.';
-  document.querySelectorAll('.province-label').forEach(label=>{
-    const name=label.getAttribute('aria-label').split(',')[0];
-    label.classList.toggle('is-selected',provinceFilter===name);
-    label.onclick=()=>selectProvince(name);
-  });
+
 }
 $('#province-select').onchange=e=>selectProvince(e.target.value);
 $('#clear-province').onclick=()=>selectProvince('');
@@ -64,26 +63,25 @@ function renderMap(data){
   const map=$('#map'),bounds=map.getBoundingClientRect();
   const scale=Math.min((bounds.width||362)/440,(bounds.height||560)/680);
   const municipal=kommunLights(data);
-  const groups=clusterCities(data,cities,scale);$('#map-points').replaceChildren();
-  for(const group of groups){
-    const litCount=group.people.filter(p=>p.lit).length;
-    const kommunGroups=[...new Set(group.people.map(kommunKey))].map(name=>municipal.get(name));
-    const level=Math.max(...kommunGroups.map(g=>g.level));
-    const details=kommunGroups.map(g=>`${g.name}: ${g.count} found work and lit, level ${g.level} of 6`).join('; ');
-    const label=`${details}. ${group.people.length} people across ${group.cities.length} city or cities: ${litCount} lit, ${group.people.length-litCount} resting.`;
-    // Clamp the complete hit target into the SVG viewport, including edge cities.
-    const x=Math.max(30/scale,Math.min(440-40/scale,group.x));
-    const y=Math.max(44/scale,Math.min(680-44/scale,group.y));
-    const g=svgNode('g',{class:`community-marker light-level-${level}`,'data-light-level':level,transform:`translate(${x} ${y}) scale(${1/scale})`,role:'img','aria-label':label});
-    const title=svgNode('title');title.textContent=label;g.append(title,svgNode('rect',{x:-28,y:-40,width:56,height:80,rx:12,class:'marker-target'}));
-    // A combined marker previews the highest municipal level, never their summed count.
-    if(level)g.append(svgNode('ellipse',{cx:0,cy:-12,rx:9+level*2.5,ry:13+level*3,class:'municipal-glow',opacity:0.12+level*0.09}));
-    const light=svgNode('circle',{cx:0,cy:0,r:level?2+level*.6:2,class:level?'map-light':'map-light resting-light'});g.append(light);
-    const badge=svgNode('g',{class:'marker-count'});badge.append(svgNode('rect',{x:5,y:-34,width:group.people.length>99?32:27,height:22,rx:11}));
-    const text=svgNode('text',{x:group.people.length>99?21:18.5,y:-19,'text-anchor':'middle'});text.textContent=group.people.length;badge.append(text);g.append(badge);
+  // Story lights stay at the chosen place; decorative dots need no collision clustering.
+  const groups=cities.map(city=>({city,people:data.filter(p=>p.city===city.name)})).filter(g=>g.people.length);
+  $('#map-points').replaceChildren();
+  for(const {city,people} of groups){
+    const litCount=people.filter(p=>p.lit).length;
+    const level=Math.max(...people.map(p=>municipal.get(kommunKey(p)).level));
+    const own=people.some(p=>p.id==='mine');
+    const label=`${city.name}: ${people.length} stories, ${litCount} lit; kommun light level ${level} of 6.`;
+    const g=svgNode('g',{class:`story-light light-level-${level}${own?' own-story-light':''}`,'data-city':city.name,'data-light-level':level,'data-story-count':people.length,transform:`translate(${city.x} ${city.y}) scale(${1/scale})`,role:'img','aria-label':label});
+    const title=svgNode('title');title.textContent=label;g.append(title);
+    if(litCount)g.append(svgNode('circle',{r:4+level*1.8,class:'story-glow',opacity:.22+level*.07}));
+    if(own&&litCount)g.append(svgNode('circle',{r:8+level,class:'own-story-ring'}));
+    g.append(svgNode('circle',{r:litCount?1.8+level*.35:1.8,class:litCount?'map-light':'map-light resting-light'}));
     $('#map-points').append(g);
   }
-  $('#map-selection').textContent=provinceFilter?`Showing stories from ${provinceFilter}.`:cityFilter?`Showing stories from ${cityFilter}. ${[...municipal.values()].filter(g=>data.some(p=>p.city===cityFilter&&kommunKey(p)===g.name)).map(g=>`${g.name}: ${g.count} found work + lit · light level ${g.level}/6`).join('; ')}`:`${data.length} visible profiles · ${groups.length} map groups`;
+  const own=data.find(p=>p.id==='mine');
+  $('#map-update').textContent=own?`✓ Your story is on the map · ${own.city}`:'Every light is someone choosing hope.';
+  $('#story-total').textContent=`${data.length} community stories`;
+  $('#map-selection').textContent=provinceFilter?`Showing stories from ${provinceFilter}.`:cityFilter?`Showing stories from ${cityFilter}. ${[...municipal.values()].filter(g=>data.some(p=>p.city===cityFilter&&kommunKey(p)===g.name)).map(g=>`${g.name}: ${g.count} found work + lit · light level ${g.level}/6`).join('; ')}`:`${data.length} visible profiles · ${groups.length} places with stories`;
 }
 $('#prev-page').onclick=()=>{storyPage=Math.max(0,storyPage-1);render();$('#stories-title').scrollIntoView({block:'nearest'});};
 $('#next-page').onclick=()=>{storyPage++;render();$('#stories-title').scrollIntoView({block:'nearest'});};

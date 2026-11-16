@@ -85,3 +85,13 @@ grid and the dashboard remains outside the community view. This catches the
 misplaced closing tags that previously made the welcome panel full width.
 Desktop column sizing now caps the welcome panel at 460px with a 32px gap;
 smaller screens use one column at 760px and below.
+
+
+## Approved preview and immediate map updates
+Story dots now use exact selected-place coordinates, without clustering.
+`runtime-test.mjs` verifies a lit, visible Kiruna story appears immediately even
+without Found work, its selected-place coordinates, a distinct own-story ring,
+reload persistence, moving to Malmö, hiding, total counts, and hover/focus names.
+Employment-based kommun thresholds remain independent of basic story visibility.
+The old cluster separation checks in verify.mjs now cover the retained helper
+only, not the current decorative story dots. Browser visual QA remains pending.
