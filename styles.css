@@ -61,3 +61,33 @@ main{max-width:1440px;padding-inline:40px}header{max-width:1440px;padding-inline
 .province-area,.province-area:hover,.province-area.is-selected,.province-area:focus-visible{stroke:transparent}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #fff4d5;outline-offset:3px;box-shadow:0 0 0 7px #07121c}
 @media(forced-colors:active){.boundary-dark,.indicator-dark{stroke:Canvas}.boundary-light,.indicator-light{stroke:CanvasText}#province-focus .indicator-light{stroke:Highlight}.province-area{forced-color-adjust:none}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline-color:Highlight}}
+
+/* FR-05: content reflows at narrow widths and grows with user text settings. */
+header{height:auto;min-height:5rem;flex-wrap:wrap;gap:1rem;padding-block:1rem}
+header nav{max-width:100%;flex-wrap:wrap;gap:.5rem;justify-content:flex-start}
+header .brand{max-width:100%;font-size:1.75rem;white-space:normal;overflow-wrap:anywhere}
+nav button{font-size:.875rem;white-space:normal}
+main{padding-inline:clamp(1rem,3vw,2.5rem)}
+.intro,.layout,.welcome-panel,.map-panel,.story,.featured-light{min-width:0}
+h1,h2,h3,p,button,a,label,summary{overflow-wrap:anywhere}
+.intro h1{font-size:clamp(2.375rem,4.6vw,4.125rem);letter-spacing:normal}
+.intro p{font-size:clamp(1.25rem,2vw,1.6875rem)}
+.join-card h2{font-size:clamp(2.5rem,4vw,3.625rem)}
+.primary{font-size:1.625rem;min-width:0;gap:1rem;white-space:normal}
+button,input,select,textarea{max-width:100%}
+input,select,textarea{font-size:1rem}
+.stats,.pagination,.panel-head,.map-summary{flex-wrap:wrap}
+.map-summary span{white-space:normal;padding-left:0;border-left:0}
+.map-stage{margin:0;max-width:100%;isolation:isolate}
+#map{overflow:hidden}
+#province-tooltip{max-width:calc(100% - 1.5rem);font-size:1rem;overflow-wrap:anywhere}
+.province-controls select{min-width:0;width:100%}
+.province-controls label{font-size:.875rem}
+.stories{grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr))}
+.featured-light{flex-wrap:wrap}.personal-story-content{flex:1 1 10rem}
+.personal-story-content .featured-message{font-size:1.25rem}
+.personal-story-content h3{font-size:1.75rem}
+.site-footer{flex-wrap:wrap}
+dialog{padding:1.25rem;max-width:calc(100vw - 2rem)}
+@media(max-width:60rem){.layout{grid-template-columns:minmax(0,1fr)}.welcome-panel{max-width:36rem;justify-self:center}.intro{padding-block:2rem}}
+@media(max-width:30rem){header{padding-inline:1rem}header nav{width:100%}.welcome-panel{padding:1.5rem 1rem}.map-panel{padding:1.25rem .75rem 0}.join-card h2{font-size:2.5rem}.heading-spark{position:static;display:inline-block;margin-left:.5rem}.stats{gap:1rem}.panel-head .badge{white-space:normal}}
