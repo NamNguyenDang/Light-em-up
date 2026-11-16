@@ -101,3 +101,13 @@ select,input:not([type=checkbox]),textarea{min-height:44px}
 .site-footer a,.brand{min-height:44px;display:inline-flex;align-items:center;padding-block:.5rem}
 .cities,.pagination,header nav{gap:.5rem}
 /* Irregular province shapes have the same-page, full-size province-select alternative. */
+
+/* FR-07: collapsed until requested; available without hover or interpreting color. */
+.map-data{margin:1rem 0;color:#f5dfba;font-size:1rem}
+.map-data summary{font-size:1rem}.map-data p{font-size:.875rem}
+.map-data table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:.875rem}
+.map-data caption{text-align:left;font-weight:600;padding-block:.75rem}
+.map-data th,.map-data td{text-align:left;vertical-align:top;border-bottom:1px solid #59717a;padding:.5rem;overflow-wrap:anywhere}
+.map-data th{font-weight:600}.map-data th button{font-size:inherit;padding:.375rem}
+.map-data ul{margin:0;padding-left:1rem}
+@media(max-width:40rem){.map-data table,.map-data thead,.map-data tbody,.map-data tr,.map-data th,.map-data td{display:block;width:100%}.map-data thead{position:absolute;width:1px;height:1px;clip-path:inset(50%);overflow:hidden}.map-data td:nth-child(2)::before{content:'Stories: ';font-weight:600}.map-data td:nth-child(3)::before{content:'Candles: ';font-weight:600}.map-data td:nth-child(4)::before{content:'Kommun levels: ';font-weight:600}.map-data tr{margin-bottom:1rem}}
