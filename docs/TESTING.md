@@ -105,3 +105,9 @@ even-odd holes), the highest kommun rule without adding separate kommun counts,
 zero-level land remaining dark, and immediate 50→51→50 save/toggle transitions.
 The HTML check verifies the SVG gradient exists and the legend has six entries.
 The fixture is isolated; the 100-profile default demo is unchanged.
+
+Dot radii now use a shared `lightAppearance` definition for the map and legend:
+6.45, 7.5, 8.55, 9.6, 10.65 and 11.7 screen pixels. Each is exactly three times
+the old radius. The runtime suite verifies each rendered radius and corresponding
+legend diameter (12.9–23.4px). Halo and own-story ring dimensions follow the core.
+Province eligibility and land intensity are unchanged by this sizing correction.

@@ -62,6 +62,7 @@ $('#province-select').onchange=e=>selectProvince(e.target.value);
 $('#clear-province').onclick=()=>selectProvince('');
 for(const province of provinces){const option=el('option',`${province.name} · ${province.region}`);option.value=province.name;$('#province-select').append(option);}
 function renderMap(data){
+  for(let level=1;level<=6;level++){const size=lightAppearance(level);$('#scale-dot-'+level).setAttribute('style',`width:${size.diameter}px;height:${size.diameter}px`);}
   renderProvinces(data);
   const map=$('#map'),bounds=map.getBoundingClientRect();
   const scale=Math.min((bounds.width||362)/440,(bounds.height||560)/680);
@@ -73,12 +74,13 @@ function renderMap(data){
     const litCount=people.filter(p=>p.lit).length;
     const level=Math.max(...people.map(p=>municipal.get(kommunKey(p)).level));
     const own=people.some(p=>p.id==='mine');
+    const appearance=lightAppearance(level);
     const label=`${city.name}: ${people.length} stories, ${litCount} lit; kommun light level ${level} of 6.`;
     const g=svgNode('g',{class:`story-light light-level-${level}${own?' own-story-light':''}`,'data-city':city.name,'data-light-level':level,'data-story-count':people.length,transform:`translate(${city.x} ${city.y}) scale(${1/scale})`,role:'img','aria-label':label});
     const title=svgNode('title');title.textContent=label;g.append(title);
-    if(litCount)g.append(svgNode('circle',{r:4+level*1.8,class:'story-glow',opacity:.22+level*.07}));
-    if(own&&litCount)g.append(svgNode('circle',{r:8+level,class:'own-story-ring'}));
-    g.append(svgNode('circle',{r:litCount?1.8+level*.35:1.8,class:litCount?'map-light':'map-light resting-light'}));
+    if(litCount)g.append(svgNode('circle',{r:appearance.haloRadius,class:'story-glow',opacity:appearance.haloOpacity}));
+    if(own&&litCount)g.append(svgNode('circle',{r:appearance.radius+5,class:'own-story-ring'}));
+    g.append(svgNode('circle',{r:litCount?appearance.radius:1.8,class:litCount?'map-light':'map-light resting-light'}));
     $('#map-points').append(g);
   }
   const own=data.find(p=>p.id==='mine');

@@ -91,6 +91,8 @@ for(const [city,province,count,level] of lightCases){
  assert(Number(glow.attributes.opacity)>priorOpacity);priorOpacity=Number(glow.attributes.opacity);
  const radius=Number(dot.children.find(n=>n.attributes.class==='map-light').attributes.r);
  assert(radius>priorRadius);priorRadius=radius;
+ assert.equal(radius,Number((3*(1.8+level*.35)).toFixed(2)));
+ assert.equal(b.nodes['scale-dot-'+level].attributes.style,`width:${radius*2}px;height:${radius*2}px`);
 }
 // Separate kommun counts in one province are never summed to choose land intensity.
 renderFixture([...eligible('Malmö',25),...eligible('Lund',30)]);

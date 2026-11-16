@@ -53,3 +53,9 @@ function provinceLightLevels(data) {
   }
   return levels;
 }
+
+// Screen-pixel sizing shared by the map and legend; 3× the original dot radius.
+function lightAppearance(level) {
+  const radius=Number((3*(1.8+level*.35)).toFixed(2));
+  return {radius,diameter:radius*2,haloRadius:radius*2,haloOpacity:.22+level*.07};
+}
