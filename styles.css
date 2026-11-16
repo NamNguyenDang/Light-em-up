@@ -111,3 +111,8 @@ select,input:not([type=checkbox]),textarea{min-height:44px}
 .map-data th{font-weight:600}.map-data th button{font-size:inherit;padding:.375rem}
 .map-data ul{margin:0;padding-left:1rem}
 @media(max-width:40rem){.map-data table,.map-data thead,.map-data tbody,.map-data tr,.map-data th,.map-data td{display:block;width:100%}.map-data thead{position:absolute;width:1px;height:1px;clip-path:inset(50%);overflow:hidden}.map-data td:nth-child(2)::before{content:'Stories: ';font-weight:600}.map-data td:nth-child(3)::before{content:'Candles: ';font-weight:600}.map-data td:nth-child(4)::before{content:'Kommun levels: ';font-weight:600}.map-data tr{margin-bottom:1rem}}
+
+/* FR-08: bypass repeated navigation and expose focus after pagination. */
+.skip-link{position:absolute;left:1rem;top:1rem;z-index:20;transform:translateY(-200%);padding:.75rem 1rem;background:#fff4d5;color:#07121c}
+.skip-link:focus{transform:none}#stories-title:focus{outline:3px solid #fff4d5;outline-offset:4px}
+#community-status{font-size:.875rem;color:#c7d3d5}
