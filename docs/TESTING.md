@@ -76,3 +76,12 @@ province boundary cannot be divided from a city-only profile.
 Run `node scripts/province-test.mjs` to verify all 25 province paths, regional
 membership, all 832 place assignments, all 100 demo profiles and representative
 known province matches.
+
+## Main-page column regression
+Run `python scripts/layout-test.py` (requires lxml) to inspect the parsed HTML,
+not a simulated DOM. It asserts that map and welcome panel are the two sibling
+grid children, city search stays inside the welcome panel, stories follow the
+grid and the dashboard remains outside the community view. This catches the
+misplaced closing tags that previously made the welcome panel full width.
+Desktop column sizing now caps the welcome panel at 460px with a 32px gap;
+smaller screens use one column at 760px and below.
