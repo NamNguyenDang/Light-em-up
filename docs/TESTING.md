@@ -38,3 +38,11 @@ Run `node scripts/verify.mjs` plus `node --check app.js` and `node --check citie
 PASS: 832 unique place labels, projected coordinate bounds, original sample city compatibility, accent-insensitive and alias search, no-match state, result limit, HTML IDs/app selectors, local file references, no remote runtime resources, and five key text/background pairs at a minimum 4.5:1 calculated contrast.
 
 Browser QA remains BLOCKED: `sites-preview status` reports preview relay unavailable. These logic/static checks do not verify rendered screenshots, native datalist behavior, mobile layout or full keyboard interaction.
+
+
+## Candle and 100-profile density review — 2026-11-16
+
+- PASS: `node --check app.js`, `node --check demo-data.js`, `node --check map-layout.js`.
+- PASS: `node scripts/verify.mjs`: 100 fictional records with unique IDs and known cities; no count loss or duplication in clustering. Complete marker bounds and pairwise separation pass for map viewports 388×600, 362×560, 270×530 and 220×530. Results: 4, 4, 3 and 3 map groups respectively.
+- PASS: `node scripts/runtime-test.mjs`: full app startup in a dependency-free DOM simulation, 12-record pagination and last page, cluster activation, required nickname, local create/edit/hide, candle independence, reaction deduplication, reload persistence and reset.
+- Browser/screenshots: BLOCKED by missing managed preview relay. These are computational layout and simulated DOM checks, not screenshot or native browser verification. Text wrapping, native datalist behavior, visual icon appearance and responsive rendering still need a real browser review.

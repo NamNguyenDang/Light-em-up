@@ -4,13 +4,16 @@ An offline community prototype for people in Sweden looking for full-time work, 
 
 ## Run offline
 
-Download or clone this repository, then open **index.html** in a modern browser. No installation, build, account or network connection is required. Keep index.html, styles.css, cities.js and app.js together. Storage behavior for file URLs varies by browser; use the same browser and file path to revisit your profile. For consistent local storage, optionally serve this directory with `python3 -m http.server 8000` and open http://localhost:8000.
+Download or clone this repository, then open **index.html** in a modern browser. No installation, build, account or network connection is required. Keep index.html, styles.css, cities.js, demo-data.js, map-layout.js, app.js and the assets folder together. Storage behavior for file URLs varies by browser; use the same browser and file path to revisit your profile. For consistent local storage, optionally serve this directory with `python3 -m http.server 8000` and open http://localhost:8000.
 
 ## Included
 
 - Sweden-only geographic SVG map, searchable city filters and equivalent story list.
 - Left map/data and right join panel; stacked responsive mobile layout.
-- Public browsing with clearly labeled fictional stories.
+- 100 clearly labeled fictional profiles across 29 Swedish cities for density review.
+- Nearby-city clustering with counted candle markers and a city chooser.
+- Colorized hand-drawn candle artwork and a matching resting state.
+- Story pagination (12 per page) and wrapping for longer nicknames.
 - One browser-local profile: nickname, city, encouragement and optional employment details.
 - Independent candle and employment states; edit, hide, relight or delete a contribution.
 - Local encouragement reactions, demonstration reporting, export and reset.
@@ -25,6 +28,7 @@ This is a single-browser prototype, not a deployed community service. There is n
 
 - [Feature breakdown](docs/FEATURES.md)
 - [Component architecture and interfaces](docs/ARCHITECTURE.md)
+- [Design v3 — candle and 100-profile density review](docs/DESIGN-V3.md)
 - [Design v2 — map, search and warmer dark theme](docs/DESIGN-V2.md)
 - [Original design v1 specification](docs/DESIGN.md)
 - [Geographic data attribution](docs/ATTRIBUTION.md)

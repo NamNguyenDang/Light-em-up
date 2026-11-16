@@ -7,7 +7,7 @@ Help people in Sweden feel less alone during a job search. This delivery is an o
 | ID | Component / feature | Offline behavior | Online follow-up |
 |---|---|---|---|
 | F01 | Public welcome | Short explanation, Sweden map left, join panel right | Real community records |
-| F02 | Map and city navigation | Natural Earth geographic SVG, 832 searchable GeoNames place records, all-city story list | Extend place coverage if needed; validate catalog freshness |
+| F02 | Map and city navigation | Natural Earth geographic SVG, 832 searchable GeoNames place records, all-city story list; nearby-city count clusters; 12 stories per page | Extend place coverage if needed; validate catalog freshness |
 | F03 | Public story | Nickname, city, encouragement excerpt; optional details under See more | Server-side publication rules |
 | F04 | Local identity | One browser-local profile; clear demo notice | Google sign-in and email code or password decision |
 | F05 | Contribution editor | Nickname and city required; message prioritized but optional; role, company, situation and work type optional | Owner-authorized CRUD APIs |

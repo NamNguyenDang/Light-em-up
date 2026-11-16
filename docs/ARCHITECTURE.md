@@ -13,7 +13,7 @@
 | Aggregate view | Visible profiles and local events | Counts with explicit demo labels | No real visitor identification |
 | Export/reset | User action and confirmation | Download or local reset | Does not affect other browsers |
 
-`app.js` contains these small responsibilities as functions for the prototype. `cities.js` bundles the offline GeoNames place catalog. `index.html` owns semantic structure and `styles.css` owns responsive presentation. Keep offline dependencies at zero.
+`app.js` contains these small responsibilities as functions for the prototype. `cities.js` bundles the offline GeoNames place catalog. `demo-data.js` contains 100 fictional profiles. `map-layout.js` groups nearby cities until their complete candle hit-target rectangles are separated at the current rendering scale. Cluster buttons provide exact lit/resting counts and a city chooser. The story list paginates at 12 records. `index.html` owns semantic structure and `styles.css` owns responsive presentation. Keep offline dependencies at zero.
 
 ## Local data contract
 
