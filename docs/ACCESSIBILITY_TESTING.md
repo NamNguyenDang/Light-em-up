@@ -21,3 +21,5 @@ Record tester, date, browser/assistive-technology versions, pass/fail and linked
 Current local status: source/DOM suites pass. Local Chromium launch is blocked by the workspace's socket restrictions; browser and assistive-technology outcomes are pending, not passed.
 
 References: https://www.w3.org/WAI/test-evaluate/ and https://playwright.dev/docs/accessibility-testing
+
+CI evidence for the complete FR-05–10 series: https://github.com/NamNguyenDang/Light-em-up/actions/runs/43876862850. Browser and axe checks passed on Ubuntu 24.04/Chromium, including 320–1280px layouts, targets, tooltips, focus, text-spacing and forced-colors emulation. Screenshots and axe JSON are attached to that run. Only documentation/ignore-rule changes followed that tested source. The manual checklist above remains pending.
