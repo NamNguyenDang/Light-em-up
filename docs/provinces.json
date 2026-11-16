@@ -1,0 +1,33 @@
+{
+  "Norrland": [
+    "Lappland",
+    "Norrbotten",
+    "Västerbotten",
+    "Jämtland",
+    "Ångermanland",
+    "Härjedalen",
+    "Medelpad",
+    "Hälsingland",
+    "Gästrikland"
+  ],
+  "Svealand": [
+    "Dalarna",
+    "Värmland",
+    "Västmanland",
+    "Uppland",
+    "Närke",
+    "Södermanland"
+  ],
+  "Götaland": [
+    "Dalsland",
+    "Bohuslän",
+    "Västergötland",
+    "Östergötland",
+    "Småland",
+    "Gotland",
+    "Halland",
+    "Öland",
+    "Blekinge",
+    "Skåne"
+  ]
+}
