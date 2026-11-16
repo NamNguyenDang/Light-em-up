@@ -32,22 +32,28 @@ function candleGraphic(width,height,lit){
 function renderMap(data){
   const map=$('#map'),bounds=map.getBoundingClientRect();
   const scale=Math.min((bounds.width||362)/440,(bounds.height||560)/680);
+  const municipal=kommunLights(data);
   const groups=clusterCities(data,cities,scale);$('#map-points').replaceChildren();
   for(const group of groups){
     const litCount=group.people.filter(p=>p.lit).length;
-    const label=`${group.people.length} people across ${group.cities.length} city or cities: ${litCount} lit, ${group.people.length-litCount} resting. Open stories.`;
+    const kommunGroups=[...new Set(group.people.map(kommunKey))].map(name=>municipal.get(name));
+    const level=Math.max(...kommunGroups.map(g=>g.level));
+    const details=kommunGroups.map(g=>`${g.name}: ${g.count} found work and lit, level ${g.level} of 6`).join('; ');
+    const label=`${details}. ${group.people.length} people across ${group.cities.length} city or cities: ${litCount} lit, ${group.people.length-litCount} resting. Open stories.`;
     // Clamp the complete hit target into the SVG viewport, including edge cities.
     const x=Math.max(30/scale,Math.min(440-40/scale,group.x));
     const y=Math.max(44/scale,Math.min(680-44/scale,group.y));
-    const g=svgNode('g',{class:'community-marker',transform:`translate(${x} ${y}) scale(${1/scale})`,role:'button',tabindex:0,'aria-label':label});
+    const g=svgNode('g',{class:`community-marker light-level-${level}`,'data-light-level':level,transform:`translate(${x} ${y}) scale(${1/scale})`,role:'button',tabindex:0,'aria-label':label});
     const title=svgNode('title');title.textContent=label;g.append(title,svgNode('rect',{x:-28,y:-40,width:56,height:80,rx:12,class:'marker-target'}));
-    const candle=candleGraphic(52,76,litCount>0);candle.setAttribute('x','-26');candle.setAttribute('y','-38');g.append(candle);
+    // A combined marker previews the highest municipal level, never their summed count.
+    if(level)g.append(svgNode('ellipse',{cx:0,cy:-12,rx:9+level*2.5,ry:13+level*3,class:'municipal-glow',opacity:0.12+level*0.09}));
+    const candle=candleGraphic(52,76,level>0);candle.setAttribute('x','-26');candle.setAttribute('y','-38');g.append(candle);
     const badge=svgNode('g',{class:'marker-count'});badge.append(svgNode('rect',{x:5,y:-34,width:group.people.length>99?32:27,height:22,rx:11}));
     const text=svgNode('text',{x:group.people.length>99?21:18.5,y:-19,'text-anchor':'middle'});text.textContent=group.people.length;badge.append(text);g.append(badge);
-    const open=()=>{if(group.cities.length===1){selectCity(group.cities[0].name);return;}$('#cluster-summary').textContent=`${group.people.length} community members nearby (includes fictional demo profiles). Choose a city to read their stories.`;$('#cluster-cities').replaceChildren();for(const city of group.cities){const people=group.people.filter(p=>p.city===city.name),lit=people.filter(p=>p.lit).length;const button=el('button',`${city.name} · ${people.length} people · ${lit} lit`);button.onclick=()=>{$('#cluster-dialog').close();selectCity(city.name);};$('#cluster-cities').append(button);}$('#cluster-dialog').showModal();};
+    const open=()=>{if(group.cities.length===1){selectCity(group.cities[0].name);return;}$('#cluster-summary').textContent=`${group.people.length} community members nearby (includes fictional demo profiles). Glow previews the highest kommun level. ${details}. Choose a city to read their stories.`;$('#cluster-cities').replaceChildren();for(const city of group.cities){const people=group.people.filter(p=>p.city===city.name),lit=people.filter(p=>p.lit).length;const local=[...new Set(people.map(kommunKey))].map(name=>municipal.get(name));const volume=local.map(g=>`${g.name}: ${g.count} found work + lit · level ${g.level}/6`).join('; ');const button=el('button',`${city.name} · ${people.length} people · ${lit} lit · ${volume}`);button.onclick=()=>{$('#cluster-dialog').close();selectCity(city.name);};$('#cluster-cities').append(button);}$('#cluster-dialog').showModal();};
     g.addEventListener('click',open);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});$('#map-points').append(g);
   }
-  $('#map-selection').textContent=cityFilter?`Showing stories from ${cityFilter}.`:`${data.length} visible profiles · ${groups.length} map groups`;
+  $('#map-selection').textContent=cityFilter?`Showing stories from ${cityFilter}. ${[...municipal.values()].filter(g=>data.some(p=>p.city===cityFilter&&kommunKey(p)===g.name)).map(g=>`${g.name}: ${g.count} found work + lit · light level ${g.level}/6`).join('; ')}`:`${data.length} visible profiles · ${groups.length} map groups`;
 }
 $('#prev-page').onclick=()=>{storyPage=Math.max(0,storyPage-1);render();$('#stories-title').scrollIntoView({block:'nearest'});};
 $('#next-page').onclick=()=>{storyPage++;render();$('#stories-title').scrollIntoView({block:'nearest'});};

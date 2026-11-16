@@ -24,3 +24,20 @@ function clusterCities(data, catalog, scale=1) {
   }
   return groups;
 }
+
+// Explicit kommun wins; legacy local profiles use their selected place as the group key.
+function kommunKey(person) { return person.kommun || person.city; }
+function lightLevel(count) {
+  return count <= 0 ? 0 : count <= 10 ? 1 : count <= 50 ? 2 : count <= 100 ? 3 : count <= 200 ? 4 : count <= 500 ? 5 : 6;
+}
+function kommunLights(data) {
+  const groups=new Map();
+  for(const person of data){
+    const name=kommunKey(person);
+    if(!groups.has(name))groups.set(name,{name,count:0,level:0});
+    const group=groups.get(name);
+    if(person.lit === true && person.status === 'Found work' && person.visible !== false)group.count++;
+    group.level=lightLevel(group.count);
+  }
+  return groups;
+}

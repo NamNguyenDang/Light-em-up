@@ -46,3 +46,19 @@ Browser QA remains BLOCKED: `sites-preview status` reports preview relay unavail
 - PASS: `node scripts/verify.mjs`: 100 fictional records with unique IDs and known cities; no count loss or duplication in clustering. Complete marker bounds and pairwise separation pass for map viewports 388×600, 362×560, 270×530 and 220×530. Results: 4, 4, 3 and 3 map groups respectively.
 - PASS: `node scripts/runtime-test.mjs`: full app startup in a dependency-free DOM simulation, 12-record pagination and last page, cluster activation, required nickname, local create/edit/hide, candle independence, reaction deduplication, reload persistence and reset.
 - Browser/screenshots: BLOCKED by missing managed preview relay. These are computational layout and simulated DOM checks, not screenshot or native browser verification. Text wrapping, native datalist behavior, visual icon appearance and responsive rendering still need a real browser review.
+
+## Kommun light volume
+Run `node scripts/light-level-test.mjs` for all thresholds (including zero),
+100 fictional eligible users (Malmö 55 → level 3; Stockholm 45 → level 2),
+Stockholm 600 → level 6, eligibility exclusions and explicit kommun grouping.
+Only visible profiles with `status: 'Found work'` and `lit: true` contribute.
+Ranges are 1–10, 11–50, 51–100, 101–200, 201–500, 501+.
+The original 100-profile demo remains mixed-status; tests use isolated fixtures.
+Cluster glow previews the highest kommun level, never a sum across kommuner.
+Individual counts and levels are exposed in marker labels and the group picker.
+
+Current data limitation: `kommun` is supported as the authoritative grouping
+field, but existing profiles and the 832-place catalog only contain `city`.
+Those records fall back to the selected place. A verified place-to-kommun
+mapping is needed before claiming official municipality-wide totals.
+Visual browser QA remains outstanding; runtime checks use a DOM simulation.
