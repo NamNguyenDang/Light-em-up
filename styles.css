@@ -91,3 +91,13 @@ input,select,textarea{font-size:1rem}
 dialog{padding:1.25rem;max-width:calc(100vw - 2rem)}
 @media(max-width:60rem){.layout{grid-template-columns:minmax(0,1fr)}.welcome-panel{max-width:36rem;justify-self:center}.intro{padding-block:2rem}}
 @media(max-width:30rem){header{padding-inline:1rem}header nav{width:100%}.welcome-panel{padding:1.5rem 1rem}.map-panel{padding:1.25rem .75rem 0}.join-card h2{font-size:2.5rem}.heading-spark{position:static;display:inline-block;margin-left:.5rem}.stats{gap:1rem}.panel-head .badge{white-space:normal}}
+
+/* FR-06: controls have at least 44px hit areas, exceeding the AA 24px minimum. */
+button,header nav button,.cities button,.story button,.province-controls button,
+.personal-story-content button,#login{min-height:44px;min-width:44px}
+summary{min-height:44px;padding-block:.5rem}
+select,input:not([type=checkbox]),textarea{min-height:44px}
+.check{min-height:44px;cursor:pointer}.check input{flex-shrink:0;width:24px;height:24px;margin:0}
+.site-footer a,.brand{min-height:44px;display:inline-flex;align-items:center;padding-block:.5rem}
+.cities,.pagination,header nav{gap:.5rem}
+/* Irregular province shapes have the same-page, full-size province-select alternative. */
