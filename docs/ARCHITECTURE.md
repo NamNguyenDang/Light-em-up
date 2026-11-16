@@ -5,7 +5,7 @@
 | Component | Receives | Provides | Storage / trust boundary |
 |---|---|---|---|
 | Page shell | Navigation selection | Community and demo-dashboard views | Public local document |
-| Map / city navigator | Visible profile records, city catalog | Selected city filter | Illustrative positions, no home location |
+| Map / city navigator | Visible profile records, city catalog | Selected city filter | Projected city coordinates, no home location |
 | Story list | Filter, visible records, local reaction state | Details, reaction intent, report intent | User text rendered with textContent |
 | Profile editor | Current local profile | Validated profile or delete intent | No credentials collected |
 | Candle model | User-selected lit and visible flags | Independent state, public visibility | Never infer employment |
@@ -13,7 +13,7 @@
 | Aggregate view | Visible profiles and local events | Counts with explicit demo labels | No real visitor identification |
 | Export/reset | User action and confirmation | Download or local reset | Does not affect other browsers |
 
-`app.js` contains these small responsibilities as functions for the prototype. `index.html` owns semantic structure and `styles.css` owns responsive presentation. Keep offline dependencies at zero.
+`app.js` contains these small responsibilities as functions for the prototype. `cities.js` bundles the offline GeoNames place catalog. `index.html` owns semantic structure and `styles.css` owns responsive presentation. Keep offline dependencies at zero.
 
 ## Local data contract
 

@@ -30,3 +30,11 @@ Execution results are recorded below after verification. Unexecuted checklist it
 - PASS: HTML parser validated local stylesheet and script paths, unique IDs and required app DOM references.
 - PASS: no remote resource references in application HTML/CSS/JS.
 - BLOCKED: rendered browser QA. Managed preview reported `preview relay unavailable`. Desktop/mobile rendering and interactive checklist remain unverified. This is an environment limitation, not a passing browser test.
+
+## Design v2 checks — 2026-11-16
+
+Run `node scripts/verify.mjs` plus `node --check app.js` and `node --check cities.js`.
+
+PASS: 832 unique place labels, projected coordinate bounds, original sample city compatibility, accent-insensitive and alias search, no-match state, result limit, HTML IDs/app selectors, local file references, no remote runtime resources, and five key text/background pairs at a minimum 4.5:1 calculated contrast.
+
+Browser QA remains BLOCKED: `sites-preview status` reports preview relay unavailable. These logic/static checks do not verify rendered screenshots, native datalist behavior, mobile layout or full keyboard interaction.
