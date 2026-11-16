@@ -30,3 +30,19 @@ Computational checks preserve all 100 profiles exactly once and show 4 non-overl
 > Your opinion — 2, grouped lights and counts: Keep / Change / Comment: …
 
 > Your opinion — 3, story pagination: Keep / Change / Comment: …
+
+
+## Corrected visual reference (16 November 2026)
+The supplied reference supersedes the earlier green card layout. The main page
+now uses a midnight-blue background, cream serif headline to the left, a large
+faceted blue Sweden map with a fine gold coast, and a rounded right-hand panel
+with the amber Add my light button, quote, North star sample story, and city search.
+Map points remain live data, with six municipal light levels. Decorative lights
+are not added to imply nonexistent users. Existing stories and local profile
+controls remain available below the hero. The terrain is a procedural SVG based
+on the credited geographic outline, not the reference image pasted into the UI.
+
+Verification: existing 100-profile checks, local workflow simulation and all
+light thresholds pass. Full rendered browser QA is unverified because the managed
+preview relay is unavailable. This is an implementation of the supplied visual
+direction, not a claim of pixel-for-pixel equivalence.
