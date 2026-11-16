@@ -29,6 +29,11 @@ try{
     results.push(`Layout and target assertions passed at ${width}px`);
   }
   await page.setViewportSize({width:1280,height:900});await open();
+  // FR-10: keep the desktop hero compact without forcing overflow on small screens.
+  assert.equal(await page.locator('.intro .eyebrow').count(),0);
+  assert.equal(await page.locator('.map-help').count(),0);
+  const headline=await page.locator('.intro h1').evaluate(n=>({height:n.getBoundingClientRect().height,lineHeight:parseFloat(getComputedStyle(n).lineHeight)}));
+  assert(headline.height<=headline.lineHeight+1,'Desktop headline should occupy one line at 1280px');
   await scan('community');
   await page.locator('#map-data-details summary').click();assert.equal(await page.locator('#map-data tbody tr').count(),25);await scan('map-data');
   await page.locator('#map-data button').first().focus();await page.keyboard.press('Enter');assert(await page.locator('#map-data button').first().evaluate(n=>n===document.activeElement));

@@ -118,8 +118,8 @@ select,input:not([type=checkbox]),textarea{min-height:44px}
 #community-status{font-size:.875rem;color:#c7d3d5}
 
 /* FR-10: compact, calmer typography and the same candle artwork as the brand. */
-.intro{padding-block:2rem 2.25rem}
-.intro h1{font-family:Georgia,serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:400;font-style:normal;line-height:1.2;letter-spacing:normal;max-width:28ch;margin:1rem auto .75rem;text-wrap:balance}
+.intro{padding-block:1.5rem 1.75rem}
+.intro h1{font-family:Georgia,serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:400;font-style:normal;line-height:1.2;letter-spacing:normal;max-width:100%;margin:0 auto .75rem;text-wrap:wrap}
 .intro p{font-family:system-ui,sans-serif;font-size:1.125rem;line-height:1.6;max-width:48ch;margin-inline:auto}
 .intro .eyebrow{font-size:.75rem;letter-spacing:.15em}
 .layout{grid-template-columns:minmax(0,1fr) minmax(18rem,24rem);gap:2rem}
