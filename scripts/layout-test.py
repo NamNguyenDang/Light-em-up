@@ -16,3 +16,7 @@ print('PASS: parsed HTML keeps map and welcome as two sibling columns, search in
 
 assert root.xpath('//lineargradient[@id="province-land-light"]'), 'Land illumination must reference a defined SVG gradient'
 assert len(root.xpath('//section[@class="light-scale"]//li')) == 6
+
+welcome=children[1]
+assert welcome[0].get('class')=='join-card'
+assert welcome[1].get('id')=='featured-story', 'Own story must immediately follow join controls'

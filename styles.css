@@ -39,3 +39,8 @@ main{max-width:1440px;padding-inline:40px}header{max-width:1440px;padding-inline
 
 /* Legend core diameters are set from the same screen-pixel sizing as map dots. */
 .scale-dot{background:#fff0b5;box-shadow:none;filter:drop-shadow(0 0 3px #ffbd40) drop-shadow(0 0 7px #ff9e20)}
+
+/* Saved profile stays immediately beneath the join controls. */
+.welcome-panel>.featured-light{margin-top:24px;align-items:flex-start}.personal-candle{flex:0 0 65px;width:65px;padding-top:8px}.personal-story-content{min-width:0;flex:1}.personal-story-content h3{overflow-wrap:anywhere}.personal-story-content .featured-message{white-space:pre-wrap;overflow-wrap:anywhere;font-size:20px}.personal-story-content button{font-size:13px;margin-top:8px;padding:8px 12px}.personal-story-content .small{font-size:12px;margin:8px 0 0}.personal-story-content .sample{margin-bottom:6px}.light-scale ol{grid-template-columns:repeat(3,minmax(0,1fr))}.light-scale li{min-height:200px;overflow:hidden;gap:18px}.light-scale li>span:last-child{font-size:13px}.scale-dot{flex-shrink:0}@media(max-width:600px){.light-scale ol{grid-template-columns:repeat(2,minmax(0,1fr))}.featured-light{gap:12px;padding:16px 12px}.personal-story-content h3{font-size:26px}}
+
+.story-glow{fill:url(#story-light-halo);filter:none}

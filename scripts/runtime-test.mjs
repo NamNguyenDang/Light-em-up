@@ -91,7 +91,7 @@ for(const [city,province,count,level] of lightCases){
  assert(Number(glow.attributes.opacity)>priorOpacity);priorOpacity=Number(glow.attributes.opacity);
  const radius=Number(dot.children.find(n=>n.attributes.class==='map-light').attributes.r);
  assert(radius>priorRadius);priorRadius=radius;
- assert.equal(radius,Number((3*(1.8+level*.35)).toFixed(2)));
+ assert.equal(radius,[6,12,20,30,42,56,72][level]);
  assert.equal(b.nodes['scale-dot-'+level].attributes.style,`width:${radius*2}px;height:${radius*2}px`);
 }
 // Separate kommun counts in one province are never summed to choose land intensity.
@@ -110,3 +110,18 @@ assert.equal(Number(b.nodes['province-glows'].children[0].attributes['data-light
 landForm.elements.lit.checked=false;landForm.onsubmit({preventDefault(){}});
 assert.equal(Number(b.nodes['province-glows'].children[0].attributes['data-light-level']),2);
 console.log('PASS: six simultaneous dot/land levels, increasing land opacity and dot size, province-clipped geometry, highest kommun without summing, level-zero land off, immediate save/toggle land updates.');
+
+// Personal story is immediately available in the welcome panel, independent of filters.
+b=boot();b.run('state.profile=null;persist();render()');
+const featuredTitle=()=>b.nodes['featured-story'].children[1].children.find(n=>n.tag==='h3').textContent;
+assert.equal(featuredTitle(),'North star');
+b.nodes.join.onclick();const personalForm=b.nodes['profile-form'];
+personalForm.elements.nickname.value='My Kiruna light';personalForm.elements.city.value='Kiruna';personalForm.elements.message.value='My own encouragement';
+personalForm.onsubmit({preventDefault(){}});assert.equal(featuredTitle(),'My Kiruna light');
+b.run("selectProvince('Skåne')");assert.equal(featuredTitle(),'My Kiruna light');
+const edit=b.nodes['featured-story'].children[1].children.find(n=>n.tag==='button');assert.equal(edit.textContent,'Edit my story');edit.onclick();assert(b.nodes['profile-dialog'].open);
+personalForm.elements.nickname.value='Updated story';personalForm.elements.visible.checked=false;personalForm.onsubmit({preventDefault(){}});assert.equal(featuredTitle(),'Updated story');
+assert(b.nodes['featured-story'].children[1].children.some(n=>n.textContent==='Only you can see this story.'));
+b=boot();assert.equal(featuredTitle(),'Updated story');
+b.nodes['delete-profile'].onclick();assert.equal(featuredTitle(),'North star');
+console.log('PASS: own-story card immediately after save, filter independence, edit, hidden-story privacy label, reload and sample fallback after deletion.');

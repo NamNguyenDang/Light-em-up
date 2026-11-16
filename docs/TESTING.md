@@ -111,3 +111,14 @@ Dot radii now use a shared `lightAppearance` definition for the map and legend:
 the old radius. The runtime suite verifies each rendered radius and corresponding
 legend diameter (12.9–23.4px). Halo and own-story ring dimensions follow the core.
 Province eligibility and land intensity are unchanged by this sizing correction.
+
+
+## Current agreed sizes and personal card
+The newer agreed circle diameters supersede the previous triple-size values:
+levels 0–6 use 12, 24, 40, 60, 84, 112 and 144px. Halo radii are 0, 24, 40,
+60, 84, 112 and 144px; halo opacity is 0, .25, .35, .45, .55, .65, .80; land
+opacity is 0, .10, .20, .32, .45, .60, .75. Map and legend share this definition.
+Runtime tests verify personal-card create/edit, filter independence, hidden-story
+privacy label, reload and fallback after deletion. The real HTML check asserts
+that the story card immediately follows the join controls in the welcome panel.
+Saved local profiles stand in for signed-in users in this offline prototype.
