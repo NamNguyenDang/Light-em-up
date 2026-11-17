@@ -1,0 +1,3 @@
+
+'use strict';
+(()=>{let generation=0;const status=document.getElementById('public-story-status');const unsubscribe=LightEmUpSession.subscribe(async value=>{if(value.status==='checking')return;const request=++generation;try{const stories=await LightEmUpSession.publicStories();if(request!==generation)return;serverStories=Array.isArray(stories)?stories:[];render();status.textContent=serverStories.length?'Community candles are up to date.':'';}catch{if(request===generation)status.textContent='Online stories are unavailable. You can still explore the labelled samples.';}});window.addEventListener('pagehide',()=>{generation++;unsubscribe();},{once:true});})();

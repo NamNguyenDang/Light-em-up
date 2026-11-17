@@ -23,6 +23,7 @@ try{
  await page.route('https://fr13-test.supabase.co/**',async route=>{
   const req=route.request(),url=new URL(req.url()),headers={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'authorization,apikey,x-client-info,content-type,x-supabase-api-version','Access-Control-Allow-Methods':'GET,POST,OPTIONS'};
   if(req.method()==='OPTIONS'){await route.fulfill({status:200,headers});return;}
+  if(url.pathname==='/rest/v1/public_stories'){await route.fulfill({headers,json:[]});return;}
   if(url.pathname==='/rest/v1/stories'){await route.fulfill({status:200,headers,json:[]});return;}
   if(url.pathname.endsWith('/user')){await route.fulfill({status:userStatus,headers,json:userStatus===200?user:{code:'unexpected_failure',message:'Fixture unavailable'}});return;}
   if(url.pathname.endsWith('/authorize')){assert.equal(url.searchParams.get('provider'),'google');assert.equal(new URL(url.searchParams.get('redirect_to')).pathname,'/signin.html');await route.fulfill({status:302,headers:{...headers,Location:base+'signin.html#error=access_denied&error_description=fixture'}});return;}
