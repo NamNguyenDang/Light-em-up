@@ -23,7 +23,7 @@ function boot(){
  const windowEvents={};
  const context=vm.createContext({document:{activeElement:null,body:new Element('body'),querySelector:s=>{assert(s.startsWith('#'));assert(nodes[s.slice(1)],s);return nodes[s.slice(1)];},querySelectorAll:s=>{const all=[];const walk=n=>{if(n&&typeof n==='object'){all.push(n);for(const c of n.children||[])walk(c);}};for(const n of Object.values(nodes))walk(n);return s==='[data-focus-key]'?all.filter(n=>n.attributes?.['data-focus-key']):s==='#stories details[open]'?all.filter(n=>n.tag==='details'&&n.open):s==='#stories details'?all.filter(n=>n.tag==='details'):[];},createElement:t=>new Element(t),createElementNS:(_,t)=>new Element(t),createTextNode:t=>({textContent:t}),getElementById:id=>{const find=n=>n?.id===id||n?.attributes?.id===id?n:(n?.children||[]).map(find).find(Boolean);return nodes[id]||Object.values(nodes).map(find).find(Boolean)||null;}},window:{addEventListener:(key,fn)=>windowEvents[key]=fn},localStorage:{getItem:k=>stored.get(k)||null,setItem:(k,v)=>stored.set(k,v)},setTimeout:()=>1,clearTimeout(){},confirm:()=>true});
  Element.prototype.focus=function(){this.focused=true;context.document.activeElement=this;};
- for(const name of ['cities.js','provinces.js','demo-data.js','map-layout.js','app.js'])vm.runInContext(read(name),context,{filename:name});
+ for(const name of ['cities.js','provinces.js','demo-data.js','map-layout.js','app-state.js','app.js'])vm.runInContext(read(name),context,{filename:name});
  return {nodes,context,windowEvents,run:s=>vm.runInContext(s,context)};
 }
 let b=boot();assert.equal(b.nodes.stories.children.length,12);assert.equal(b.nodes['map-points'].children.length,29);assert.match(b.nodes['page-status'].textContent,/1–12 of 100/);
@@ -146,3 +146,12 @@ b.nodes['all-stories'].onclick();b.nodes['next-page'].focus();b.nodes['next-page
 b.nodes.join.onclick();b.nodes['profile-form'].elements.nickname.value='Focus test';b.nodes['profile-form'].onsubmit({preventDefault(){}});assert.equal(b.context.document.activeElement.id,'edit-my-story');
 assert.match(b.nodes['community-status'].textContent,/stories/);
 console.log('PASS: FR-07 all-province text alternative; FR-08 city focus restoration, pagination heading focus, post-save fallback and results status.');
+
+// FR-11: real application handlers publish independent state dimensions.
+b=boot();assert.equal(b.run('applicationState.authentication.status'),'signedOut');
+b.nodes.join.onclick();assert.equal(b.run('applicationState.navigation.dialog'),'profile');assert.equal(b.run('applicationState.story.status'),'editing');
+b.nodes['profile-form'].elements.nickname.value='State test';b.nodes['profile-form'].onsubmit({preventDefault(){}});
+assert.equal(b.run('applicationState.story.status'),'saved');assert.equal(b.run('applicationState.navigation.dialog'),null);assert.equal(b.run('applicationState.authentication.status'),'signedOut');
+b.nodes.rules.onclick();assert.equal(b.run('applicationState.navigation.dialog'),'info');b.nodes['info-dialog'].events.close();assert.equal(b.run('applicationState.navigation.dialog'),null);
+b.nodes.reset.onclick();assert.equal(b.run('applicationState.story.status'),'none');
+console.log('PASS: FR-11 editor/save/info/reset handlers update UI state independently of authentication.');
