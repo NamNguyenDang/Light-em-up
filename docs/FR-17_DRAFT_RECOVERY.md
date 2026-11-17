@@ -1,0 +1,5 @@
+# FR-17 — Failed save and session recovery
+
+Account edits are retained in this tab's session storage for at most 30 minutes, bounded in size and tied to the verified account ID. Never restore to a different account. Failed writes keep all fields in place. Expired credentials expose a Sign in again action with the existing safe editor return intent. Reopening after authentication restores the draft; successful save or explicit discard clears it. Account/session transitions invalidate pending editor completions, preventing late results from replacing another account's UI.
+
+WCAG 2.2 AA before PR: field/error preservation (3.3.1/3.3.3/3.3.7), keyboard reauthentication and focus (2.1.1/2.4.3), live restoration/error feedback (4.1.3). Rerun state/browser/axe suites and account fixtures covering 503, 401, refresh recovery, retry and draft cleanup; unit-test account isolation, expiry and malformed storage. Native beforeunload warnings are browser-dependent. Screen-reader/live-provider verification remains pending. Reference: https://www.w3.org/TR/WCAG22/.
