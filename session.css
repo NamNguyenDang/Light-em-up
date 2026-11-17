@@ -1,0 +1,4 @@
+/* FR-12: session feedback is independent of public map and story rendering. */
+.session-feedback{max-width:1360px;margin:.75rem auto;padding:.5rem 1rem;display:flex;align-items:center;flex-wrap:wrap;gap:.75rem;color:#f5dfba}
+.session-feedback p{margin:0;color:#c7d3d5;font:1rem/1.5 system-ui,sans-serif;overflow-wrap:anywhere}
+#session-retry{min-width:44px;min-height:44px;font-size:1rem}
