@@ -32,7 +32,7 @@
    if(document.activeElement===document.body)submit.focus();
  };
  $('password-toggle').onclick=()=>{const visible=password.type==='password';password.type=visible?'text':'password';$('password-toggle').textContent=visible?'Hide password':'Show password';$('password-toggle').setAttribute('aria-pressed',String(visible));};
- retry.onclick=async()=>{await flow.retry();if(!retry.hidden)retry.focus();else if(!$('signin-fields').disabled)email.focus();else cancel.focus();};
+ retry.onclick=async()=>{await flow.retry();if(document.activeElement!==document.body&&document.activeElement!==retry)return;if(!retry.hidden)retry.focus();else if(!$('signin-fields').disabled)email.focus();else cancel.focus();};
  $('signin-google').onclick=async()=>{clearErrors();await flow.google();if(document.activeElement===document.body&&!$('signin-google').disabled)$('signin-google').focus();};
  window.addEventListener('pagehide',()=>flow.stop(),{once:true});
  void flow.start();

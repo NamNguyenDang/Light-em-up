@@ -13,7 +13,8 @@
 #signin-submit{background:#efbc70;color:#1d2c23;font-weight:600}
 #signin-submit:hover{background:#ffcf8d}#signin-submit:disabled{opacity:.7}
 #signin-error,.signin-panel .field-error{color:#ffe2d8}
-#signin-error:empty,#signin-status:empty,.signin-panel .field-error:empty{display:none}
+#signin-error:empty,#signin-status:empty{margin:0}
+.signin-panel .field-error:empty{display:none}
 #signin-cancel{display:flex;align-items:center;justify-content:center;color:#f5dfba;margin-top:1rem;padding:.5rem;text-align:center}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .signin-panel{overflow-wrap:anywhere}.signin-panel :focus-visible{scroll-margin-block:1rem}
