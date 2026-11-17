@@ -7,11 +7,12 @@ ids = root.xpath('//*[@id]/@id')
 assert len(ids) == len(set(ids))
 expected = {
     'profile-dialog': 'Your little light',
+    'encouragement-dialog': 'Send encouragement',
     'cluster-dialog': 'Lights near each other',
     'info-dialog': 'Care for each other',
 }
 dialogs = root.xpath('//dialog')
-assert len(dialogs) == 3
+assert len(dialogs) == 4
 for dialog in dialogs:
     refs = dialog.get('aria-labelledby', '').split()
     assert refs
@@ -23,7 +24,7 @@ for dialog in dialogs:
         headings.append(matches[0])
     name = headings[0].text_content().strip()
     assert name == expected[dialog.get('id')]
-print('PASS: three dialogs reference unique visible headings by accessible name.')
+print('PASS: four dialogs reference unique visible headings by accessible name.')
 
 # FR-03: required inputs resolve their field-specific error descriptions.
 for name in ('nickname', 'city'):
