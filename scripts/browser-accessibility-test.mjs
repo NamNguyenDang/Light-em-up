@@ -31,6 +31,7 @@ try{
   await page.setViewportSize({width:1280,height:900});await open();
   // FR-10: keep the desktop hero compact without forcing overflow on small screens.
   assert.equal(await page.locator('.intro .eyebrow').count(),0);
+  assert(!(await page.locator('body').innerText()).toLowerCase().includes('100 fictional demo profiles'));
   assert.equal(await page.locator('.map-help').count(),0);
   const headline=await page.locator('.intro h1').evaluate(n=>({height:n.getBoundingClientRect().height,lineHeight:parseFloat(getComputedStyle(n).lineHeight),style:getComputedStyle(n).fontStyle,weight:getComputedStyle(n).fontWeight}));
   assert(headline.height<=headline.lineHeight+1,'Desktop headline should occupy one line at 1280px');
