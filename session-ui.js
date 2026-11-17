@@ -5,9 +5,11 @@
   const retry=document.getElementById('session-retry');
   const account=document.getElementById('header-login');
   const originalLabel=account.textContent;
-  let retryAttempt=false,repository=null;
+  let retryAttempt=false,repository=null,sdk=null;
+  const signout=document.getElementById('signout');
   const listeners=new Set();
   function renderSession(value){
+    signout.hidden=value.status!=='signedIn';
     document.body.setAttribute('data-session-state',value.status);
     // Optional FR-11 bridge: this feature also works before FR-11 is merged.
     if(typeof dispatchApplication==='function'&&value.status!=='notConfigured'){
@@ -29,14 +31,24 @@
   }
   const controller=SessionRestoration.create({
     config:globalThis.LIGHT_EM_UP_AUTH||{},
-    clientFactory:(...args)=>{const client=globalThis.supabase.createClient(...args);repository=StoryRepository.create(client);return client;},
+    clientFactory:(...args)=>{const client=globalThis.supabase.createClient(...args);sdk=client;repository=StoryRepository.create(client);return client;},
     onChange:renderSession
   });
   globalThis.LightEmUpSession=Object.freeze({
+    async signOut(){if(!sdk)throw new Error('No account client');const result=await sdk.auth.signOut({scope:'local'});if(result.error)throw result.error;},
     loadStory(owner){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.load(owner);},
     saveStory(owner,story){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.save(owner,story);},
     subscribe(listener){listeners.add(listener);listener(controller.snapshot());return ()=>listeners.delete(listener);}
   });
+  signout.onclick=async()=>{
+    if(signout.disabled)return;
+    if(typeof requestProfileClose==='function'&&document.getElementById('profile-dialog').open&&!requestProfileClose())return;
+    const user=controller.snapshot().user;signout.disabled=true;message.textContent='Signing out…';
+    dispatchApplication({type:'AUTH_CHANGED',status:'signingOut',user});
+    try{await LightEmUpSession.signOut();clearPrivateLocalData();dispatchApplication({type:'NAVIGATE',view:'community'});document.getElementById('community').hidden=false;document.getElementById('dashboard').hidden=true;account.focus();message.textContent='You have signed out. Your published candle is unchanged.';}
+    catch{dispatchApplication({type:'AUTH_CHANGED',status:'signedIn',user});message.textContent='We could not sign you out. Please try again.';signout.focus();}
+    finally{signout.disabled=false;}
+  };
   retry.onclick=async()=>{
     retryAttempt=true;
     await controller.retry();
