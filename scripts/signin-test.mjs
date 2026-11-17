@@ -1,0 +1,28 @@
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url),flowModule=require('../signin-flow.js'),sessionModule=require('../session-restoration.js');
+const href='https://example.test/light/signin.html';
+for(const value of ['https://evil.test/','//evil.test/','javascript:alert(1)','../admin.html','signin.html'])assert.equal(flowModule.returnTarget(href+'?returnTo='+encodeURIComponent(value)),'https://example.test/light/index.html');
+assert.equal(flowModule.returnTarget(href+'?returnTo=index.html%23stories-title'),'https://example.test/light/index.html#stories-title');
+assert.equal(flowModule.returnTarget(href+'?returnTo=index.html%3Ftoken%3Dprivate'),'https://example.test/light/index.html');
+const config={url:'https://fr13-test.supabase.co',publishableKey:'sb_publishable_fixture',googleEnabled:true};
+function fixture({configOverride=config,timeoutMs=100}={}){
+ let session=null,loginResult={data:{session:{user:{id:'untrusted'}}},error:null},sessionError=null,verifyError=null,loginCalls=0,loginFn;
+ const navigation=[],states=[],saved=new Map();let oauthURL='https://fr13-test.supabase.co/auth/v1/authorize?provider=google',oauthCalls=0;
+ const client={auth:{getSession:async()=>({data:{session},error:sessionError}),getUser:async()=>({data:{user:{id:'verified',user_metadata:{nickname:'Nam'}}},error:verifyError}),onAuthStateChange:()=>({data:{subscription:{unsubscribe(){}}}}),stopAutoRefresh(){},signInWithPassword:async values=>{loginCalls++;assert.deepEqual(values,{email:'person@example.test',password:'fixture-password'});const result=loginFn?await loginFn():loginResult;if(!result.error)session=result.data.session;return result;},signInWithOAuth:async credentials=>{oauthCalls++;assert.equal(credentials.options.skipBrowserRedirect,true);assert.equal(credentials.options.redirectTo,href);return {data:{url:oauthURL},error:null};}}};
+ const controller=flowModule.create({config:configOverride,sessionModule,sdkFactory:()=>client,href,storage:{getItem:k=>saved.get(k),setItem:(k,v)=>saved.set(k,v),removeItem:k=>saved.delete(k)},navigate:url=>navigation.push(url),onChange:s=>states.push(s),timeoutMs});
+ return {controller,navigation,states,saved,setLogin:r=>{loginResult=r;},setSession:r=>{session=r;},setCheckError:e=>{sessionError=e;},setVerifyError:e=>{verifyError=e;},setLoginFn:fn=>{loginFn=fn;},setOAuth:url=>{oauthURL=url;},calls:()=>loginCalls,oauthCalls:()=>oauthCalls};
+}
+let f=fixture({configOverride:{}});await f.controller.start();assert.equal(f.controller.snapshot().phase,'unavailable');assert.equal(f.calls(),0);
+f=fixture();await f.controller.start();assert.equal(f.controller.snapshot().phase,'ready');
+f.setLogin({data:{},error:{status:400,code:'invalid_credentials'}});await f.controller.signIn({email:'person@example.test',password:'fixture-password'});assert.equal(f.controller.snapshot().error,'credentials');assert.equal(f.navigation.length,0);
+f.setLogin({data:{},error:{status:400,code:'email_not_confirmed'}});await f.controller.signIn({email:'person@example.test',password:'fixture-password'});assert.equal(f.controller.snapshot().error,'unconfirmed');
+f.setLogin({data:{session:{user:{id:'forged'}}},error:null});await f.controller.signIn({email:'person@example.test',password:'fixture-password'});assert.equal(f.controller.snapshot().user.id,'verified');assert.deepEqual(f.navigation,['https://example.test/light/index.html']);assert.equal(f.saved.get('light-em-up-signin-focus'),'header-login');assert(!JSON.stringify(f.states).includes('fixture-password'));f.controller.stop();
+f=fixture();f.setCheckError({status:503});await f.controller.start();assert.equal(f.controller.snapshot().phase,'checkFailed');f.setCheckError(null);await f.controller.retry();assert.equal(f.controller.snapshot().phase,'ready');f.controller.stop();
+f=fixture();f.setSession({user:{id:'cached'}});await f.controller.start();assert.equal(f.controller.snapshot().user.id,'verified');assert.equal(f.navigation.length,1);f.controller.stop();
+f=fixture();await f.controller.start();let complete;f.setLoginFn(()=>new Promise(r=>{complete=r;}));const pending=f.controller.signIn({email:'person@example.test',password:'fixture-password'});await f.controller.signIn({email:'person@example.test',password:'fixture-password'});assert.equal(f.calls(),1);f.controller.cancel();complete({data:{session:{}},error:null});await pending;assert.equal(f.navigation.length,1,'Cancellation suppresses late sign-in navigation');
+f=fixture({timeoutMs:15});await f.controller.start();f.setLoginFn(()=>new Promise(()=>{}));await f.controller.signIn({email:'person@example.test',password:'fixture-password'});assert.equal(f.controller.snapshot().error,'connection');f.controller.stop();
+f=fixture();await f.controller.start();await f.controller.google();assert.equal(f.controller.snapshot().phase,'redirecting');assert.equal(f.oauthCalls(),1);assert(f.navigation[0].startsWith(config.url));f.controller.stop();
+f=fixture();await f.controller.start();f.setOAuth('https://evil.test/auth/v1/authorize');await f.controller.google();assert.equal(f.controller.snapshot().error,'provider');assert.equal(f.navigation.length,0);f.controller.stop();
+f=fixture();await f.controller.start();f.setVerifyError({status:503});await f.controller.signIn({email:'person@example.test',password:'fixture-password'});assert.equal(f.controller.snapshot().error,'connection');assert.equal(f.navigation.length,0);f.controller.stop();
+console.log('PASS: safe internal return targets, no-config handling, credential/confirmation failures, server-verified success, password-free state, existing session, retry, duplicate suppression, cancellation, timeout and restricted OAuth redirects.');

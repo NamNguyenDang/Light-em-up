@@ -17,6 +17,11 @@
     retry.disabled=value.status==='checking';
     account.disabled=value.status==='checking';
     account.textContent=value.status==='signedIn'?value.user.nickname:originalLabel;
+    if(value.status==='signedIn'){
+      try{const id=sessionStorage.getItem('light-em-up-signin-focus');if(['header-login','stories-title','featured-story','community'].includes(id)){
+        sessionStorage.removeItem('light-em-up-signin-focus');const target=document.getElementById(id);if(target){if(id!=='header-login')target.setAttribute('tabindex','-1');target.focus();}
+      }}catch{}
+    }
     const text={checking:'Checking your session…',signedOut:'You’re browsing as a visitor.',signedIn:value.user?`Welcome back, ${value.user.nickname}.`:'',checkFailed:'We couldn’t check your session. You can still browse the community.',notConfigured:''};
     message.textContent=text[value.status];
   }

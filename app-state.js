@@ -4,7 +4,7 @@
 // This model is not authentication or authorization; a future adapter supplies
 // verified sessions and the backend must independently authorize every request.
 const ApplicationState=(()=>{
-  const views=['community','dashboard'];
+  const views=['community','dashboard','signIn'];
   const dialogs=['profile','info','cluster'];
   const authTransitions={
     signedOut:['checking','signingIn'],

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sign in — Light’em up</title>
+<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="signin.css">
+<script defer src="supabase-config.js"></script><script defer src="assets/vendor/supabase-2.119.0.js"></script>
+<script defer src="app-state.js"></script><script defer src="session-restoration.js"></script>
+<script defer src="signin-flow.js"></script><script defer src="signin-ui.js"></script>
+</head>
+<body class="signin-page">
+<a class="skip-link" href="#signin-title">Skip to sign-in</a>
+<header><a class="brand" href="index.html"><span class="brand-candle" aria-hidden="true"><svg viewBox="550 150 440 710" width="34" height="50" focusable="false"><image href="assets/candle-color.png" width="1535" height="1024"/></svg></span> Light’em up</a><nav aria-label="Main"><a href="index.html">Our community</a></nav></header>
+<main class="signin-main">
+<section class="signin-panel" aria-labelledby="signin-title">
+<h1 id="signin-title" tabindex="-1">Sign in</h1><p>Welcome back to Light’em up.</p>
+<p id="signin-status" role="status" aria-live="polite" aria-atomic="true">Checking your session…</p>
+<p id="signin-error" role="alert" aria-atomic="true"></p>
+<button id="signin-retry" type="button" hidden>Check session again</button>
+<form id="signin-form" novalidate>
+<fieldset id="signin-fields"><legend class="sr-only">Account details</legend>
+<label for="signin-email">Email (required)</label>
+<input id="signin-email" name="email" type="email" required autocomplete="username" autocapitalize="none" spellcheck="false" aria-describedby="email-error signin-error">
+<p id="email-error" class="field-error"></p>
+<label for="signin-password">Password (required)</label>
+<input id="signin-password" name="password" type="password" required autocomplete="current-password" aria-describedby="password-error signin-error">
+<p id="password-error" class="field-error"></p>
+<button id="password-toggle" type="button" aria-controls="signin-password" aria-pressed="false">Show password</button>
+<button id="signin-submit" type="submit">Sign in</button>
+</fieldset>
+</form>
+<button id="signin-google" type="button" hidden>Continue with Google</button>
+<a id="signin-cancel" href="index.html">Back to the community</a>
+</section>
+</main>
+</body></html>

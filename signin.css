@@ -1,0 +1,23 @@
+.signin-page{min-height:100vh}.signin-page header{height:auto;min-height:5rem;gap:1rem;flex-wrap:wrap}
+.signin-page header nav a{color:#f5dfba;min-height:44px;display:inline-flex;align-items:center;padding:.5rem}
+.signin-main{max-width:36rem;width:100%;margin:0 auto;padding:2rem 1rem}
+.signin-panel{border:1px solid #59717a;background:#0b2029;border-radius:1.25rem;padding:clamp(1.25rem,4vw,2rem)}
+.signin-panel h1{font:400 clamp(1.75rem,4vw,2.25rem)/1.2 Georgia,serif;letter-spacing:normal;margin:0 0 1rem}
+.signin-panel p{font-size:1rem;line-height:1.5;overflow-wrap:anywhere}
+.signin-panel fieldset{border:0;padding:0;margin:0;min-width:0}
+.signin-panel label{font-size:1rem;margin:.75rem 0 .25rem}
+.signin-panel input{font-size:1rem;min-height:44px}
+.signin-panel button,.signin-panel a{min-height:44px;min-width:44px;font-size:1rem}
+#password-toggle{margin:.5rem 0 1rem}
+#signin-submit,#signin-google{display:block;width:100%;margin:.75rem 0;padding:.75rem 1rem}
+#signin-submit{background:#efbc70;color:#1d2c23;font-weight:600}
+#signin-submit:hover{background:#ffcf8d}#signin-submit:disabled{opacity:.7}
+#signin-error,.signin-panel .field-error{color:#ffe2d8}
+#signin-error:empty,#signin-status:empty{margin:0}
+.signin-panel .field-error:empty{display:none}
+#signin-cancel{display:flex;align-items:center;justify-content:center;color:#f5dfba;margin-top:1rem;padding:.5rem;text-align:center}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.signin-panel{overflow-wrap:anywhere}.signin-panel :focus-visible{scroll-margin-block:1rem}
+@media(forced-colors:active){#signin-submit{background:ButtonFace;color:ButtonText}.signin-panel{border-color:CanvasText}}
+
+.signin-panel h1:focus{outline:3px solid #fff4d5;outline-offset:4px;box-shadow:0 0 0 7px #07121c}
