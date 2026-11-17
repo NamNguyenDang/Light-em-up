@@ -3,6 +3,7 @@ import {createRequire} from 'node:module';
 const require=createRequire(import.meta.url),flowModule=require('../signin-flow.js'),sessionModule=require('../session-restoration.js');
 const href='https://example.test/light/signin.html';
 for(const value of ['https://evil.test/','//evil.test/','javascript:alert(1)','../admin.html','signin.html'])assert.equal(flowModule.returnTarget(href+'?returnTo='+encodeURIComponent(value)),'https://example.test/light/index.html');
+assert.equal(flowModule.returnTarget(href+'?returnTo=index.html%23add-candle'),'https://example.test/light/index.html#add-candle');
 assert.equal(flowModule.returnTarget(href+'?returnTo=index.html%23stories-title'),'https://example.test/light/index.html#stories-title');
 assert.equal(flowModule.returnTarget(href+'?returnTo=index.html%3Ftoken%3Dprivate'),'https://example.test/light/index.html');
 const config={url:'https://fr13-test.supabase.co',publishableKey:'sb_publishable_fixture',googleEnabled:true};

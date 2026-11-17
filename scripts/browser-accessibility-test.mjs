@@ -36,19 +36,20 @@ try{
   const headline=await page.locator('.intro h1').evaluate(n=>({height:n.getBoundingClientRect().height,lineHeight:parseFloat(getComputedStyle(n).lineHeight),style:getComputedStyle(n).fontStyle,weight:getComputedStyle(n).fontWeight}));
   assert(headline.height<=headline.lineHeight+1,'Desktop headline should occupy one line at 1280px');
   assert.equal(headline.style,'italic');assert.equal(headline.weight,'700');
+  // Local-demo editor regressions use the saved-light control; FR-14 tests cover authenticated Add your candle.
   // FR-11: modal navigation keeps the existing browsing context and focus.
   assert.equal(await page.locator('body').getAttribute('data-auth-state'),'signedOut');
   await page.locator('#province-select').selectOption('Skåne');
   await page.locator('#next-page').click();
   const provincePage=await page.locator('#page-status').textContent();
-  await page.locator('#join').click();
+  await page.locator('#login').click();
   assert.equal(await page.locator('body').getAttribute('data-dialog-state'),'profile');
   assert.equal(await page.locator('body').getAttribute('data-story-state'),'editing');
   await page.keyboard.press('Escape');
   await page.waitForFunction(()=>document.body.getAttribute('data-dialog-state')==='none');
   assert.equal(await page.locator('#province-select').inputValue(),'Skåne');
   assert.equal(await page.locator('#page-status').textContent(),provincePage);
-  assert(await page.locator('#join').evaluate(n=>n===document.activeElement));
+  assert(await page.locator('#login').evaluate(n=>n===document.activeElement));
   await page.locator('#city-search').fill('Kiruna');await page.locator('#cities button').first().click();
   const cityHeading=await page.locator('#stories-title').textContent();
   await page.locator('#rules').click();
@@ -65,7 +66,7 @@ try{
   await page.locator('#clear-province').click();
   const area=page.locator('#province-areas path').first();await area.focus();assert(await page.locator('#province-tooltip').isVisible());await page.keyboard.press('Escape');assert.equal(await page.locator('#province-tooltip').textContent(),'');
   await area.dispatchEvent('mouseenter');await area.dispatchEvent('mouseleave');await page.locator('#province-tooltip').hover();assert(await page.locator('#province-tooltip').isVisible());
-  await page.locator('#join').click();await scan('dialog');
+  await page.locator('#login').click();await scan('dialog');
   await page.getByRole('button',{name:'Save my light',exact:true}).click();assert.equal(await page.locator('[name=nickname]').getAttribute('aria-invalid'),'true');assert(await page.locator('[name=nickname]').evaluate(n=>n===document.activeElement));await scan('validation');
   await page.locator('[name=nickname]').fill('Accessibility test');await page.locator('[name=city]').fill('Kiruna');await page.getByRole('button',{name:'Save my light',exact:true}).click();assert(await page.locator('#edit-my-story').evaluate(n=>n===document.activeElement));assert.equal(await page.locator('body').getAttribute('data-story-state'),'saved');assert.equal(await page.locator('body').getAttribute('data-auth-state'),'signedOut');
   await page.reload();assert.equal(await page.locator('#featured-story h3').textContent(),'Accessibility test');

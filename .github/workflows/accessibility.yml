@@ -24,6 +24,7 @@ jobs:
       - run: npm test
       - run: node scripts/session-test.mjs
       - run: node scripts/signin-test.mjs
+      - run: node scripts/candle-entry-test.mjs
       - run: npm run test:a11y
       - run: node scripts/session-browser-test.mjs
       - run: node scripts/signin-browser-test.mjs

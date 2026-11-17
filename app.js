@@ -167,3 +167,14 @@ $('#profile-dialog').addEventListener('close',()=>{if(!document.activeElement||d
 
 // FR-13: account sign-in has its own page; local story editing stays separate.
 $('#header-login').onclick=()=>{location.assign(new URL('signin.html',location.href).href);};
+
+// FR-14: retain only public browsing context through the sign-in round trip.
+function getBrowsingContext(){return {province:provinceFilter,city:cityFilter,page:storyPage,query:$('#city-search').value.slice(0,120)};}
+function restoreBrowsingContext(value){
+ if(!value||typeof value!=='object')return;
+ provinceFilter=provinces.some(p=>p.name===value.province)?value.province:'';
+ cityFilter=!provinceFilter&&cities.some(c=>c.name===value.city)?value.city:'';
+ storyPage=Number.isSafeInteger(value.page)&&value.page>=0&&value.page<=100000?value.page:0;
+ $('#city-search').value=typeof value.query==='string'?value.query.slice(0,120):'';
+ render();
+}

@@ -6,6 +6,7 @@
   const account=document.getElementById('header-login');
   const originalLabel=account.textContent;
   let retryAttempt=false;
+  const listeners=new Set();
   function renderSession(value){
     document.body.setAttribute('data-session-state',value.status);
     // Optional FR-11 bridge: this feature also works before FR-11 is merged.
@@ -24,11 +25,15 @@
     }
     const text={checking:'Checking your session…',signedOut:'You’re browsing as a visitor.',signedIn:value.user?`Welcome back, ${value.user.nickname}.`:'',checkFailed:'We couldn’t check your session. You can still browse the community.',notConfigured:''};
     message.textContent=text[value.status];
+    for(const listener of listeners)listener(value);
   }
   const controller=SessionRestoration.create({
     config:globalThis.LIGHT_EM_UP_AUTH||{},
     clientFactory:globalThis.supabase?.createClient,
     onChange:renderSession
+  });
+  globalThis.LightEmUpSession=Object.freeze({
+    subscribe(listener){listeners.add(listener);listener(controller.snapshot());return ()=>listeners.delete(listener);}
   });
   retry.onclick=async()=>{
     retryAttempt=true;
