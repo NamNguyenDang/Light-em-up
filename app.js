@@ -2,7 +2,10 @@
 const KEY='light-em-up-v1';
 
 let state={profile:null,reactions:[],reports:[],opens:0},cityFilter='',provinceFilter='',storyPage=0;
-const PAGE_SIZE=12;let storageOK=true;
+const PAGE_SIZE=12;let storageOK=true,accountStoryMode=false;
+let localDemoProfile=null;
+function setAccountStory(story,enabled){if(enabled&&!accountStoryMode)localDemoProfile=state.profile;accountStoryMode=enabled;state.profile=enabled?story:localDemoProfile;dispatchApplication({type:'LOCAL_STORY_CLEARED'});render();}
+
 try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved&&typeof saved==='object'){if(saved.profile&&typeof saved.profile.nickname==='string'&&cities.some(c=>c.name===saved.profile.city))state.profile=saved.profile;state.reactions=Array.isArray(saved.reactions)?saved.reactions.filter(x=>typeof x==='string'):[];state.reports=Array.isArray(saved.reports)?saved.reports.filter(x=>typeof x==='string'):[];state.opens=Number.isSafeInteger(saved.opens)&&saved.opens>=0?saved.opens:0;}}catch{storageOK=false;}
 state.opens++;
 let applicationState=ApplicationState.initial({hasLocalStory:!!state.profile});
@@ -21,7 +24,7 @@ function openApplicationDialog(name){
 
 const $=s=>document.querySelector(s);const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
 function notify(msg){$('#toast').textContent=msg;clearTimeout(notify.timer);notify.timer=setTimeout(()=>$('#toast').textContent='',5000);}
-function persist(){try{localStorage.setItem(KEY,JSON.stringify(state));return true;}catch{storageOK=false;notify('Browser storage is unavailable. Changes last only while this page stays open.');return false;}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify({...state,profile:accountStoryMode?localDemoProfile:state.profile}));return true;}catch{storageOK=false;notify('Browser storage is unavailable. Changes last only while this page stays open.');return false;}}
 function entries(){return [...samples,...(state.profile?.visible?[state.profile]:[])];}
 function stat(value,label){const n=el('div',undefined,'stat');n.append(el('strong',String(value)),el('span',label));return n;}
 function render(){
@@ -34,11 +37,12 @@ function render(){
   if(focusKey){const next=[...document.querySelectorAll('[data-focus-key]')].find(n=>n.getAttribute('data-focus-key')===focusKey);if(next&&!next.disabled)next.focus();else $('#stories-title').focus();}
 }
 function renderFeaturedStory(){
+  if(accountStoryMode&&!state.profile){const card=$('#featured-story');card.replaceChildren(el('p','Your account story appears here after you add a candle.'));return;}
   const p=state.profile||samples.find(p=>p.nickname==='North star')||samples[1];
   const card=$('#featured-story');card.replaceChildren();
   const candle=el('div',undefined,'personal-candle');candle.append(candleGraphic(62,100,!!p.lit));
   const content=el('div',undefined,'personal-story-content');
-  content.append(el('div',state.profile?'YOUR STORY':'SAMPLE STORY','sample'),el('h3',p.nickname),el('p',p.city,'featured-city'),el('p',p.message||'Sharing a little presence. Words can come later.','featured-message'),el('p',p.lit?'Candle lit':'Candle resting','small'));
+  content.append(el('div',state.profile?(accountStoryMode?'YOUR STORY':'YOUR LOCAL STORY'):'SAMPLE STORY','sample'),el('h3',p.nickname),el('p',p.city,'featured-city'),el('p',p.message||'Sharing a little presence. Words can come later.','featured-message'),el('p',p.lit?'Candle lit':'Candle resting','small'));
   if(state.profile){
     if(!p.visible)content.append(el('p','Only you can see this story.','small'));
     const edit=el('button','Edit my story');edit.id='edit-my-story';edit.setAttribute('data-focus-key','edit-my-story');edit.onclick=openProfile;content.append(edit);
@@ -67,7 +71,7 @@ function requestProfileClose(){
 }
 $('#profile-dialog').addEventListener('cancel',event=>{event.preventDefault();requestProfileClose();});
 window.addEventListener('beforeunload',event=>{if(profileSaving||profileHasChanges()){event.preventDefault();event.returnValue='';}});
-function openProfile(){if($('#profile-dialog').open||applicationState.navigation.dialog)return;form.reset();clearProfileErrors();setProfileSaving(false);const p=state.profile;if(p){for(const key of profileFields)form.elements[key].value=p[key]||'';form.elements.lit.checked=!!p.lit;form.elements.visible.checked=!!p.visible;}else form.elements.city.value='Stockholm';$('#delete-profile').hidden=!p;profileBaseline=profileDraft();openApplicationDialog('profile');form.elements.nickname.focus();}
+function openProfile(){if(accountStoryMode&&globalThis.LightEmUpAccount&&!LightEmUpAccount.ready()){void LightEmUpAccount.openEditor();return;}if($('#profile-dialog').open||applicationState.navigation.dialog)return;form.reset();clearProfileErrors();setProfileSaving(false);const p=state.profile;if(p){for(const key of profileFields)form.elements[key].value=p[key]||'';form.elements.lit.checked=!!p.lit;form.elements.visible.checked=!!p.visible;}else form.elements.city.value='Stockholm';$('#delete-profile').hidden=!p||accountStoryMode;profileBaseline=profileDraft();openApplicationDialog('profile');form.elements.nickname.focus();}
 form.onsubmit=e=>{
   e.preventDefault();if(profileSaving)return;clearProfileErrors();
   const nickname=form.elements.nickname.value.trim();if(!nickname){profileError('nickname','Please enter a nickname.');return;}
@@ -75,9 +79,9 @@ form.onsubmit=e=>{
   const p={id:'mine',nickname,city:chosen.name,lit:form.elements.lit.checked,visible:form.elements.visible.checked};
   for(const key of ['message','status','seeking','role','company'])p[key]=form.elements[key].value.trim();
   const previous=state.profile;dispatchApplication({type:'SAVE_STARTED'});setProfileSaving(true);state.profile=p;
-  const success=saved=>{profileBaseline=profileDraft();setProfileSaving(false);dispatchApplication({type:'SAVE_SUCCEEDED',id:p.id,persistence:saved?'browser':'sessionOnly'});$('#profile-dialog').close();render();focusSavedStory();notify(saved?'Your light is saved on this browser.':'Your light is available this session only; browser storage is unavailable.');};
+  const success=saved=>{if(saved&&typeof saved==='object'){state.profile=saved;p.id=saved.id;}profileBaseline=profileDraft();setProfileSaving(false);dispatchApplication({type:'SAVE_SUCCEEDED',id:p.id,persistence:accountStoryMode?'server':saved?'browser':'sessionOnly'});$('#profile-dialog').close();render();focusSavedStory();notify(accountStoryMode?'Your candle is saved.':saved?'Your light is saved on this browser.':'Your light is available this session only; browser storage is unavailable.');};
   const failure=()=>{state.profile=previous;setProfileSaving(false);const message='Your light could not be saved. Your changes are still here. Please try again.';dispatchApplication({type:'SAVE_FAILED',error:message});$('#form-error').textContent=message;$('#save-profile').focus();};
-  try{const result=persist();if(result&&typeof result.then==='function')return Promise.resolve(result).then(success,failure);success(result);}catch{failure();}
+  try{const result=accountStoryMode?LightEmUpAccount.save(p):persist();if(result&&typeof result.then==='function')return Promise.resolve(result).then(success,failure);success(result);}catch{failure();}
 };
 ['#join','#login','#my-light'].forEach(s=>$(s).onclick=openProfile);document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.dataset.close==='profile-dialog'?requestProfileClose():document.getElementById(b.dataset.close).close());$('#delete-profile').onclick=()=>{if(profileSaving)return;if(!confirm('Delete your local profile and its reactions?'))return;state.profile=null;state.reactions=[];persist();dispatchApplication({type:'LOCAL_STORY_CLEARED'});$('#profile-dialog').close();render();focusSavedStory();notify('Your local profile was deleted.');};$('#all-stories').onclick=()=>{$('#city-search').value='';selectCity('');};document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{dispatchApplication({type:'NAVIGATE',view:b.dataset.view});$('#community').hidden=applicationState.navigation.view!=='community';$('#dashboard').hidden=applicationState.navigation.view!=='dashboard';render();});$('#rules').onclick=()=>openApplicationDialog('info');$('#export').onclick=()=>{const url=URL.createObjectURL(new Blob([JSON.stringify({version:1,...state},null,2)],{type:'application/json'}));const a=el('a');a.href=url;a.download='light-em-up-local-data.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};$('#reset').onclick=()=>{if(!confirm('Reset all profiles, reactions, reports and page-open counts on this browser?'))return;state={profile:null,reactions:[],reports:[],opens:1};persist();dispatchApplication({type:'LOCAL_STORY_CLEARED'});render();notify('Local demo reset. Fictional samples remain.');};
 

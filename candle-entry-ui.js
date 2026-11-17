@@ -14,7 +14,7 @@
  const entry=CandleEntry.create({
   resumeIntent:intent,
   isModalOpen:()=>!!document.querySelector('dialog[open]'),
-  openEditor:()=>openProfile(),
+  openEditor:()=>globalThis.LightEmUpAccount?LightEmUpAccount.openEditor():openProfile(),
   clearIntent,
   signIn:()=>{
    try{sessionStorage.setItem(contextKey,JSON.stringify({...getBrowsingContext(),at:Date.now()}));}catch{}

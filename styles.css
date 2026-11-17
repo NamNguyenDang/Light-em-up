@@ -138,3 +138,5 @@ select,input:not([type=checkbox]),textarea{min-height:44px}
 @media(max-width:30rem){.welcome-panel{padding:1.25rem 1rem}.join-card h2{font-size:1.75rem}.intro{padding-block:1.5rem}.intro h1{font-size:2rem}}
 
 #profile-save-status:empty{margin:0}
+
+.own-story-feedback p:empty{margin:0}.own-story-feedback p{font:1rem/1.5 system-ui,sans-serif}#own-story-retry{min-height:44px}

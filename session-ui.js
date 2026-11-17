@@ -5,7 +5,7 @@
   const retry=document.getElementById('session-retry');
   const account=document.getElementById('header-login');
   const originalLabel=account.textContent;
-  let retryAttempt=false;
+  let retryAttempt=false,repository=null;
   const listeners=new Set();
   function renderSession(value){
     document.body.setAttribute('data-session-state',value.status);
@@ -29,10 +29,12 @@
   }
   const controller=SessionRestoration.create({
     config:globalThis.LIGHT_EM_UP_AUTH||{},
-    clientFactory:globalThis.supabase?.createClient,
+    clientFactory:(...args)=>{const client=globalThis.supabase.createClient(...args);repository=StoryRepository.create(client);return client;},
     onChange:renderSession
   });
   globalThis.LightEmUpSession=Object.freeze({
+    loadStory(owner){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.load(owner);},
+    saveStory(owner,story){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.save(owner,story);},
     subscribe(listener){listeners.add(listener);listener(controller.snapshot());return ()=>listeners.delete(listener);}
   });
   retry.onclick=async()=>{
