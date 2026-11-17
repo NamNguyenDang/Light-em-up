@@ -8,7 +8,7 @@
  menu.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();close(true);}});
  document.addEventListener('click',event=>{if(!menu.hidden&&!menu.contains(event.target)&&event.target!==button)close();});
  document.getElementById('menu-my-story').onclick=()=>{close();const card=document.getElementById('featured-story');card.setAttribute('tabindex','-1');card.focus();card.scrollIntoView({block:'nearest'});};
- document.getElementById('menu-encouragement').onclick=()=>{close();panel.hidden=false;document.getElementById('encouragement-title').focus();};
+ document.getElementById('menu-encouragement').onclick=()=>{close();panel.hidden=false;document.dispatchEvent(new Event('encouragement-open'));document.getElementById('encouragement-title').focus();};
  document.getElementById('close-encouragement').onclick=()=>{panel.hidden=true;button.focus();};
  window.addEventListener('pagehide',()=>unsubscribe(),{once:true});
 })();

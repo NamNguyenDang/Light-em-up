@@ -144,3 +144,5 @@ select,input:not([type=checkbox]),textarea{min-height:44px}
 .account-menu{display:flex;flex-wrap:wrap;gap:.5rem;width:100%;justify-content:flex-end}.account-menu[hidden]{display:none}#encouragement-panel{border-top:1px solid #54717c;padding-top:1rem}#encouragement-panel h3{font-size:1.4rem}#encouragement-panel button{min-height:44px}@media(max-width:40rem){.account-menu{justify-content:flex-start}}
 
 .join-card[hidden]{display:none}
+
+.received-event{padding:1rem 0;border-bottom:1px solid #54717c;overflow-wrap:anywhere}.received-event h4{font-size:1.2rem;margin:0 0 .5rem}.received-event time{font: .875rem/1.5 system-ui,sans-serif}.received-event summary{min-height:44px;padding:.75rem 0}

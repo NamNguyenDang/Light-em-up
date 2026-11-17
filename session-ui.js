@@ -35,8 +35,12 @@
     onChange:renderSession
   });
   globalThis.LightEmUpSession=Object.freeze({
+    receivedEncouragement(owner,offset){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.receivedEncouragement(offset);},
+    readEncouragement(owner,event){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.readEncouragement(event);},
     sentEncouragement(owner){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.sentEncouragement(owner);},
     sendEncouragement(owner,story){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.sendEncouragement(owner,story);},
+    receivedEncouragement(owner,offset){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.receivedEncouragement(offset);},
+    readEncouragement(owner,event){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.readEncouragement(event);},
     sentEncouragement(owner){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.sentEncouragement(owner);},
     encourage(owner,storyId){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.encourage(owner,storyId);},
     publicStories(){return repository?repository.publicStories():Promise.resolve([]);},
