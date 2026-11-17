@@ -142,3 +142,5 @@ select,input:not([type=checkbox]),textarea{min-height:44px}
 .own-story-feedback p:empty{margin:0}.own-story-feedback p{font:1rem/1.5 system-ui,sans-serif}#own-story-retry{min-height:44px}
 
 .account-menu{display:flex;flex-wrap:wrap;gap:.5rem;width:100%;justify-content:flex-end}.account-menu[hidden]{display:none}#encouragement-panel{border-top:1px solid #54717c;padding-top:1rem}#encouragement-panel h3{font-size:1.4rem}#encouragement-panel button{min-height:44px}@media(max-width:40rem){.account-menu{justify-content:flex-start}}
+
+.join-card[hidden]{display:none}

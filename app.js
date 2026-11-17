@@ -39,6 +39,7 @@ function render(){
   if(focusKey){const next=[...document.querySelectorAll('[data-focus-key]')].find(n=>n.getAttribute('data-focus-key')===focusKey);if(next&&!next.disabled)next.focus();else $('#stories-title').focus();}
 }
 function renderFeaturedStory(){
+  $('#join-card').hidden=accountStoryMode&&!!state.profile;$('#login').hidden=accountStoryMode;
   if(accountStoryMode&&!state.profile){const card=$('#featured-story');card.replaceChildren(el('p','Your account story appears here after you add a candle.'));return;}
   const p=state.profile||samples.find(p=>p.nickname==='North star')||samples[1];
   const card=$('#featured-story');card.replaceChildren();
