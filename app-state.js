@@ -5,7 +5,7 @@
 // verified sessions and the backend must independently authorize every request.
 const ApplicationState=(()=>{
   const views=['community','dashboard','signIn'];
-  const dialogs=['profile','info','cluster'];
+  const dialogs=['profile','info','cluster','encouragement'];
   const authTransitions={
     signedOut:['checking','signingIn'],
     checking:['signedIn','signedOut','checkFailed'],

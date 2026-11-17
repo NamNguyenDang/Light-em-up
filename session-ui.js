@@ -42,7 +42,7 @@
     receivedEncouragement(owner,offset){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.receivedEncouragement(offset);},
     readEncouragement(owner,event){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.readEncouragement(event);},
     sentEncouragement(owner){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.sentEncouragement(owner);},
-    encourage(owner,storyId){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.encourage(owner,storyId);},
+    encourage(owner,storyId,message){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.encourage(owner,storyId,message);},
     publicStories(){return repository?repository.publicStories():Promise.resolve([]);},
     async signOut(){if(!sdk)throw new Error('No account client');const result=await sdk.auth.signOut({scope:'local'});if(result.error)throw result.error;},
     loadStory(owner){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.load(owner);},
