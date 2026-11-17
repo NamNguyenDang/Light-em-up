@@ -5,10 +5,14 @@ const StoryRepository=(()=>{
  function create(client,{timeoutMs=10000}={}){
   async function request(query){const abort=new AbortController(),timer=setTimeout(()=>abort.abort(),timeoutMs);try{const {data,error}=await query.abortSignal(abort.signal);if(error)throw error;return data;}finally{clearTimeout(timer);}}
   return Object.freeze({
+   async reportEncouragement(event,reason){return await request(client.rpc('report_encouragement',{event,report_reason:reason}));},
+   async blockSender(event){return await request(client.rpc('block_encouragement_sender',{event}));},
    async receivedEncouragement(offset){return await request(client.rpc('received_encouragement',{page_offset:offset}));},
    async readEncouragement(event){return await request(client.rpc('read_encouragement',{event}));},
    async sentEncouragement(owner){return await request(client.from('encouragements').select('story_id').eq('sender_id',owner));},
    async sendEncouragement(owner,story){return await request(client.from('encouragements').insert({sender_id:owner,story_id:story}).select('story_id'));},
+   async reportEncouragement(event,reason){return await request(client.rpc('report_encouragement',{event,report_reason:reason}));},
+   async blockSender(event){return await request(client.rpc('block_encouragement_sender',{event}));},
    async receivedEncouragement(offset){return await request(client.rpc('received_encouragement',{page_offset:offset}));},
    async readEncouragement(event){return await request(client.rpc('read_encouragement',{event}));},
    async sentEncouragement(owner){return await request(client.from('encouragements').select('story_id').eq('sender_id',owner).limit(1000));},

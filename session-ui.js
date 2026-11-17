@@ -35,10 +35,14 @@
     onChange:renderSession
   });
   globalThis.LightEmUpSession=Object.freeze({
+    reportEncouragement(owner,event,reason){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.reportEncouragement(event,reason);},
+    blockSender(owner,event){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.blockSender(event);},
     receivedEncouragement(owner,offset){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.receivedEncouragement(offset);},
     readEncouragement(owner,event){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.readEncouragement(event);},
     sentEncouragement(owner){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.sentEncouragement(owner);},
     sendEncouragement(owner,story){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.sendEncouragement(owner,story);},
+    reportEncouragement(owner,event,reason){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.reportEncouragement(event,reason);},
+    blockSender(owner,event){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.blockSender(event);},
     receivedEncouragement(owner,offset){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.receivedEncouragement(offset);},
     readEncouragement(owner,event){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.readEncouragement(event);},
     sentEncouragement(owner){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.sentEncouragement(owner);},

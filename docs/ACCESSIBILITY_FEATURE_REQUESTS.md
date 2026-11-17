@@ -17,7 +17,7 @@ Target: WCAG 2.2 AA. Implementation and validation status are separate. No confo
 
 FR-10 is a product presentation request, not an independent WCAG success criterion. Sizes above scale through rem units with user preferences.
 
-Automated evidence for the combined series: https://github.com/NamNguyenDang/Light-em-up/actions/runs/43876862850. FR-05 reached main. FR-06–10 were merged into their predecessor branches; a correction PR targets main and preserves the original feature commits.
+Automated evidence for the combined series: https://github.com/NamNguyenDang/Light-em-up/actions/runs/43876862850. FR-05 reached main. FR-06–10 were merged into their predecessor branches; integration PR #10 brought the series to main while preserving its feature commits.
 
 ## Application backlog
 
@@ -25,19 +25,24 @@ Each FR targets main through a separate PR and receives a WCAG 2.2 AA cross-chec
 
 | ID | Request | Acceptance criteria / remaining work | Status |
 |---|---|---|---|
-| FR-11 | Application state | Independent navigation, authentication and story states. | Merged PR #11. |
-| FR-12 | Restore session | Verify restored identity, expose checking/failure/retry. | Merged PR #12; public provider configuration/live checks pending. |
-| FR-13 | Sign in | Accessible email/password and optional Google, safe return navigation. | Merged PR #13; live-provider checks pending. |
-| FR-14 | Add candle entry | Verified users enter editor; visitors sign in then return once; preserve public browsing context. | Merged PR #14. |
-| FR-15 | Story editor | Empty/prefilled fields, required validation, saving feedback, duplicate prevention, unsaved discard warning. | Implemented in this feature; see FR-15_STORY_EDITOR.md for evidence and limits. |
-| FR-16 | Own-story panel | Show own story next to map; refresh immediately after saving. | Backlog; local-demo panel exists, account-aware integration remains. |
-| FR-17 | Save recovery | Keep drafts on failed saves or expired sessions; reauthenticate and retry. | Backlog; in-dialog failed-write retention starts in FR-15. |
-| FR-18 | Sign out | End session, clear private local data, return to public landing; published story remains. | Backlog. |
-| FR-19 | Ownership enforcement | Backend validates identity and authorizes owner-only story writes. | Backlog; requires deployed backend configuration. |
-| FR-20 | Flow regressions | Cover auth/story state transitions and accessibility in complete journeys. | Backlog; incremental tests accompany each FR. |
-| FR-21 | Account menu | Nickname replaces Log in; My story, encouragement and sign out actions. | Backlog; verified nickname display already exists. |
-| FR-22 | Adaptive welcome | Hide invitation/Add controls for users with a story; one clear edit action. | Backlog. |
-| FR-23 | I'm with you | One reaction per story/account, no self-reaction, retry on failure. | Backlog; existing reactions are local demos. |
-| FR-24 | Received encouragement | Count/list newest first, sender/time, read state, open attached message. | Backlog. |
-| FR-25 | Encouragement message | Optional message sent with encouragement and readable by recipient. | Backlog. |
-| FR-26 | Unwanted senders | Report/block unwanted encouragement senders. | Backlog. |
+| FR-11 | Application state | Independent navigation/authentication/story states. | Merged PR #11. |
+| FR-12 | Restore session | Verified session, checking/failure/retry. | Merged PR #12; live configuration/verification pending. |
+| FR-13 | Sign in | Email/password, optional Google, safe return. | Merged PR #13; live provider verification pending. |
+| FR-14 | Add candle entry | Sign in then open editor once; preserve browsing context. | Merged PR #14. |
+| FR-15 | Story editor | Prefill/validation/saving/discard guards. | Merged PR #15. |
+| FR-16 | Own-story panel | Account-scoped load/save beside map. | Merged PR #16. |
+| FR-17 | Save recovery | Account-bound draft, failed/expired-session retry. | Merged PR #17. |
+| FR-18 | Sign out | Clear private browser data, leave published story. | Merged PR #18. |
+| FR-19 | Ownership enforcement | Owner-only RLS, public projection, constraints and SQL tests. | Merged PR #19; migrations need deployment. |
+| FR-20 | Flow regressions | Complete browser/state/SQL matrix. | Merged PR #20; manual AT/real zoom/provider checks pending. |
+| FR-21 | Account menu | Nickname disclosure: My story, Encouragement, Sign out. | Merged PR #21. |
+| FR-22 | Adaptive welcome | Existing story replaces invitation; one edit action. | Merged PR #22. |
+| FR-23 | I'm with you | Account deduplication, no self, retry and SQL enforcement. | Merged PR #23. |
+| FR-24 | Received encouragement | Sender/time, newest first, count/unread, pagination/read state. | Merged PR #24. |
+| FR-25 | Encouragement message | Optional 600-character message, composer, recipient plain-text reading. | Merged PR #25. |
+| FR-26 | Unwanted senders | Recipient-only report/block, retry, blocked-history/new-send rules. | Implemented in this feature; final evidence recorded in PR #26. |
+| FR-27 | Lessons and standards audit | `leason_learn` folder: delivery history, WCAG evidence/gaps, BFF assessment and current website/SaaS UX guidance. | Next separate FR. |
+
+Implementation is complete through FR-26 after these separate PRs merge. Live service activation is a separate setup step: apply the five numbered SQL migrations, configure public Supabase URL/publishable key and auth redirects, then run real-account tests. No live project was provisioned or modified. Browser SDK fixtures and PostgreSQL claim fixtures test implementation, not live deployment.
+
+The pre-existing presentation/accessibility series reached main through integration PR #10; the older branch-stacking correction above is historical. Manual screen-reader/real zoom checks remain open across the series; no full WCAG conformance claim is made.

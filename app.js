@@ -39,6 +39,7 @@ function render(){
   if(focusKey){const next=[...document.querySelectorAll('[data-focus-key]')].find(n=>n.getAttribute('data-focus-key')===focusKey);if(next&&!next.disabled)next.focus();else $('#stories-title').focus();}
 }
 function renderFeaturedStory(){
+  $('#profile-scope-note').textContent=accountStoryMode?'Account story. Your saved changes are stored online.':'Local demo profile. Do not enter sensitive personal information.';$('#profile-visibility-label').textContent=accountStoryMode?'Show my candle and story in the community':'Show my candle and story in this local demo';$('#story-storage-note').textContent=accountStoryMode?'Your account story is stored online. The list also includes labelled samples.':'Browser-demo additions stay on this browser. Online community stories may appear alongside labelled samples.';
   $('#join-card').hidden=accountStoryMode&&!!state.profile;$('#login').hidden=accountStoryMode;
   if(accountStoryMode&&!state.profile){const card=$('#featured-story');card.replaceChildren(el('p','Your account story appears here after you add a candle.'));return;}
   const p=state.profile||samples.find(p=>p.nickname==='North star')||samples[1];
