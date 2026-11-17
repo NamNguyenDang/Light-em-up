@@ -1,6 +1,10 @@
 'use strict';
 // FR-12: the SDK owns credentials; consumers receive a minimal verified identity.
 const SessionRestoration=(()=>{
+  function configurationStatus(config={}){
+    if(!config.url&&!config.publishableKey)return 'missing';
+    try{const url=new URL(config.url);return url.protocol==='https:'&&!url.username&&!url.password&&url.pathname==='/'&&!url.search&&!url.hash&&typeof config.publishableKey==='string'&&/^sb_publishable_[A-Za-z0-9_-]+$/.test(config.publishableKey)?'ready':'invalid';}catch{return 'invalid';}
+  }
   function create({config={},clientFactory,onChange=()=>{},timeoutMs=10000}={}){
     let client=null,subscription=null,generation=0,stopped=false,scheduled=null;
     let current=Object.freeze({status:'notConfigured',user:null,reason:null,canRetry:false});
@@ -10,9 +14,6 @@ const SessionRestoration=(()=>{
     }
     function invalidSession(error){
       return error?.name==='AuthSessionMissingError'||[401,403].includes(error?.status)||['refresh_token_not_found','refresh_token_already_used','session_not_found','session_expired','bad_jwt'].includes(error?.code);
-    }
-    function validConfig(){
-      try{const url=new URL(config.url);return url.protocol==='https:'&&!url.username&&!url.password&&url.pathname==='/'&&!url.search&&!url.hash&&typeof config.publishableKey==='string'&&/^sb_publishable_[A-Za-z0-9_-]+$/.test(config.publishableKey);}catch{return false;}
     }
     function listen(){
       const result=client.auth.onAuthStateChange((event)=>{
@@ -41,14 +42,14 @@ const SessionRestoration=(()=>{
     async function check(){
       if(stopped)return current;
       const request=++generation;
-      if(!config.url&&!config.publishableKey)return publish('notConfigured');
+      if(configurationStatus(config)==='missing')return publish('notConfigured');
       publish('checking');
-      if(!validConfig())return publish('checkFailed',null,'configuration',false);
+      if(configurationStatus(config)!=='ready')return publish('checkFailed',null,'configuration',false);
       let timer;
       try{
         if(!client){
           if(typeof clientFactory!=='function')throw new Error('Auth client unavailable');
-          client=clientFactory(config.url,config.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+          client=clientFactory(config.url,config.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}});
           listen();
         }
         const user=await Promise.race([verify(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('Session check timed out')),timeoutMs);})]);
@@ -62,6 +63,6 @@ const SessionRestoration=(()=>{
     function stop(){stopped=true;generation++;clearTimeout(scheduled);subscription?.unsubscribe();}
     return Object.freeze({start:check,retry:check,stop,snapshot});
   }
-  return Object.freeze({create});
+  return Object.freeze({create,configurationStatus});
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=SessionRestoration;
