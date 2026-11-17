@@ -21,4 +21,23 @@ Automated evidence for the combined series: https://github.com/NamNguyenDang/Lig
 
 ## Application backlog
 
-FR-11 is implemented on its own feature branch; see [application state specification and WCAG cross-check](FR-11_APPLICATION_STATE.md). FR-12–26 remain in the confirmed backlog pending their individual implementations.
+Each FR targets main through a separate PR and receives a WCAG 2.2 AA cross-check before that PR is opened. Merge authorization applies only to this repository. Automated checks and manual conformance verification remain separate.
+
+| ID | Request | Acceptance criteria / remaining work | Status |
+|---|---|---|---|
+| FR-11 | Application state | Independent navigation, authentication and story states. | Merged PR #11. |
+| FR-12 | Restore session | Verify restored identity, expose checking/failure/retry. | Merged PR #12; public provider configuration/live checks pending. |
+| FR-13 | Sign in | Accessible email/password and optional Google, safe return navigation. | Merged PR #13; live-provider checks pending. |
+| FR-14 | Add candle entry | Verified users enter editor; visitors sign in then return once; preserve public browsing context. | Merged PR #14. |
+| FR-15 | Story editor | Empty/prefilled fields, required validation, saving feedback, duplicate prevention, unsaved discard warning. | Implemented in this feature; see FR-15_STORY_EDITOR.md for evidence and limits. |
+| FR-16 | Own-story panel | Show own story next to map; refresh immediately after saving. | Backlog; local-demo panel exists, account-aware integration remains. |
+| FR-17 | Save recovery | Keep drafts on failed saves or expired sessions; reauthenticate and retry. | Backlog; in-dialog failed-write retention starts in FR-15. |
+| FR-18 | Sign out | End session, clear private local data, return to public landing; published story remains. | Backlog. |
+| FR-19 | Ownership enforcement | Backend validates identity and authorizes owner-only story writes. | Backlog; requires deployed backend configuration. |
+| FR-20 | Flow regressions | Cover auth/story state transitions and accessibility in complete journeys. | Backlog; incremental tests accompany each FR. |
+| FR-21 | Account menu | Nickname replaces Log in; My story, encouragement and sign out actions. | Backlog; verified nickname display already exists. |
+| FR-22 | Adaptive welcome | Hide invitation/Add controls for users with a story; one clear edit action. | Backlog. |
+| FR-23 | I'm with you | One reaction per story/account, no self-reaction, retry on failure. | Backlog; existing reactions are local demos. |
+| FR-24 | Received encouragement | Count/list newest first, sender/time, read state, open attached message. | Backlog. |
+| FR-25 | Encouragement message | Optional message sent with encouragement and readable by recipient. | Backlog. |
+| FR-26 | Unwanted senders | Report/block unwanted encouragement senders. | Backlog. |

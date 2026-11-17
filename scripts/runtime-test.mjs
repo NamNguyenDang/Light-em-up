@@ -155,3 +155,25 @@ assert.equal(b.run('applicationState.story.status'),'saved');assert.equal(b.run(
 b.nodes.rules.onclick();assert.equal(b.run('applicationState.navigation.dialog'),'info');b.nodes['info-dialog'].events.close();assert.equal(b.run('applicationState.navigation.dialog'),null);
 b.nodes.reset.onclick();assert.equal(b.run('applicationState.story.status'),'none');
 console.log('PASS: FR-11 editor/save/info/reset handlers update UI state independently of authentication.');
+
+// FR-15: prefilled/empty drafts, discard protection and in-flight save guards.
+b=boot();b.nodes.join.onclick();
+assert.equal(b.run('profileHasChanges()'),false);
+const draftForm=b.nodes['profile-form'];const originalNickname=draftForm.elements.nickname.value;
+draftForm.elements.nickname.value='Unsaved draft';assert.equal(b.run('profileHasChanges()'),true);
+b.context.confirm=()=>false;b.run('requestProfileClose()');assert(b.nodes['profile-dialog'].open);assert.equal(draftForm.elements.nickname.value,'Unsaved draft');
+let unloadPrevented=false;b.windowEvents.beforeunload({preventDefault(){unloadPrevented=true;}});assert(unloadPrevented);
+b.context.confirm=()=>true;b.run('requestProfileClose()');assert.equal(b.nodes['profile-dialog'].open,false);
+// The fake DOM close method does not dispatch the browser's native close event.
+b.run("dispatchApplication({type:'CLOSE_DIALOG',dialog:'profile'})");b.nodes.join.onclick();assert.equal(draftForm.elements.nickname.value,originalNickname);
+draftForm.elements.nickname.value='Retry draft';
+const previousProfile=b.run('JSON.stringify(state.profile)');
+b.run('globalThis.originalPersist=persist;persist=()=>{throw new Error("fixture failure")};');draftForm.onsubmit({preventDefault(){}});
+assert.equal(b.run('applicationState.story.status'),'saveFailed');assert.equal(b.run('JSON.stringify(state.profile)'),previousProfile);assert.equal(draftForm.elements.nickname.value,'Retry draft');assert(b.nodes['profile-dialog'].open);assert.match(b.nodes['form-error'].textContent,/try again/);
+b.run('globalThis.writes=0;persist=()=>{writes++;return new Promise(resolve=>globalThis.finishSave=resolve)}');
+const saving=draftForm.onsubmit({preventDefault(){}});assert.equal(b.run('applicationState.story.status'),'saving');assert(draftForm.elements.nickname.disabled);assert(b.nodes['save-profile'].disabled);assert.match(b.nodes['profile-save-status'].textContent,/Saving/);
+draftForm.onsubmit({preventDefault(){}});assert.equal(b.run('writes'),1);assert.equal(b.run('requestProfileClose()'),false);
+b.run('finishSave(true)');await saving;
+assert.equal(b.run('applicationState.story.status'),'saved');assert.equal(b.nodes['profile-dialog'].open,false);assert.equal(draftForm.elements.nickname.disabled,false);assert.equal(b.run('state.profile.nickname'),'Retry draft');
+b.run('persist=originalPersist');
+console.log('PASS: FR-15 prefilled drafts, dirty detection, discard cancel/accept, unload guard, failed-save rollback/draft retention, saving status, duplicate-submit/close guard and retry success.');

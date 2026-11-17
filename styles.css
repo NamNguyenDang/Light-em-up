@@ -136,3 +136,5 @@ select,input:not([type=checkbox]),textarea{min-height:44px}
 .welcome-panel blockquote{font-size:1.25rem;line-height:1.5}
 @media(max-width:60rem){.layout{grid-template-columns:minmax(0,1fr)}.welcome-panel{max-width:30rem}.intro h1{max-width:24ch}}
 @media(max-width:30rem){.welcome-panel{padding:1.25rem 1rem}.join-card h2{font-size:1.75rem}.intro{padding-block:1.5rem}.intro h1{font-size:2rem}}
+
+#profile-save-status:empty{margin:0}

@@ -72,6 +72,25 @@ try{
   await page.reload();assert.equal(await page.locator('#featured-story h3').textContent(),'Accessibility test');
   await page.locator('#next-page').click();assert(await page.locator('#stories-title').evaluate(n=>n===document.activeElement));
   await page.locator('#edit-my-story').click();page.once('dialog',d=>d.accept());await page.locator('#delete-profile').click();assert(await page.locator('#join').evaluate(n=>n===document.activeElement));
+  // FR-15: native keyboard discard confirmation and real saving/error output.
+  await page.locator('#login').click();
+  await page.locator('[name=nickname]').fill('Unsaved candle');
+  page.once('dialog',d=>d.dismiss());await page.keyboard.press('Escape');
+  assert(await page.locator('#profile-dialog').isVisible());assert.equal(await page.locator('[name=nickname]').inputValue(),'Unsaved candle');
+  page.once('dialog',d=>d.accept());await page.getByRole('button',{name:'Close',exact:true}).click();
+  await page.locator('#profile-dialog').waitFor({state:'hidden'});
+  await page.locator('#login').click();assert.equal(await page.locator('[name=nickname]').inputValue(),'');
+  await page.locator('[name=nickname]').fill('Save retry candle');await page.locator('[name=city]').fill('Kiruna');
+  await page.evaluate(()=>{globalThis.testPersist=persist;globalThis.testWrites=0;persist=()=>{testWrites++;return new Promise((resolve,reject)=>{globalThis.resolveSave=resolve;globalThis.rejectSave=reject;});};});
+  await page.locator('#save-profile').click();
+  assert.equal(await page.locator('body').getAttribute('data-story-state'),'saving');assert(await page.locator('#save-profile').isDisabled());assert(await page.locator('[name=nickname]').isDisabled());
+  await page.locator('#profile-save-status').scrollIntoViewIfNeeded();await scan('editor-saving');await page.screenshot({path:path.join(root,'test-results/editor-saving.png'),fullPage:true});
+  await page.evaluate(()=>{document.querySelector('#profile-form').dispatchEvent(new Event('submit',{cancelable:true}));});assert.equal(await page.evaluate(()=>testWrites),1);
+  await page.keyboard.press('Escape');assert(await page.locator('#profile-dialog').isVisible());
+  await page.evaluate(()=>rejectSave(new Error('fixture failure')));
+  await page.waitForFunction(()=>document.body.getAttribute('data-story-state')==='saveFailed');assert.equal(await page.locator('[name=nickname]').inputValue(),'Save retry candle');assert(await page.locator('#save-profile').evaluate(n=>n===document.activeElement));await scan('editor-save-failed');
+  await page.screenshot({path:path.join(root,'test-results/editor-save-failed.png'),fullPage:true});
+  await page.evaluate(()=>{persist=testPersist;});await page.locator('#save-profile').click();await page.locator('#profile-dialog').waitFor({state:'hidden'});assert.equal(await page.locator('#featured-story h3').textContent(),'Save retry candle');
   // Approximation only: manual browser text-only resize remains required.
   await open();await page.evaluate(()=>{for(const n of document.querySelectorAll('body *:not(svg):not(svg *)')){if([...n.childNodes].some(c=>c.nodeType===3&&c.textContent.trim()))n.style.fontSize=`${parseFloat(getComputedStyle(n).fontSize)*2}px`;}});await noOverflow();await page.screenshot({path:path.join(root,'test-results/text-200-percent.png'),fullPage:true});
   await open();await page.addStyleTag({content:'* {line-height:1.5!important;letter-spacing:.12em!important;word-spacing:.16em!important} p {margin-bottom:2em!important}'});await noOverflow();await page.screenshot({path:path.join(root,'test-results/text-spacing.png'),fullPage:true});
