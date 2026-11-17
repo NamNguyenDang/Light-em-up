@@ -35,6 +35,7 @@
     onChange:renderSession
   });
   globalThis.LightEmUpSession=Object.freeze({
+    publicStories(){return repository?repository.publicStories():Promise.resolve([]);},
     async signOut(){if(!sdk)throw new Error('No account client');const result=await sdk.auth.signOut({scope:'local'});if(result.error)throw result.error;},
     loadStory(owner){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.load(owner);},
     saveStory(owner,story){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.save(owner,story);},

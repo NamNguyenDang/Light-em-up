@@ -23,6 +23,7 @@ try{
   const request=r.request(),u=new URL(request.url()),method=request.method();if(method==='OPTIONS'){await r.fulfill({headers,json:{}});return;}
   if(u.pathname.endsWith('/logout')){await r.fulfill({headers,status:204,body:''});return;}
   if(u.pathname.endsWith('/user')){await r.fulfill({headers,json:user});return;}
+  if(u.pathname==='/rest/v1/public_stories'){await r.fulfill({headers,json:[]});return;}
   if(u.pathname==='/rest/v1/stories'){
    if(method==='GET'){assert.equal(u.searchParams.get('owner_id'),'eq.'+owner);await r.fulfill({headers,json:own?[own]:[]});return;}
    writes++;if(failSave||expireSave){await r.fulfill({headers,status:expireSave?401:503,json:{code:expireSave?'PGRST301':'fixture_failure',message:'Fixture failure'}});return;}
