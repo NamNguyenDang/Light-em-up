@@ -22,4 +22,4 @@ Each feature is checked before its PR. CI runs dependency-free state/data/HTML t
 
 NVDA with Firefox or VoiceOver with Safari; focus and announcements through complete flows; real 200% text-only resize/400% zoom; password manager and real provider authentication; deploy migrations in a test project and exercise real JWTs from two accounts. These remain explicit gaps, not full WCAG conformance claims. Target remains WCAG 2.2 AA: https://www.w3.org/TR/WCAG22/.
 
-Future encouragement/menu/moderation FRs extend this matrix with their own tests.
+FR-21–26 extend account-browser-test with nickname disclosure, adaptive invitation, real-story encouragement failure/retry, received counts/read state, private plain-text messages, composer and report/block cancel/confirm. SQL tests additionally cover unique/self/spoof/hidden/blocked send rules, recipient-only inbox/read/report/block and private safety-record isolation. Each PR records its exact-head pre-PR run.

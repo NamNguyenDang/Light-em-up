@@ -2,7 +2,7 @@
 
 ## Goal and scope
 
-Help people in Sweden feel less alone during a job search. This delivery is an offline, single-browser prototype. It validates the community experience before online identity, moderation and analytics infrastructure are introduced.
+Help people in Sweden feel less alone during a job search. The offline browser demo remains available. Optional Supabase-backed account stories, encouragement/messages and report/block controls are implemented; deployment requires the numbered migrations and public auth configuration. Analytics and active moderation staffing are outside this delivery.
 
 | ID | Component / feature | Offline behavior | Online follow-up |
 |---|---|---|---|
@@ -28,8 +28,8 @@ Help people in Sweden feel less alone during a job search. This delivery is an o
 - A hidden profile is excluded from public totals.
 - Found-work milestones are self-reported and include labeled samples in this demo.
 - No signup required for reading; local profile required to send encouragement.
-- No open comments, private messaging, leaderboards or automatic announcements.
-- Demo reports are never described as submitted to moderators.
+- No open comments, unrestricted private chat, leaderboards or automatic announcements. Optional private text can accompany a single encouragement event.
+- Sample-story reports remain labelled local demos. Received-event reports are stored for project-owner database review, without automatic notification or a staffed moderation promise.
 
 ## Acceptance journey
 
