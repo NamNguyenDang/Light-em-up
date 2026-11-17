@@ -177,7 +177,7 @@ $('#next-page').onclick=()=>{storyPage++;render();$('#stories-title').focus();$(
 let resizeTimer;
 window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>renderMap(entries()),120);});
 
-for(const name of ['profile','info','cluster'])document.getElementById(name+'-dialog').addEventListener('close',()=>dispatchApplication({type:'CLOSE_DIALOG',dialog:name}));
+for(const name of ['profile','info','cluster','encouragement'])document.getElementById(name+'-dialog').addEventListener('close',()=>dispatchApplication({type:'CLOSE_DIALOG',dialog:name}));
 dispatchApplication({type:'NAVIGATE',view:'community'});
 persist();render();if(!storageOK)notify('Browser storage is unavailable. This demo will work for this session only.');
 

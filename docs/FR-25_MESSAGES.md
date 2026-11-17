@@ -1,0 +1,5 @@
+# FR-25 — Optional encouragement messages
+
+I'm with you opens a named native composer. Send an empty candle or up to 600 characters of optional encouragement. Failed sends keep the text; retry cannot duplicate the event. Cancellation/Escape confirms discard when text exists. Recipients expand the inbox event to read plain text and mark it read; messages never appear in the public story projection. No HTML rendering, email, push notification or paid service is required.
+
+Database length checks and recipient-scoped RPC protect messages. Existing duplicate keys do not replace a previously sent message. Before PR run SQL recipient-isolation/message tests and actual-SDK send failure/retry, plain-text rendering, read state and composer axe/keyboard tests. WCAG 2.2 AA: named dialog/label and optional instruction (1.3.1/4.1.2), focus/Escape/return (2.1.1/2.4.3), live feedback/errors/draft preservation (3.3.1/3.3.3/4.1.3), 320px reflow. Manual AT/live deployment checks pending. https://www.w3.org/TR/WCAG22/
