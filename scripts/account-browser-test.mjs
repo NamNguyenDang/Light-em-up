@@ -21,6 +21,7 @@ try{
  await page.route('**/supabase-config.js',r=>r.fulfill({contentType:'text/javascript',body:"globalThis.LIGHT_EM_UP_AUTH={url:'https://account-test.supabase.co',publishableKey:'sb_publishable_fixture'};"}));
  await page.route('https://account-test.supabase.co/**',async r=>{
   const request=r.request(),u=new URL(request.url()),method=request.method();if(method==='OPTIONS'){await r.fulfill({headers,json:{}});return;}
+  if(u.pathname.endsWith('/logout')){await r.fulfill({headers,status:204,body:''});return;}
   if(u.pathname.endsWith('/user')){await r.fulfill({headers,json:user});return;}
   if(u.pathname==='/rest/v1/stories'){
    if(method==='GET'){assert.equal(u.searchParams.get('owner_id'),'eq.'+owner);await r.fulfill({headers,json:own?[own]:[]});return;}
@@ -41,5 +42,6 @@ try{
  page.once('dialog',d=>d.accept());await page.reload();await page.locator('#edit-my-story').click();assert.equal(await page.locator('[name=message]').inputValue(),'Keep this draft');await page.locator('#save-profile').click();await page.locator('#profile-dialog').waitFor({state:'hidden'});assert.equal(await page.evaluate(()=>sessionStorage.getItem('light-em-up-private-draft')),null);
  await page.addScriptTag({path:require.resolve('axe-core/axe.min.js')});const axe=await page.evaluate(()=>window.axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}}));await fs.writeFile(path.join(root,'test-results/axe-account-story.json'),JSON.stringify(axe,null,2));assert.equal(axe.violations.length,0);
  await page.screenshot({path:path.join(root,'test-results/account-story.png'),fullPage:true});
+ const published=JSON.stringify(own);await page.locator('#signout').click();await page.waitForFunction(()=>document.body.dataset.sessionState==='signedOut');assert.equal(await page.locator('#header-login').textContent(),'Log in');assert.equal(await page.evaluate(()=>sessionStorage.getItem('light-em-up-private-draft')),null);assert.equal(await page.evaluate(()=>localStorage.getItem('light-em-up-v1')),null);assert.equal(JSON.stringify(own),published);assert(await page.locator('#header-login').evaluate(n=>n===document.activeElement));
  assert.deepEqual(errors,[]);console.log('PASS FR-16: actual-SDK owner query, account/local separation, prefill, immediate server-save card/map update, filter independence and axe account output.');
 }finally{await browser?.close();await new Promise(r=>server.close(r));}

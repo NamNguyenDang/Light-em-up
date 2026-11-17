@@ -213,3 +213,10 @@ function restoreBrowsingContext(value){
  $('#city-search').value=typeof value.query==='string'?value.query.slice(0,120):'';
  render();
 }
+
+function clearPrivateLocalData(){
+  editorGeneration++;setProfileSaving(false);$('#profile-dialog').close();form.reset();clearProfileErrors();
+  globalThis.LightEmUpAccount?.draft.clear();localDemoProfile=null;state={profile:null,reactions:[],reports:[],opens:state.opens};
+  try{localStorage.removeItem(KEY);sessionStorage.removeItem('light-em-up-candle-context');sessionStorage.removeItem('light-em-up-signin-focus');}catch{}
+  dispatchApplication({type:'LOCAL_STORY_CLEARED'});render();
+}
