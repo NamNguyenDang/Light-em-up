@@ -9,6 +9,8 @@ class Element{
  replaceChildren(...nodes){this.children=[...nodes];}
  setAttribute(key,value){this.attributes[key]=value;}
  addEventListener(key,fn){this.events[key]=fn;}
+ getAttribute(key){return this.attributes[key]??null;}
+ contains(n){return this===n||this.children.some(c=>c?.contains?.(n));}
  getBoundingClientRect(){return {width:388,height:600};}
  scrollIntoView(){} focus(){this.focused=true;} showModal(){this.open=true;} close(){this.open=false;}
 }
@@ -19,7 +21,8 @@ function boot(){
  for(const m of read('index.html').matchAll(/\bname="([^"]+)"/g))form.elements[m[1]]=new Element('input');
  form.reset=()=>{for(const input of Object.values(form.elements)){input.value='';input.checked=false;}form.elements.visible.checked=form.elements.lit.checked=true;};form.reset();
  const windowEvents={};
- const context=vm.createContext({document:{querySelector:s=>{assert(s.startsWith('#'));assert(nodes[s.slice(1)],s);return nodes[s.slice(1)];},querySelectorAll:()=>[],createElement:t=>new Element(t),createElementNS:(_,t)=>new Element(t),createTextNode:t=>({textContent:t}),getElementById:id=>nodes[id]},window:{addEventListener:(key,fn)=>windowEvents[key]=fn},localStorage:{getItem:k=>stored.get(k)||null,setItem:(k,v)=>stored.set(k,v)},setTimeout:()=>1,clearTimeout(){},confirm:()=>true});
+ const context=vm.createContext({document:{activeElement:null,body:new Element('body'),querySelector:s=>{assert(s.startsWith('#'));assert(nodes[s.slice(1)],s);return nodes[s.slice(1)];},querySelectorAll:s=>{const all=[];const walk=n=>{if(n&&typeof n==='object'){all.push(n);for(const c of n.children||[])walk(c);}};for(const n of Object.values(nodes))walk(n);return s==='[data-focus-key]'?all.filter(n=>n.attributes?.['data-focus-key']):s==='#stories details[open]'?all.filter(n=>n.tag==='details'&&n.open):s==='#stories details'?all.filter(n=>n.tag==='details'):[];},createElement:t=>new Element(t),createElementNS:(_,t)=>new Element(t),createTextNode:t=>({textContent:t}),getElementById:id=>{const find=n=>n?.id===id||n?.attributes?.id===id?n:(n?.children||[]).map(find).find(Boolean);return nodes[id]||Object.values(nodes).map(find).find(Boolean)||null;}},window:{addEventListener:(key,fn)=>windowEvents[key]=fn},localStorage:{getItem:k=>stored.get(k)||null,setItem:(k,v)=>stored.set(k,v)},setTimeout:()=>1,clearTimeout(){},confirm:()=>true});
+ Element.prototype.focus=function(){this.focused=true;context.document.activeElement=this;};
  for(const name of ['cities.js','provinces.js','demo-data.js','map-layout.js','app.js'])vm.runInContext(read(name),context,{filename:name});
  return {nodes,context,windowEvents,run:s=>vm.runInContext(s,context)};
 }
@@ -135,3 +138,11 @@ assert(b.nodes['featured-story'].children[1].children.some(n=>n.textContent==='O
 b=boot();assert.equal(featuredTitle(),'Updated story');
 b.nodes['delete-profile'].onclick();assert.equal(featuredTitle(),'North star');
 console.log('PASS: own-story card immediately after save, filter independence, edit, hidden-story privacy label, reload and sample fallback after deletion.');
+
+// FR-07/08: text alternative and focus survive updates.
+b=boot();assert.equal(b.nodes['map-data'].children[0].children[2].children.length,25);
+let cityButton=b.nodes.cities.children[0];cityButton.focus();cityButton.onclick();assert.equal(b.context.document.activeElement.attributes['data-focus-key'],cityButton.attributes['data-focus-key']);
+b.nodes['all-stories'].onclick();b.nodes['next-page'].focus();b.nodes['next-page'].onclick();assert.equal(b.context.document.activeElement,b.nodes['stories-title']);
+b.nodes.join.onclick();b.nodes['profile-form'].elements.nickname.value='Focus test';b.nodes['profile-form'].onsubmit({preventDefault(){}});assert.equal(b.context.document.activeElement.id,'edit-my-story');
+assert.match(b.nodes['community-status'].textContent,/stories/);
+console.log('PASS: FR-07 all-province text alternative; FR-08 city focus restoration, pagination heading focus, post-save fallback and results status.');
