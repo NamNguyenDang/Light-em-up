@@ -18,3 +18,7 @@ Target: WCAG 2.2 AA. Implementation and validation status are separate. No confo
 FR-10 is a product presentation request, not an independent WCAG success criterion. Sizes above scale through rem units with user preferences.
 
 Automated evidence for the combined series: https://github.com/NamNguyenDang/Light-em-up/actions/runs/43876862850. FR-05 reached main. FR-06–10 were merged into their predecessor branches; a correction PR targets main and preserves the original feature commits.
+
+## Application backlog
+
+FR-11 is implemented on its own feature branch; see [application state specification and WCAG cross-check](FR-11_APPLICATION_STATE.md). FR-12–26 remain in the confirmed backlog pending their individual implementations.

@@ -2,7 +2,7 @@
   "name": "light-em-up-accessibility-checks",
   "private": true,
   "scripts": {
-    "test": "node scripts/runtime-test.mjs && node scripts/light-level-test.mjs && node scripts/province-test.mjs && node scripts/verify.mjs && python3 scripts/layout-test.py && python3 scripts/dialog-accessibility-test.py",
+    "test": "node scripts/application-state-test.mjs && node scripts/runtime-test.mjs && node scripts/light-level-test.mjs && node scripts/province-test.mjs && node scripts/verify.mjs && python3 scripts/layout-test.py && python3 scripts/dialog-accessibility-test.py",
     "test:a11y": "node scripts/browser-accessibility-test.mjs"
   },
   "devDependencies": {

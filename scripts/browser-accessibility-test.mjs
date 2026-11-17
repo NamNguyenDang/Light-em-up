@@ -36,6 +36,29 @@ try{
   const headline=await page.locator('.intro h1').evaluate(n=>({height:n.getBoundingClientRect().height,lineHeight:parseFloat(getComputedStyle(n).lineHeight),style:getComputedStyle(n).fontStyle,weight:getComputedStyle(n).fontWeight}));
   assert(headline.height<=headline.lineHeight+1,'Desktop headline should occupy one line at 1280px');
   assert.equal(headline.style,'italic');assert.equal(headline.weight,'700');
+  // FR-11: modal navigation keeps the existing browsing context and focus.
+  assert.equal(await page.locator('body').getAttribute('data-auth-state'),'signedOut');
+  await page.locator('#province-select').selectOption('Skåne');
+  await page.locator('#next-page').click();
+  const provincePage=await page.locator('#page-status').textContent();
+  await page.locator('#join').click();
+  assert.equal(await page.locator('body').getAttribute('data-dialog-state'),'profile');
+  assert.equal(await page.locator('body').getAttribute('data-story-state'),'editing');
+  await page.keyboard.press('Escape');
+  await page.waitForFunction(()=>document.body.getAttribute('data-dialog-state')==='none');
+  assert.equal(await page.locator('#province-select').inputValue(),'Skåne');
+  assert.equal(await page.locator('#page-status').textContent(),provincePage);
+  assert(await page.locator('#join').evaluate(n=>n===document.activeElement));
+  await page.locator('#city-search').fill('Kiruna');await page.locator('#cities button').first().click();
+  const cityHeading=await page.locator('#stories-title').textContent();
+  await page.locator('#rules').click();
+  assert.equal(await page.locator('body').getAttribute('data-dialog-state'),'info');
+  await page.keyboard.press('Escape');
+  await page.waitForFunction(()=>document.body.getAttribute('data-dialog-state')==='none');
+  assert.equal(await page.locator('#city-search').inputValue(),'Kiruna');
+  assert.equal(await page.locator('#stories-title').textContent(),cityHeading);
+  assert(await page.locator('#rules').evaluate(n=>n===document.activeElement));
+  await page.locator('#all-stories').click();
   await scan('community');
   await page.locator('#map-data-details summary').click();assert.equal(await page.locator('#map-data tbody tr').count(),25);await scan('map-data');
   await page.locator('#map-data button').first().focus();await page.keyboard.press('Enter');assert(await page.locator('#map-data button').first().evaluate(n=>n===document.activeElement));
@@ -44,7 +67,7 @@ try{
   await area.dispatchEvent('mouseenter');await area.dispatchEvent('mouseleave');await page.locator('#province-tooltip').hover();assert(await page.locator('#province-tooltip').isVisible());
   await page.locator('#join').click();await scan('dialog');
   await page.getByRole('button',{name:'Save my light',exact:true}).click();assert.equal(await page.locator('[name=nickname]').getAttribute('aria-invalid'),'true');assert(await page.locator('[name=nickname]').evaluate(n=>n===document.activeElement));await scan('validation');
-  await page.locator('[name=nickname]').fill('Accessibility test');await page.locator('[name=city]').fill('Kiruna');await page.getByRole('button',{name:'Save my light',exact:true}).click();assert(await page.locator('#edit-my-story').evaluate(n=>n===document.activeElement));
+  await page.locator('[name=nickname]').fill('Accessibility test');await page.locator('[name=city]').fill('Kiruna');await page.getByRole('button',{name:'Save my light',exact:true}).click();assert(await page.locator('#edit-my-story').evaluate(n=>n===document.activeElement));assert.equal(await page.locator('body').getAttribute('data-story-state'),'saved');assert.equal(await page.locator('body').getAttribute('data-auth-state'),'signedOut');
   await page.reload();assert.equal(await page.locator('#featured-story h3').textContent(),'Accessibility test');
   await page.locator('#next-page').click();assert(await page.locator('#stories-title').evaluate(n=>n===document.activeElement));
   await page.locator('#edit-my-story').click();page.once('dialog',d=>d.accept());await page.locator('#delete-profile').click();assert(await page.locator('#join').evaluate(n=>n===document.activeElement));
