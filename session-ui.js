@@ -1,0 +1,39 @@
+'use strict';
+(()=>{
+  const feedback=document.getElementById('session-feedback');
+  const message=document.getElementById('session-status');
+  const retry=document.getElementById('session-retry');
+  const account=document.getElementById('header-login');
+  const originalLabel=account.textContent;
+  let retryAttempt=false;
+  function renderSession(value){
+    document.body.setAttribute('data-session-state',value.status);
+    // Optional FR-11 bridge: this feature also works before FR-11 is merged.
+    if(typeof dispatchApplication==='function'&&value.status!=='notConfigured'){
+      dispatchApplication({type:'AUTH_CHANGED',status:value.status,user:value.user});
+    }
+    feedback.hidden=value.status==='notConfigured';
+    retry.hidden=!(value.canRetry||(value.status==='checking'&&retryAttempt));
+    retry.disabled=value.status==='checking';
+    account.disabled=value.status==='checking';
+    account.textContent=value.status==='signedIn'?value.user.nickname:originalLabel;
+    const text={checking:'Checking your session…',signedOut:'You’re browsing as a visitor.',signedIn:value.user?`Welcome back, ${value.user.nickname}.`:'',checkFailed:'We couldn’t check your session. You can still browse the community.',notConfigured:''};
+    message.textContent=text[value.status];
+  }
+  const controller=SessionRestoration.create({
+    config:globalThis.LIGHT_EM_UP_AUTH||{},
+    clientFactory:globalThis.supabase?.createClient,
+    onChange:renderSession
+  });
+  retry.onclick=async()=>{
+    retryAttempt=true;
+    await controller.retry();
+    retryAttempt=false;
+    // Restore a visible focus target after the retry button disappears.
+    if(!retry.hidden){retry.focus();}else{account.focus();}
+  };
+  window.addEventListener('pagehide',()=>controller.stop(),{once:true});
+  // A page restored from the browser back-forward cache needs fresh listeners.
+  window.addEventListener('pageshow',event=>{if(event.persisted)location.reload();});
+  void controller.start();
+})();
