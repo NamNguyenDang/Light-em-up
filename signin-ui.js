@@ -23,7 +23,7 @@
    if(value.phase==='signedIn')password.value='';
  }
  const flow=SignInFlow.create({config:globalThis.LIGHT_EM_UP_AUTH||{},sessionModule:SessionRestoration,sdkFactory:globalThis.supabase?.createClient,href:location.href,storage,onChange:render,navigate:target=>location.replace(target)});
- cancel.href=flow.target;cancel.onclick=event=>{event.preventDefault();password.value='';flow.cancel();};
+ cancel.href=flow.cancelTarget;cancel.onclick=event=>{event.preventDefault();password.value='';flow.cancel();};
  form.onsubmit=async event=>{
    event.preventDefault();clearErrors();
    if(!email.value.trim()||email.validity.typeMismatch){email.setAttribute('aria-invalid','true');$('email-error').textContent='Enter a valid email address.';email.focus();return;}

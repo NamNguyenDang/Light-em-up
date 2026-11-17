@@ -6,7 +6,7 @@ const SignInFlow=(()=>{
     try{
       const target=new URL(requested||fallback.href,here);
       if(target.origin!==fallback.origin||![fallback.pathname,new URL('./',here).pathname].includes(target.pathname))return fallback.href;
-      const hashes=['','#community','#stories-title','#featured-story'];
+      const hashes=['','#community','#stories-title','#featured-story','#add-candle'];
       fallback.hash=hashes.includes(target.hash)?target.hash:'';
       return fallback.href;
     }catch{return fallback.href;}
@@ -17,6 +17,7 @@ const SignInFlow=(()=>{
     const returnKey='light-em-up-signin-return';
     let stored='';try{stored=storage?.getItem(returnKey)||'';}catch{}
     const target=returnTarget(href,stored);
+    const back=new URL(target);if(back.hash==='#add-candle')back.hash='';const cancelTarget=back.href;
     const currentURL=new URL(href);
     const callbackError=currentURL.searchParams.has('error')||new URLSearchParams(currentURL.hash.slice(1)).has('error');
     let state=Object.freeze({phase,message:'Checking your session…',error:null,user:null});
@@ -94,10 +95,10 @@ const SignInFlow=(()=>{
       if(stopped)return;
       stopped=true;sequence++;abort?.abort();restoration.stop();releaseWaiters();client?.auth.stopAutoRefresh?.();
       try{storage?.removeItem(returnKey);}catch{}
-      navigate(target);
+      navigate(cancelTarget);
     }
     function stop(){stopped=true;sequence++;abort?.abort();restoration.stop();releaseWaiters();client?.auth.stopAutoRefresh?.();}
-    return Object.freeze({start,retry:start,signIn,google,cancel,stop,snapshot:()=>state,target});
+    return Object.freeze({start,retry:start,signIn,google,cancel,stop,snapshot:()=>state,target,cancelTarget});
   }
   return Object.freeze({create,returnTarget});
 })();

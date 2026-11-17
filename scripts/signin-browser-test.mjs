@@ -14,7 +14,7 @@ try{
  const wait=phase=>page.waitForFunction(p=>document.body.getAttribute('data-signin-state')===p,phase);
  const scan=async label=>{await page.addScriptTag({path:require.resolve('axe-core/axe.min.js')});const result=await page.evaluate(()=>axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']}}));await fs.writeFile(path.join(root,`test-results/axe-signin-${label}.json`),JSON.stringify(result,null,2));assert.equal(result.violations.length,0,result.violations.map(v=>v.id).join(', '));};
  await page.goto(base+'signin.html');await wait('unavailable');assert(await page.locator('#signin-submit').isDisabled());await scan('unconfigured');
- await page.locator('#signin-cancel').click();await page.waitForURL('**/index.html');await page.locator('#header-login').click();await page.waitForURL('**/signin.html');await wait('unavailable');
+ await page.locator('#signin-cancel').click();await page.waitForURL('**/index.html');await page.locator('#join').click();await page.waitForURL('**/signin.html?*');await wait('unavailable');await page.locator('#signin-cancel').click();await page.waitForURL('**/index.html');await page.locator('#header-login').click();await page.waitForURL('**/signin.html');await wait('unavailable');
  let passwordCalls=0,userStatus=200,credentialStatus=400,holdPassword=false,releasePassword;
  const user={id:'verified-person',aud:'authenticated',role:'authenticated',email:'person@example.test',user_metadata:{nickname:'Nam'},app_metadata:{provider:'email',providers:['email']},created_at:new Date().toISOString()};
  const encode=v=>Buffer.from(JSON.stringify(v)).toString('base64url');
@@ -55,8 +55,23 @@ try{
  await fresh();await page.locator('#signin-google').click();await wait('failed');assert.match(await page.locator('#signin-error').textContent(),/cancelled/);assert(page.url().startsWith(base+'signin.html'));
  await fresh();userStatus=503;await page.evaluate(v=>localStorage.setItem('sb-fr13-test-auth-token',JSON.stringify(v)),session());await page.reload();await wait('checkFailed');assert(await page.locator('#signin-retry').isVisible());await scan('check-failed');
  userStatus=200;await page.locator('#signin-retry').focus();await page.keyboard.press('Enter');await page.waitForURL('**/index.html');
+ // FR-14: Add your candle requires a verified session and resumes only once.
+ await fresh();await page.goto(base+'index.html');await page.waitForFunction(()=>document.body.getAttribute('data-session-state')==='signedOut');
+ await page.evaluate(()=>localStorage.setItem('light-em-up-v1',JSON.stringify({profile:{id:'mine',nickname:'Local only',city:'Kiruna',lit:true,visible:true},opens:0,reactions:[],reports:[]})));
+ await page.reload();await page.waitForFunction(()=>document.body.getAttribute('data-session-state')==='signedOut');
+ await page.locator('#province-select').selectOption('Skåne');await page.locator('#next-page').click();const beforePage=await page.locator('#page-status').textContent();
+ await page.locator('#join').focus();await page.keyboard.press('Enter');await page.waitForURL('**/signin.html?*');await wait('ready');
+ assert.equal(new URL(page.url()).searchParams.get('returnTo'),'index.html#add-candle');
+ await page.locator('#signin-cancel').click();await page.waitForURL('**/index.html');await page.waitForFunction(()=>document.body.getAttribute('data-session-state')==='signedOut');
+ assert.equal(await page.locator('#province-select').inputValue(),'Skåne');assert.equal(await page.locator('#page-status').textContent(),beforePage);assert(await page.locator('#profile-dialog').isHidden());
+ await page.locator('#join').click();await wait('ready');await page.locator('#signin-email').fill('person@example.test');await page.locator('#signin-password').fill('fixture-password');await page.locator('#signin-submit').click();
+ await page.waitForURL(url=>url.pathname.endsWith('/index.html'));await page.locator('#profile-dialog').waitFor({state:'visible'});
+ assert.equal(new URL(page.url()).hash,'');assert.equal(await page.locator('#province-select').inputValue(),'Skåne');assert.equal(await page.locator('#page-status').textContent(),beforePage);
+ assert(await page.locator('[name=nickname]').evaluate(n=>n===document.activeElement));assert.equal(await page.locator('body').getAttribute('data-auth-state'),'signedIn');
+ await page.keyboard.press('Escape');await page.locator('#profile-dialog').waitFor({state:'hidden'});await page.reload();await page.waitForFunction(()=>document.body.getAttribute('data-session-state')==='signedIn');assert(await page.locator('#profile-dialog').isHidden());
+ await page.locator('#join').click();await page.locator('#profile-dialog').waitFor({state:'visible'});assert(new URL(page.url()).pathname.endsWith('/index.html'));await page.keyboard.press('Escape');
  await fresh();await page.addStyleTag({content:'*{line-height:1.5!important;letter-spacing:.12em!important;word-spacing:.16em!important}p{margin-bottom:2em!important}'});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
  await page.emulateMedia({forcedColors:'active'});await page.locator('#signin-email').focus();await page.screenshot({path:path.join(root,'test-results/signin-forced-colors.png'),fullPage:true});
  assert.deepEqual(errors,[]);
- console.log('PASS: actual SDK sign-in, missing config, labelled fields, password-manager metadata/paste/visibility, validation, credentials/network errors, duplicate suppression, verified login/return focus, allowed return paths, cancellation/Google callback, session retry, 320–1280px targets/reflow, text spacing, forced colors and five sign-in axe scans. Fixture integration only.');
+ console.log('PASS: actual SDK sign-in, missing config, labelled fields, password-manager metadata/paste/visibility, validation, credentials/network errors, duplicate suppression, verified login/return focus, allowed return paths, cancellation/Google callback, session retry, 320–1280px targets/reflow, text spacing, forced colors and five sign-in axe scans. FR-14 signed-out/cancel/signed-in/one-shot editor entry and browsing-context checks pass. Fixture integration only.');
 }finally{await browser?.close();await new Promise(r=>server.close(r));}
