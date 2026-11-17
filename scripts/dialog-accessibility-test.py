@@ -48,3 +48,10 @@ for step in range(1001):
     contrast = lambda a, b: (max(a, b) + .05) / (min(a, b) + .05)
     assert max(contrast(dark, bg), contrast(light, bg)) >= 3
 print(f'PASS: required-field error associations; indicator pair {ratio:.2f}:1; light/dark bands cover background luminance range.')
+
+# Side-effecting modules must bootstrap once, especially account subscriptions.
+for name in ('index.html','signin.html'):
+    page = html.fromstring((Path(__file__).resolve().parent.parent / name).read_text())
+    sources = page.xpath('//script[@src]/@src')
+    assert len(sources) == len(set(sources)), f'Duplicate script bootstrap in {name}'
+print('PASS: each external script bootstraps once on both pages.')
