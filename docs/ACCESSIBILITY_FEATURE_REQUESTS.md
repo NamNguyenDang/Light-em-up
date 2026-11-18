@@ -41,9 +41,9 @@ Each FR targets main through a separate PR and receives a WCAG 2.2 AA cross-chec
 | FR-24 | Received encouragement | Sender/time, newest first, count/unread, pagination/read state. | Merged PR #24. |
 | FR-25 | Encouragement message | Optional 600-character message, composer, recipient plain-text reading. | Merged PR #25. |
 | FR-26 | Unwanted senders | Recipient-only report/block, retry, blocked-history/new-send rules. | Merged PR #26. |
-| FR-27 | Lessons and standards audit | `leason_learn` folder: delivery history, WCAG evidence/gaps, BFF assessment and current website/SaaS UX guidance. | FR-27 audit and evidence delivered separately. |
-| FR-28 | Agent guidance | Agent/memory.md and skill.md capture lessons and future PR rules, discoverable through repository instructions. | FR-28 adds repo-local memory/workflow and autonomous merge/DR instructions. |
-| FR-29 | Usable registration, sign-in and candle journey | Fix/configure real account flow; prove register/confirmation/sign-in/create-light-save/reload/sign-out-in on deployed origin; fail release readiness on missing config/skipped live tests. | Confirmed release blocker; specification recorded, implementation/live acceptance pending. |
+| FR-27 | Lessons and standards audit | `leason_learn` folder: delivery history, WCAG evidence/gaps, BFF assessment and current website/SaaS UX guidance. | Merged PR #27. |
+| FR-28 | Agent guidance | Agent/memory.md and skill.md capture lessons and future PR rules, discoverable through repository instructions. | Merged PR #28. |
+| FR-29 | Usable registration, sign-in and candle journey | Fix/configure real account flow; prove register/confirmation/sign-in/create-light-save/reload/sign-out-in on deployed origin; fail release readiness on missing config/skipped live tests. | Signup/local-demo/preflight code under FR-29; online release remains BLOCKED until real backend configuration and acceptance. |
 
 Implementation is merged through FR-26. FR-27 adds the lessons and standards audit. Live service activation is a separate setup step: apply the five numbered SQL migrations, configure public Supabase URL/publishable key and auth redirects, then run real-account tests. No live project was provisioned or modified. Browser SDK fixtures and PostgreSQL claim fixtures test implementation, not live deployment.
 

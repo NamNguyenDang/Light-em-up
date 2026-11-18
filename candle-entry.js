@@ -1,10 +1,10 @@
 'use strict';
 const CandleEntry=(()=>{
- function create({openEditor,signIn,clearIntent=()=>{},isModalOpen=()=>false,onBusy=()=>{},resumeIntent=false}={}){
+ function create({openEditor,openLocalEditor=null,signIn,clearIntent=()=>{},isModalOpen=()=>false,onBusy=()=>{},resumeIntent=false}={}){
   let session={status:'checking',user:null},waiting=false,intent=resumeIntent,stopped=false;
   const checking=()=>!session.status||session.status==='checking';
   const verified=()=>session.status==='signedIn'&&typeof session.user?.id==='string'&&!!session.user.id;
-  function run(){if(isModalOpen())return;if(verified())openEditor();else signIn();}
+  function run(){if(isModalOpen())return;if(verified())openEditor();else if(session.status==='notConfigured'&&typeof openLocalEditor==='function')openLocalEditor();else signIn();}
   function activate(){if(stopped||isModalOpen())return;if(checking()){waiting=true;onBusy(true);return;}run();}
   function update(value){
    if(stopped)return;session=value||{status:'checkFailed',user:null};
