@@ -497,6 +497,23 @@
         "scripts/check-requirements.py"
       ],
       "evidence_scope": "real local-browser IndexedDB/Web Crypto acceptance; deferred provider fixtures separate; live deployment and manual AT reported separately"
+    },
+    {
+      "fr": "FR-35",
+      "acceptance_ids": [
+        "FR-35-AC1",
+        "FR-35-AC2",
+        "FR-35-AC3"
+      ],
+      "case_ids": [
+        "TC-FR-35-01"
+      ],
+      "automated_tests": [
+        "tests/browser/auth-feedback.test.mjs",
+        "tests/browser/local-accounts.test.mjs",
+        "scripts/check-requirements.py"
+      ],
+      "evidence_scope": "real local auth/error output; labelled legacy-data and storage-fault fixtures; manual AT/public deployment separate"
     }
   ]
 }

@@ -4,6 +4,7 @@ const LocalAccounts=(()=>{
  const DB='light-em-up-accounts-v1',SESSION='light-em-up-local-session',ITERATIONS=600000,TTL=12*60*60*1000;
  const fail=code=>Object.assign(new Error(code),{code,status:code==='session'?401:undefined});
  function nickname(value){const display=String(value??'').normalize('NFKC').trim();if(!display||display.length>40||!/[\p{L}\p{N}]/u.test(display)||!/^[\p{L}\p{N} ._-]+$/u.test(display))throw fail('nickname');return {display,key:display.toLocaleLowerCase('en-US')};}
+ function passwordIssue(password){if(typeof password!=='string'||password.length<8||password.length>128)return 'length';return /^[A-Za-z0-9]+$/.test(password)?null:'characters';}
  function create({database=globalThis.indexedDB,crypto=globalThis.crypto,storage=globalThis.sessionStorage,now=Date.now}={}){
   let connection;const listeners=new Set();
   function changed(){for(const fn of listeners)fn();}
@@ -19,7 +20,7 @@ const LocalAccounts=(()=>{
   async function identity(){await db();const t=token();if(!t)return null;const s=await read('sessions',await digest(t));if(!s||!Number.isFinite(s.expiresAt)||s.expiresAt<=now()){storage.removeItem(SESSION);return null;}const a=await read('accounts',s.accountId);return a?{id:a.id,nickname:a.nickname}:null;}
   async function begin(a){const t=hex(bytes(32)),old=token();await write('sessions',{digest:await digest(t),accountId:a.id,expiresAt:now()+TTL});try{storage.setItem(SESSION,t);}catch{await revoke(t);throw fail('storage');}if(old)await revoke(old);changed();return {id:a.id,nickname:a.nickname};}
   async function revoke(t){if(!t)return;const key=await digest(t),d=await db();await new Promise((resolve,reject)=>{const tx=d.transaction('sessions','readwrite');tx.objectStore('sessions').delete(key);tx.oncomplete=resolve;tx.onabort=()=>reject(fail('storage'));});}
-  async function register(name,password){const n=nickname(name);if(typeof password!=='string'||password.length<15||password.length>128)throw fail('password');if(await read('accounts',n.key,'nickname'))throw fail('duplicate');const salt=hex(bytes(16)),a={id:hex(bytes(16)),key:n.key,nickname:n.display,salt,verifier:await derive(password,salt),algorithm:'PBKDF2-SHA256',iterations:ITERATIONS};await write('accounts',a,true);return begin(a);}
+  async function register(name,password){const n=nickname(name);if(passwordIssue(password))throw fail('password');if(await read('accounts',n.key,'nickname'))throw fail('duplicate');const salt=hex(bytes(16)),a={id:hex(bytes(16)),key:n.key,nickname:n.display,salt,verifier:await derive(password,salt),algorithm:'PBKDF2-SHA256',iterations:ITERATIONS};await write('accounts',a,true);return begin(a);}
   async function signIn(name,password){let n;try{n=nickname(name);}catch{throw fail('credentials');}if(typeof password!=='string'||password.length>128)throw fail('credentials');const a=await read('accounts',n.key,'nickname');const candidate=await derive(password,a?.salt||'00'.repeat(16));let difference=0;const expected=a?.verifier||'00'.repeat(32);for(let i=0;i<64;i++)difference|=candidate.charCodeAt(i)^expected.charCodeAt(i);if(!a||difference)throw fail('credentials');return begin(a);}
   async function signOut(){const t=token();await revoke(t);try{storage.removeItem(SESSION);}catch{throw fail('storage');}changed();}
   // Authorization and candle operation share one transaction, avoiding a logout/write race.
@@ -30,6 +31,6 @@ const LocalAccounts=(()=>{
  let singleton;
  function current(){if(!singleton)singleton=create();return singleton;}
  function sessionController({onChange=()=>{}}={}){let stopped=false,sequence=0,state={status:'checking',user:null,canRetry:false};const publish=(status,user=null)=>{state=Object.freeze({status,user,canRetry:status==='checkFailed'});onChange(state);return state;};async function check(){if(stopped)return state;const n=++sequence;publish('checking');try{const store=current();if(!unsubscribe)unsubscribe=store.subscribe(()=>void check());const user=await store.identity();if(!stopped&&n===sequence)publish(user?'signedIn':'signedOut',user);}catch{if(!stopped&&n===sequence)publish('checkFailed');}return state;}let unsubscribe;try{unsubscribe=current().subscribe(()=>void check());}catch{}return {start:check,retry:check,snapshot:()=>state,stop(){stopped=true;sequence++;unsubscribe?.();}};}
- return Object.freeze({create,current,sessionController,nickname});
+ return Object.freeze({create,current,sessionController,nickname,passwordIssue});
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=LocalAccounts;

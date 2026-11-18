@@ -27,6 +27,6 @@ Supabase integration is retained but unconfigured/deferred. Tests using SDK HTTP
 
 ### Registered local accounts (FR-34)
 
-Open index.html through a localhost/HTTPS static server. Browse without an account; register a unique nickname and a 15–128-character password to create one candle. No email is collected. Accounts/candles stay in this browser on this site; clearing site data removes them, and password recovery/cross-device login are unavailable. Local login separates profiles but does not encrypt browser data or verify one person. Earlier anonymous candles are not adopted. Cross-device encouragement/inbox and optional online services stay deferred.
+Open index.html through a localhost/HTTPS static server. Browse without an account; register a unique nickname and a 8–128-character password to create one candle. No email is collected. Accounts/candles stay in this browser on this site; clearing site data removes them, and password recovery/cross-device login are unavailable. Local login separates profiles but does not encrypt browser data or verify one person. Earlier anonymous candles are not adopted. Cross-device encouragement/inbox and optional online services stay deferred.
 
 Run `npm run test:accounts` for real local account acceptance (no auth/network mocks); `CHROMIUM_PATH` optionally selects a local Chromium executable. Historical provider/component fixtures remain separate from active acceptance.
