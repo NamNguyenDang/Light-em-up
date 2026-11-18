@@ -194,3 +194,8 @@ This specification records expected behavior, not a blanket completion claim. FR
 
 - **FR-31-AC1**: Separate frontend runtime, deferred backend, executable tests, agent guidance, golden requirements, tracking, standards, lessons, design/history and UX workspace. Keep root index.html/signin.html URLs and existing behavior. Update all asset/import/workflow/test/traceability references together; preserve prior designs and file provenance.
 - Acceptance scenario: [TC-FR-31-01](test-cases.md#tc-fr-31-01). Evidence: static/link/import checks and full browser/SQL regressions; no backend activation or UX research outcome is implied.
+
+### FR-32 — UX evidence and portfolio workspace
+
+- **FR-32-AC1**: Provide a navigable ux workspace with a case-study draft, assumptions/research plan, task/state journeys, evidence-backed design decisions, evaluation/metrics, blank session template and portfolio-review checklist. Distinguish owner feedback, implemented/automated evidence, proposed research and unmeasured outcomes. Preserve source/provenance, individual-role/AI-assistance honesty and the current local/deferred-backend boundary; never fabricate participants, quotes, outcome uplift or full standards conformity.
+- Acceptance scenario: [TC-FR-32-01](test-cases.md#tc-fr-32-01). Evidence: documentation/link/provenance review and unchanged runtime regressions; no user-study completion claim.

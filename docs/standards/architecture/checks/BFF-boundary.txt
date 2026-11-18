@@ -2,7 +2,7 @@ Backend for Frontend boundary
 Status: Not implemented as a separate server
 
 Evidence:
-Browser repository adapters call Supabase Auth/Data API; database RLS/RPCs authorize operations.
+The active product is browser-local. Optional browser adapters and database RLS/RPCs exist for a deferred Supabase integration; no separately deployed BFF or active online service is claimed.
 
 Next check:
 Retain the low-cost BaaS decision unless a specific server-boundary need arises.

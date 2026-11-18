@@ -1,16 +1,19 @@
 # Backend for Frontend architecture audit
 
-**Finding: the project does not currently implement a separate BFF service.** It is a static browser application using Backend as a Service (BaaS): Supabase Auth and Data API, with PostgreSQL RLS and purpose-shaped RPCs. A JavaScript repository facade that runs in the browser is not a backend boundary.
+**Finding: the project does not currently implement a separate BFF service.** The active product is browser-local. Its optional online code uses the Backend as a Service (BaaS) pattern: Supabase Auth and Data API, with PostgreSQL RLS and purpose-shaped RPCs; this integration is unconfigured/deferred, not a deployed service. A JavaScript repository facade that runs in the browser is not a backend boundary.
 
-## Current topology
+## Active local runtime and deferred integration
 
 ```mermaid
 flowchart TD
-  UI["Browser UI"] --> Adapter["Browser session and repository adapters"]
-  Adapter --> Auth["Supabase Auth"]
-  Adapter --> API["Supabase Data API"]
-  API --> DB["PostgreSQL: RLS and RPCs"]
+  UI["Browser UI"] --> Adapter["Browser logic and adapters"]
+  Adapter --> Local["Browser storage: active local scope"]
+  Adapter -. deferred .-> Auth["Supabase Auth"]
+  Adapter -. deferred .-> API["Supabase Data API"]
+  API -. deferred .-> DB["PostgreSQL: RLS and RPCs"]
 ```
+
+The table describes optional integration code/fixtures, not proof of an activated online service.
 
 | Concern | Current implementation | BFF assessment |
 |---|---|---|

@@ -12,7 +12,7 @@ From the repository root, run `python3 -m http.server 8000` and open http://loca
 |---|---|
 | [frontend/](frontend/README.md) | Browser code/styles/data/artwork. |
 | [backend/](backend/README.md) | Deferred optional schema and database tests. |
-| [ux/](ux/README.md) | UX process and portfolio workspace. |
+| [ux/](ux/README.md) | UX case study, research plan, journeys, decisions and evidence. |
 | [docs/](docs/README.md) | Requirements, tracking, standards, lessons, design history and licenses. |
 | [tests/](tests/README.md) | Executable verification. |
 | [agent/](agent/skill.md) | Working rules and memory, discovered through AGENTS.md. |

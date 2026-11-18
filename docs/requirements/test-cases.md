@@ -330,3 +330,12 @@ Covers: FR-31-AC1
 - Actions: follow documentation links, load both HTML pages/assets, run every unit/static/browser/SQL check, create/edit/save a local candle, exercise fixture-only account paths and inspect migrated screenshot/axe output.
 - Expected: no broken file/import/asset links or changed behavior; golden/test mappings resolve; earlier design versions remain available; frontend/backend execution boundaries and UX workspace are obvious. No real backend, new BFF, paid service or completed research is fabricated.
 - Execution references: scripts/check-requirements.py, tests/static/verify.test.mjs, tests/browser/accessibility.test.mjs, tests/browser/signin.test.mjs and tests/browser/account.test.mjs; manual navigation review complements the structural tests.
+
+### TC-FR-32-01
+
+Covers: FR-32-AC1
+
+- Preconditions: actual project decisions/PRs and synthetic browser evidence are available; no representative participant study or measured product outcome exists.
+- Actions: navigate from root to the UX case study, assumptions, plan, journeys, decisions, evaluation and evidence; inspect provenance/claim labels; compare the narrative with golden requirements, lessons and actual local output.
+- Expected: a reviewer can trace the problem, constraints, alternatives, decisions and validation gaps without mistaking planned research for findings, fixture screenshots for user acceptance, local use for a real community launch, or AI-assisted work for unsupported individual claims. Session/results templates remain NOT RUN/unmeasured until genuine evidence is added. Internal links and references resolve.
+- Execution references: scripts/check-paths.py and scripts/check-requirements.py; human evidence/claim review is mandatory and is not proven by the structural gate. Existing browser/axe regressions verify no application behavior was changed.

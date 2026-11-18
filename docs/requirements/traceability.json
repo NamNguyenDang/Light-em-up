@@ -449,6 +449,21 @@
         "tests/browser/account.test.mjs"
       ],
       "evidence_scope": "migration regression and documentation review; no online activation"
+    },
+    {
+      "fr": "FR-32",
+      "acceptance_ids": [
+        "FR-32-AC1"
+      ],
+      "case_ids": [
+        "TC-FR-32-01"
+      ],
+      "automated_tests": [
+        "scripts/check-paths.py",
+        "scripts/check-requirements.py",
+        "tests/browser/accessibility.test.mjs"
+      ],
+      "evidence_scope": "documentation/claim/provenance review; proposed research and unmeasured metrics are NOT RUN, no new live acceptance"
     }
   ]
 }

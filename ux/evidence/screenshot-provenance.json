@@ -1,0 +1,35 @@
+{
+  "source_commit": "8bd31e71e6f5215cb8dc563289838fec2970c229",
+  "workflow_run": "https://github.com/NamNguyenDang/Light-em-up/actions/runs/44296776965",
+  "artifact_id": 14423189602,
+  "artifact_url": "https://github.com/NamNguyenDang/Light-em-up/actions/runs/44296776965/artifacts/14423189602",
+  "artifact_digest": "sha256:a2b1777b04078088633e76b76e3afdbe4e77f915ba29781d114d06a7551d5d63",
+  "artifact_retention_days": 14,
+  "captures": [
+    {
+      "artifact_file": "layout-320.png",
+      "viewport_css_pixels": {
+        "width": 320,
+        "height": 900
+      },
+      "capture": "fullPage PNG; page may be taller than viewport",
+      "sha256": "f4420a670c3ed82da442ac855e9c8af59ba138b79cb569afb4e26797839e4f78",
+      "bytes": 832816,
+      "data": "100 labelled fictional samples; no signed-in real user",
+      "mode": "unconfigured browser-local visitor"
+    },
+    {
+      "artifact_file": "layout-1280.png",
+      "viewport_css_pixels": {
+        "width": 1280,
+        "height": 900
+      },
+      "capture": "fullPage PNG; page may be taller than viewport",
+      "sha256": "0c1f717749e0d66d25e86bfd8db0e201ee74de6ab011e941eceab19619039702",
+      "bytes": 1493835,
+      "data": "100 labelled fictional samples; no signed-in real user",
+      "mode": "unconfigured browser-local visitor"
+    }
+  ],
+  "interpretation": "Actual automated browser output, not a usability study or before/after outcome measurement. Browser version is recorded in the workflow logs. PNGs are in the CI artifact, not copied into this folder; after expiry rerun and record new provenance rather than asserting byte-identical output."
+}

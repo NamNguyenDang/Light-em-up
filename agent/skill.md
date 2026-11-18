@@ -59,6 +59,10 @@ The user chose browser-local operation. Do not activate cloud services or billin
 - Website/SaaS UX has several references, not one universal screen-layout certification: WCAG accessibility, human-centred usability guidance, APG interaction patterns and measured performance. Never claim ISO conformance or achieved performance without evidence.
 - Preserve approved visual decisions and distinguish online/account data from local demo data. Keep reports honest about project-owner review and the absence of automatic/staffed moderation.
 
+## UX portfolio evidence
+
+Keep UX material under ux/. Distinguish owner/stakeholder feedback, implementation/automated checks, proposed research and measured participant evidence. Link decisions to source and golden requirements. Preserve the user's local-only delivery scope and label deferred online concepts. Do not invent personas as research, quotes, participants, scores, uplift or causal social/employment outcomes. State actual contribution and relevant AI assistance accurately; screenshots need provenance and are not usability results. Never put identifying/sensitive research records in the public repository. Read the evidence register and portfolio checklist before changing public case-study claims.
+
 ## Continuity
 
 Read agent/memory.md at task start. Update it when a decision or defect changes future practice; keep facts concise and dated. Refer to the audit/backlog for detail. Never turn repository-local notes into claims of global assistant memory or broaden merge authorization beyond this repository.
