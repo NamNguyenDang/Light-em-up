@@ -84,6 +84,7 @@ const SignInFlow=(()=>{
         const result=await bounded(()=>client.auth.signUp({email,password,options:{emailRedirectTo:new URL('signin.html',href).href}}));
         if(stopped||request!==sequence)return state;
         if(result.error)return publish('failed','',result.error.code==='weak_password'?'weakPassword':'registration');
+        if(!result.data?.session&&!(typeof result.data?.user?.id==='string'&&result.data.user.id))return publish('failed','','registration');
         if(!result.data?.session)return publish('confirmation','Check your email for a confirmation link, then return here to sign in. If you already registered, use your existing confirmation email or sign in.');
         const verified=await stableSession(await restoration.retry());
         if(stopped||request!==sequence)return state;
