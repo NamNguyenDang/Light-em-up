@@ -5,7 +5,7 @@ Status: release blocker; not fixed by this record.
 WHAT THE USER EXPERIENCED
 The user could not log in, register an account, or light a personal candle.
 
-WHAT SOURCE INSPECTION CONFIRMED
+WHAT SOURCE INSPECTION CONFIRMED AT REPORT BASELINE
 The shipped public Supabase URL/key are empty. Sign-in intentionally becomes unavailable.
 There is no account registration UI/flow. Optional Google is disabled.
 The primary Add your candle action depends on verified authentication, so the unavailable
@@ -37,3 +37,9 @@ FR-29 requires implementation plus real-service acceptance evidence before closu
 RELATION TO FR-27/28
 This file belongs to FR-27's lessons/audit folder. Agent/memory.md retains the lesson for
 future PR work under FR-28. These are repository-local records, not global agent memory.
+
+CODE REMEDIATION PROGRESS (FR-29, 18 NOVEMBER 2026)
+The code portion adds registration/confirmation handling, a clearly local candle fallback
+and served-artifact release preflight with regression coverage. Online accounts remain
+blocked by missing real project setup. A preflight-ready result is not a live smoke pass;
+release_ready remains false. Do not close this defect from fixture results or code merge.

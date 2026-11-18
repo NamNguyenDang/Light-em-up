@@ -1,0 +1,25 @@
+name: Account release preflight (not live acceptance)
+on:
+  workflow_dispatch:
+    inputs:
+      site_url:
+        description: 'Actual deployed HTTPS site root; this check never establishes full live acceptance'
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify served account artifacts and public configuration
+        env:
+          RELEASE_SITE_URL: ${{ inputs.site_url }}
+        run: node scripts/release-preflight.mjs "$RELEASE_SITE_URL"
+      - name: Record acceptance boundary
+        run: echo 'Preflight only. Real registration, confirmation, candle persistence and ownership acceptance remain required. This job is not a release-ready signal.'

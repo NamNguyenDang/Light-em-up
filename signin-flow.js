@@ -60,7 +60,7 @@ const SignInFlow=(()=>{
       finally{clearTimeout(timer);}
     }
     async function signIn({email,password}){
-      if(stopped||finished||busy||!['ready','failed'].includes(phase))return state;
+      if(stopped||finished||busy||!['ready','failed','confirmation'].includes(phase))return state;
       const request=++sequence;busy=true;abort=new AbortController();publish('signingIn','Signing in…');
       try{
         const result=await bounded(()=>client.auth.signInWithPassword({email,password}));
@@ -76,8 +76,24 @@ const SignInFlow=(()=>{
       finally{busy=false;abort=null;}
       return state;
     }
+    async function register({email,password}){
+      if(stopped||finished||busy||!['ready','failed','confirmation'].includes(phase))return state;
+      const request=++sequence;busy=true;abort=new AbortController();publish('signingIn','Creating your account…');
+      try{
+        try{storage?.setItem(returnKey,target);}catch{}
+        const result=await bounded(()=>client.auth.signUp({email,password,options:{emailRedirectTo:new URL('signin.html',href).href}}));
+        if(stopped||request!==sequence)return state;
+        if(result.error)return publish('failed','',result.error.code==='weak_password'?'weakPassword':'registration');
+        if(!result.data?.session)return publish('confirmation','Check your email for a confirmation link, then return here to sign in. If you already registered, use your existing confirmation email or sign in.');
+        const verified=await stableSession(await restoration.retry());
+        if(stopped||request!==sequence)return state;
+        return verified.status==='signedIn'?done(verified.user):publish('failed','','connection');
+      }catch{if(!stopped&&request===sequence)return publish('failed','','registration');}
+      finally{busy=false;abort=null;}
+      return state;
+    }
     async function google(){
-      if(stopped||finished||busy||!config.googleEnabled||!['ready','failed'].includes(phase))return state;
+      if(stopped||finished||busy||!config.googleEnabled||!['ready','failed','confirmation'].includes(phase))return state;
       const request=++sequence;busy=true;abort=new AbortController();publish('signingIn','Opening Google sign-in…');
       try{
         try{storage?.setItem(returnKey,target);}catch{}
@@ -98,7 +114,7 @@ const SignInFlow=(()=>{
       navigate(cancelTarget);
     }
     function stop(){stopped=true;sequence++;abort?.abort();restoration.stop();releaseWaiters();client?.auth.stopAutoRefresh?.();}
-    return Object.freeze({start,retry:start,signIn,google,cancel,stop,snapshot:()=>state,target,cancelTarget});
+    return Object.freeze({start,retry:start,signIn,register,google,cancel,stop,snapshot:()=>state,target,cancelTarget});
   }
   return Object.freeze({create,returnTarget});
 })();

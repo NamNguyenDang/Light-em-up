@@ -11,3 +11,5 @@ f=fixture(true);f.flow.update({status:'signedOut'});assert.equal(f.read().opened
 f=fixture();f.flow.update({status:'signedIn',user:null});f.flow.activate();assert.equal(f.read().opened,0);assert.equal(f.read().redirected,1);
 f=fixture();f.flow.activate();f.flow.stop();f.flow.update({status:'signedIn',user:{id:'late'}});assert.equal(f.read().opened,0);assert(!f.read().busy);
 console.log('PASS: verified versus local-only identity, direct/queued entry, modal duplicate guard, failed checks, one-shot return intent, no cancellation loop and cleanup.');
+
+let localOpens=0,accountOpens=0,navigations=0;const offlineEntry=create({openEditor:()=>accountOpens++,openLocalEditor:()=>localOpens++,signIn:()=>navigations++});offlineEntry.update({status:'notConfigured',user:null});offlineEntry.activate();assert.equal(localOpens,1);assert.equal(accountOpens,0);assert.equal(navigations,0);offlineEntry.stop();console.log('PASS FR-29: explicit local-demo fallback does not create an authenticated account.');

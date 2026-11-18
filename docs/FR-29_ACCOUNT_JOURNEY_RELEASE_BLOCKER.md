@@ -1,6 +1,6 @@
 # FR-29 — Restore the usable account and candle journey
 
-Status: confirmed release blocker, not fixed or live-verified.
+Status: code remediation in progress; online account release remains BLOCKED pending real configuration and acceptance.
 Reported: 18 November 2026, user testing latest default branch (main, called master in the report).
 Observed: cannot log in, register an account, or light a personal candle through the primary account journey.
 Verified source baseline: 3684475786761e5cc4b173233fd41e39b8f0a43a.
@@ -13,6 +13,17 @@ Verified source baseline: 3684475786761e5cc4b173233fd41e39b8f0a43a.
 - The browser-only saved-light demo is a separate feature; it does not satisfy account creation or persisted online candle acceptance.
 - CI uses actual SDK code with routed HTTP fixtures and PostgreSQL claim fixtures. Those tests validate implementation mechanics, not the deployed URL, real Auth provider, project schema or release readiness.
 - No live project URL was supplied and migration/redirect/provider deployment has not been independently verified. Do not infer a live database failure from unavailable configuration alone.
+
+## Implementation progress (18 November 2026)
+
+- Added a Create account mode with new-password metadata, visible password guidance, validation, SDK signup and email-confirmation instructions. A confirmation response is not a verified sign-in. Returned sessions still require server getUser verification.
+- Added signup unit/browser fixture scenarios for validation, confirmation-required, rejection/retry, duplicate submission and verified returned-session behavior. These are not real-provider acceptance.
+- Unconfigured visitors can explicitly choose Try a local candle, with a browser-only notice; this never creates an account or satisfies online acceptance. The normal configured account path still requires verified identity.
+- Added scripts/release-preflight.mjs and a manual Account release preflight workflow that inspect served artifacts/configuration. The shipped blank config is asserted to produce BLOCKED. Even valid preflight configuration yields only READY_FOR_LIVE_SMOKE with release_ready=false.
+- Real project URL/public key, migrations, auth redirect/provider verification and real account/candle smoke are still unavailable. FR29-04/05/09 live acceptance and manual AT work are not passed. Do not close FR-29 when the code portion merges.
+- The SDK documentation notes PKCE signup restrictions with autoconfirm. Returned-session fixture coverage does not certify live autoconfirm settings; verify the project's actual confirmation flow before activation.
+
+Run `node scripts/release-preflight.mjs https://your-deployed-site.example/` against the actual served site root. Exit 2 means blocked. A successful preflight is never full release acceptance; no real registration, confirmation or server write is performed by this check.
 
 ## Acceptance criteria
 

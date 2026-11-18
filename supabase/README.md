@@ -21,3 +21,11 @@ order by r.created_at desc;
 ```
 
 Do not expose this query through a public client or distribute privileged credentials. Reporting stores evidence, without automatic email or a staffed queue. Blocks persist for that recipient and prevent new encouragement; the owner can remove an erroneous block with an authorized database operation. This iteration does not add a public moderation dashboard.
+
+## FR-29 account readiness
+
+The shipped configuration is intentionally empty until an actual project is supplied. It cannot create online accounts. Set the public project URL/publishable key, apply all numbered migrations and verify site/confirmation redirects in the owned project. Keep confirmation/authorization intact. The signup UI supports confirmation-required feedback; provider-specific settings (including PKCE/autoconfirm restrictions) require real verification.
+
+Run `node scripts/release-preflight.mjs https://your-real-site/` or the manual Account release preflight workflow. It inspects served files without executing remote configuration code or sending account writes. Missing/bad config, missing registration or missing served artifacts produces BLOCKED/exit 2. READY_FOR_LIVE_SMOKE is only a preflight result, always release_ready=false.
+
+Then perform the FR-29 registration/confirmation/sign-in/create-light-save/reload/sign-out-in journey against the real deployed origin without mocked routing, recording the deployed commit and actual outcome. The labelled browser-only candle fallback is not evidence of online persistence. Do not mark the release usable while these checks are missing.

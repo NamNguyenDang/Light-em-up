@@ -34,3 +34,7 @@ Confirmed 18 November 2026: no repeated permission is needed to merge passing wo
 - Check mutation results before continuing dependent work. Inspect actual PR/main heads after a rejected/transient merge; do not assume a dependency merged.
 - BFF is not currently deployed. This is a direct Supabase BaaS application with browser adapters and database authorization. Do not describe a browser facade as a server or add infrastructure just for a pattern label.
 - Keep reports honest: stored for project-owner review, without promising active moderation or immediate notification. Do not mislabel online account data as browser-only storage.
+
+## FR-29 remediation boundary (18 November 2026)
+
+The code portion adds signup/confirmation handling, a clearly labelled local candle option when online services are unconfigured, and served-artifact release preflight. Preflight remains release_ready=false even with valid public config; it only permits real live smoke testing. Do not reinterpret the local fallback as an online candle or mark real signup/persistence verified. The report's empty config/missing signup diagnosis describes the original baseline; track actual current code separately. FR-29 stays open until real configuration/provider/schema/redirect checks and the full deployed-origin account journey pass.

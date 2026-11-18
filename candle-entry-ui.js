@@ -11,7 +11,9 @@
   if(location.hash==='#add-candle'){const url=new URL(location.href);url.hash='';try{history.replaceState(history.state,'',url.href);}catch{}}
   try{if(sessionStorage.getItem('light-em-up-signin-focus')==='add-candle')sessionStorage.removeItem('light-em-up-signin-focus');}catch{}
  }
+ const originalLabel=button.textContent;
  const entry=CandleEntry.create({
+  openLocalEditor:()=>openProfile(),
   resumeIntent:intent,
   isModalOpen:()=>!!document.querySelector('dialog[open]'),
   openEditor:()=>globalThis.LightEmUpAccount?LightEmUpAccount.openEditor():openProfile(),
@@ -23,7 +25,7 @@
   onBusy:busy=>{button.disabled=busy;button.setAttribute('aria-busy',String(busy));}
  });
  button.onclick=()=>entry.activate();
- const unsubscribe=globalThis.LightEmUpSession?.subscribe(value=>entry.update(value));
+ const unsubscribe=globalThis.LightEmUpSession?.subscribe(value=>{const offline=value.status==='notConfigured';document.getElementById('offline-service-note').hidden=!offline;button.textContent=offline?'Try a local candle':originalLabel;entry.update(value);});
  if(!unsubscribe)entry.update({status:'checkFailed',user:null});
  window.addEventListener('pagehide',()=>{unsubscribe?.();entry.stop();},{once:true});
 })();
