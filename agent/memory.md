@@ -54,3 +54,7 @@ The user approved FE/BE separation and a dedicated UX folder to demonstrate UX k
 ## FR-32: demonstrate UX reasoning with evidence (18 November 2026)
 
 The user wants this project to demonstrate UX knowledge. The ux folder must show problem framing, constraints, alternatives, decisions, journeys, validation and learning, with honest contribution/AI-assistance wording. Owner feedback is not a representative user study; automated screenshots/axe checks are not task-success or engagement evidence. Research plans and metrics remain NOT RUN/unmeasured until genuinely executed. Preserve provenance and local-only scope; do not inflate the maturity of deferred online functionality.
+
+## FR-33: analyze and discuss before implementing
+
+The user requested a visible request → analysis/discussion loop → finalized requirements → implementation → test-gap analysis → test execution → requirement/result verification → deployment workflow. When asked to clarify first, pause implementation until the approach is settled. Do not confuse settled scope with needing repeated merge permission. Verify test coverage against the golden contract and distinguish merged, deployed and accepted. See skill.md. The nickname/password design discussion is agreed in principle; this documentation change does not implement or claim tested local authentication.

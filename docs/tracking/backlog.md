@@ -56,3 +56,5 @@ Implementation is merged through FR-26. FR-27 adds the lessons and standards aud
 The pre-existing presentation/accessibility series reached main through integration PR #10; the older branch-stacking correction above is historical. Manual screen-reader/real zoom checks remain open across the series; no full WCAG conformance claim is made.
 
 Current scope decision (18 November 2026): browser-local use is approved. Cloud activation/online account acceptance is DEFERRED and unverified, not resolved. This does not prevent local-only use or independent documentation/UX work.
+
+| FR-33 | Request-to-deployment WoW | Analyze/discuss against golden requirements, finalize, implement, review test gaps, test, verify and deploy with separate served-output evidence. | Documentation implemented; no authentication or deployment change. |
