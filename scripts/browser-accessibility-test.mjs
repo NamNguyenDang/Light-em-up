@@ -15,7 +15,7 @@ await fs.mkdir(path.join(root,'test-results'),{recursive:true});
 let browser;
 const results=[];
 try{
-  browser=await chromium.launch({headless:true,...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}: {})});
+  browser=await chromium.launch({headless:true,channel:process.env.PLAYWRIGHT_CHANNEL||undefined,...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}: {})});
   const page=await browser.newPage({viewport:{width:1280,height:900}});
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   const open=async()=>{await page.goto(url);await page.waitForSelector('#province-areas path');};

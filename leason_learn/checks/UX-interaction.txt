@@ -1,0 +1,11 @@
+Interaction principles
+Status: Review reference only
+
+Evidence:
+Native controls, state feedback, retry and confirmations; self-service unblock still absent.
+
+Next check:
+Review consistency, user control and recovery; no clause-level ISO claim from a public abstract.
+
+Reference: https://www.iso.org/standard/75258.html
+Reviewed: 18 November 2026.

@@ -1,0 +1,11 @@
+Core Web Vitals
+Status: Unmeasured
+
+Evidence:
+No production LCP, INP or CLS data collected.
+
+Next check:
+Measure field performance at mobile/desktop 75th percentiles before claiming achieved targets.
+
+Reference: https://web.dev/articles/vitals
+Reviewed: 18 November 2026.

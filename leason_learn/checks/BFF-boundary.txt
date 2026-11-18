@@ -1,0 +1,11 @@
+Backend for Frontend boundary
+Status: Not implemented as a separate server
+
+Evidence:
+Browser repository adapters call Supabase Auth/Data API; database RLS/RPCs authorize operations.
+
+Next check:
+Retain the low-cost BaaS decision unless a specific server-boundary need arises.
+
+Reference: https://learn.microsoft.com/en-us/azure/architecture/patterns/backends-for-frontends
+Reviewed: 18 November 2026.

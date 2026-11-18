@@ -11,7 +11,7 @@ const server=http.createServer(async(req,res)=>{try{const file=path.resolve(root
 await new Promise(r=>server.listen(0,'127.0.0.1',r));const url=`http://127.0.0.1:${server.address().port}/index.html`;
 await fs.mkdir(path.join(root,'test-results'),{recursive:true});let browser;
 try{
- browser=await chromium.launch({headless:true});const page=await browser.newPage({viewport:{width:1280,height:900}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
+ browser=await chromium.launch({headless:true,channel:process.env.PLAYWRIGHT_CHANNEL||undefined});const page=await browser.newPage({viewport:{width:1280,height:900}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
  const scan=async label=>{await page.addScriptTag({path:require.resolve('axe-core/axe.min.js')});const result=await page.evaluate(()=>window.axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}}));await fs.writeFile(path.join(root,`test-results/axe-${label}.json`),JSON.stringify(result,null,2));assert.equal(result.violations.length,0,label);};
  const owner='11111111-1111-4111-8111-111111111111',storyId='22222222-2222-4222-8222-222222222222';
  const user={id:owner,aud:'authenticated',role:'authenticated',user_metadata:{nickname:'Nam'},app_metadata:{provider:'email'},created_at:new Date().toISOString()};
