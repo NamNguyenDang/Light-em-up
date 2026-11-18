@@ -6,6 +6,7 @@ const SessionRestoration=(()=>{
     try{const url=new URL(config.url);return url.protocol==='https:'&&!url.username&&!url.password&&url.pathname==='/'&&!url.search&&!url.hash&&typeof config.publishableKey==='string'&&/^sb_publishable_[A-Za-z0-9_-]+$/.test(config.publishableKey)?'ready':'invalid';}catch{return 'invalid';}
   }
   function create({config={},clientFactory,onChange=()=>{},timeoutMs=10000}={}){
+    if(config.mode==='local')return LocalAccounts.sessionController({onChange});
     let client=null,subscription=null,generation=0,stopped=false,scheduled=null;
     let current=Object.freeze({status:'notConfigured',user:null,reason:null,canRetry:false});
     const snapshot=()=>current;

@@ -24,3 +24,9 @@ Start product work with [golden requirements](docs/requirements/requirement.md),
 Install Node dependencies with `npm install` and Python HTML validation with `python3 -m pip install lxml==6.0.2`. Run `npm test` and `python3 scripts/check-requirements.py`. Browser tests use Playwright: install its Chromium locally or use an installed Chrome with PLAYWRIGHT_CHANNEL=chrome. CI records the browser version and runs all database/state/browser/axe checks.
 
 Supabase integration is retained but unconfigured/deferred. Tests using SDK HTTP responses or PostgreSQL claim fixtures do not prove online signup or shared persistence. No paid service or cloud activation is part of the local product. Manual accessibility/real zoom and future online acceptance gaps remain documented; no full WCAG conformance claim is made.
+
+### Registered local accounts (FR-34)
+
+Open index.html through a localhost/HTTPS static server. Browse without an account; register a unique nickname and a 15–128-character password to create one candle. No email is collected. Accounts/candles stay in this browser on this site; clearing site data removes them, and password recovery/cross-device login are unavailable. Local login separates profiles but does not encrypt browser data or verify one person. Earlier anonymous candles are not adopted. Cross-device encouragement/inbox and optional online services stay deferred.
+
+Run `npm run test:accounts` for real local account acceptance (no auth/network mocks); `CHROMIUM_PATH` optionally selects a local Chromium executable. Historical provider/component fixtures remain separate from active acceptance.

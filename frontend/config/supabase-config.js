@@ -1,4 +1,4 @@
 'use strict';
-// Public browser configuration. Keep both values empty for the local demo.
+// Active browser-local accounts. Online integration is deferred.
 // Use only a Supabase publishable key (sb_publishable_...), never a secret key.
-globalThis.LIGHT_EM_UP_AUTH=Object.freeze({url:'',publishableKey:'',googleEnabled:false});
+globalThis.LIGHT_EM_UP_AUTH=Object.freeze({mode:'local',url:'',publishableKey:'',googleEnabled:false});

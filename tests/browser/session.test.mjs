@@ -11,10 +11,11 @@ await new Promise(r=>server.listen(0,'127.0.0.1',r));const url=`http://127.0.0.1
 await fs.mkdir(path.join(root,'test-results'),{recursive:true});
 let browser;
 try{
- browser=await chromium.launch({headless:true,channel:process.env.PLAYWRIGHT_CHANNEL||undefined});
+ browser=await chromium.launch({headless:true,channel:process.env.PLAYWRIGHT_CHANNEL||undefined,...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}:{})});
  const context=await browser.newContext({viewport:{width:1280,height:900}}),page=await context.newPage();
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
- const wait=status=>page.waitForFunction(s=>document.body.getAttribute('data-session-state')===s,status);
+ const wait=status=>page.waitForFunction(s=>document.body?.getAttribute('data-session-state')===s,status);
+ await page.route('**/supabase-config.js',r=>r.fulfill({contentType:'text/javascript',body:'globalThis.LIGHT_EM_UP_AUTH={};'}));
  await page.goto(url);await wait('notConfigured');assert(await page.locator('#session-feedback').isHidden());assert(await page.locator('#map').isVisible());
  let userStatus=200,failNetwork=false,refreshStatus=200,holdUser=false,requests=0;
  let releaseUser;

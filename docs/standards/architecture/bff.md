@@ -42,3 +42,7 @@ A possible future web BFF contract (design suggestion, not implemented):
 | POST /api/me/blocks | Block an event's sender | Derive sender from an owned event; do not trust a supplied recipient. |
 
 A cookie-based implementation would need Secure/HttpOnly/SameSite decisions and CSRF protection; browser bearer tokens and server cookies have different threat boundaries. Preserve RLS and avoid a service-role shortcut. Document observability, error contracts and rollback before deployment. This audit does not create or deploy those routes.
+
+## FR-34 local account boundary
+
+Active nickname accounts/candles use browser IndexedDB and Web Crypto only. Duplicate nickname registration is enforced by an IndexedDB unique index; session/candle ownership is checked in the same database transaction. These are local consistency/profile-separation controls, not a trusted server or BFF. Browser-data access can bypass them; cross-device identities and person uniqueness are not provided. Optional BaaS code and SQL stay deferred. No email is collected by the active local account flow.

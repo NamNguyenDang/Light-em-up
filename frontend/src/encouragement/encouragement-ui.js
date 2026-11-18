@@ -15,6 +15,7 @@
  });
  globalThis.LightEmUpEncouragement=Object.freeze({
   bind(button,story){
+   if(globalThis.LIGHT_EM_UP_AUTH?.mode==='local'){button.disabled=true;button.textContent=story.id===state.profile?.id?'Your candle':'Local candle';return;}
    const self=story.id===state.profile?.id&&!!owner;
    button.textContent=self?'Your candle':sent.has(story.id)?'♥ Encouragement sent':pending.has(story.id)?'Sending…':'♡ I’m with you';
    button.disabled=self||sent.has(story.id)||pending.has(story.id);button.setAttribute('aria-busy',String(pending.has(story.id)));

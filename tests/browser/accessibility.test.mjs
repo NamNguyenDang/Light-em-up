@@ -17,6 +17,8 @@ const results=[];
 try{
   browser=await chromium.launch({headless:true,channel:process.env.PLAYWRIGHT_CHANNEL||undefined,...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}: {})});
   const page=await browser.newPage({viewport:{width:1280,height:900}});
+  // Historical editor component fixture; active no-anonymous acceptance is local-accounts.test.mjs.
+  await page.route('**/supabase-config.js',r=>r.fulfill({contentType:'text/javascript',body:"globalThis.LIGHT_EM_UP_AUTH={mode:'legacy-fixture'};"}));
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   const open=async()=>{await page.goto(url);await page.waitForSelector('#province-areas path');};
   const scan=async label=>{await page.addScriptTag({path:require.resolve('axe-core/axe.min.js')});const result=await page.evaluate(()=>axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']}}));await fs.writeFile(path.join(root,`test-results/axe-${label}.json`),JSON.stringify(result,null,2));assert.equal(result.violations.length,0,`${label}: ${result.violations.map(v=>v.id+': '+v.nodes.map(n=>n.target).join(', ')).join('; ')}`);};
@@ -46,7 +48,7 @@ try{
   assert.equal(await page.locator('body').getAttribute('data-dialog-state'),'profile');
   assert.equal(await page.locator('body').getAttribute('data-story-state'),'editing');
   await page.keyboard.press('Escape');
-  await page.waitForFunction(()=>document.body.getAttribute('data-dialog-state')==='none');
+  await page.waitForFunction(()=>document.body?.getAttribute('data-dialog-state')==='none');
   assert.equal(await page.locator('#province-select').inputValue(),'Skåne');
   assert.equal(await page.locator('#page-status').textContent(),provincePage);
   assert(await page.locator('#login').evaluate(n=>n===document.activeElement));
@@ -55,7 +57,7 @@ try{
   await page.locator('#rules').click();
   assert.equal(await page.locator('body').getAttribute('data-dialog-state'),'info');
   await page.keyboard.press('Escape');
-  await page.waitForFunction(()=>document.body.getAttribute('data-dialog-state')==='none');
+  await page.waitForFunction(()=>document.body?.getAttribute('data-dialog-state')==='none');
   assert.equal(await page.locator('#city-search').inputValue(),'Kiruna');
   assert.equal(await page.locator('#stories-title').textContent(),cityHeading);
   assert(await page.locator('#rules').evaluate(n=>n===document.activeElement));
@@ -88,7 +90,7 @@ try{
   await page.evaluate(()=>{document.querySelector('#profile-form').dispatchEvent(new Event('submit',{cancelable:true}));});assert.equal(await page.evaluate(()=>testWrites),1);
   await page.keyboard.press('Escape');assert(await page.locator('#profile-dialog').isVisible());
   await page.evaluate(()=>rejectSave(new Error('fixture failure')));
-  await page.waitForFunction(()=>document.body.getAttribute('data-story-state')==='saveFailed');assert.equal(await page.locator('[name=nickname]').inputValue(),'Save retry candle');assert(await page.locator('#save-profile').evaluate(n=>n===document.activeElement));await scan('editor-save-failed');
+  await page.waitForFunction(()=>document.body?.getAttribute('data-story-state')==='saveFailed');assert.equal(await page.locator('[name=nickname]').inputValue(),'Save retry candle');assert(await page.locator('#save-profile').evaluate(n=>n===document.activeElement));await scan('editor-save-failed');
   await page.screenshot({path:path.join(root,'test-results/editor-save-failed.png'),fullPage:true});
   await page.evaluate(()=>{persist=testPersist;});await page.locator('#save-profile').click();await page.locator('#profile-dialog').waitFor({state:'hidden'});assert.equal(await page.locator('#featured-story h3').textContent(),'Save retry candle');
   // Approximation only: manual browser text-only resize remains required.

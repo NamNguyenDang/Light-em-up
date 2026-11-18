@@ -8,6 +8,8 @@
   let retryAttempt=false,repository=null,sdk=null;
   const signout=document.getElementById('signout');
   const listeners=new Set();
+  const local=globalThis.LIGHT_EM_UP_AUTH?.mode==='local';
+  const localStore=()=>LocalAccounts.current();
   function renderSession(value){
     signout.hidden=value.status!=='signedIn';
     document.body.setAttribute('data-session-state',value.status);
@@ -37,20 +39,15 @@
   globalThis.LightEmUpSession=Object.freeze({
     reportEncouragement(owner,event,reason){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.reportEncouragement(event,reason);},
     blockSender(owner,event){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.blockSender(event);},
-    receivedEncouragement(owner,offset){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.receivedEncouragement(offset);},
+    receivedEncouragement(owner,offset){if(local)return Promise.resolve([]);if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.receivedEncouragement(offset);},
     readEncouragement(owner,event){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.readEncouragement(event);},
-    sentEncouragement(owner){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.sentEncouragement(owner);},
+    sentEncouragement(owner){if(local)return Promise.resolve([]);if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.sentEncouragement(owner);},
     sendEncouragement(owner,story){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.sendEncouragement(owner,story);},
-    reportEncouragement(owner,event,reason){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.reportEncouragement(event,reason);},
-    blockSender(owner,event){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.blockSender(event);},
-    receivedEncouragement(owner,offset){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.receivedEncouragement(offset);},
-    readEncouragement(owner,event){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.readEncouragement(event);},
-    sentEncouragement(owner){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.sentEncouragement(owner);},
     encourage(owner,storyId,message){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.encourage(owner,storyId,message);},
-    publicStories(){return repository?repository.publicStories():Promise.resolve([]);},
-    async signOut(){if(!sdk)throw new Error('No account client');const result=await sdk.auth.signOut({scope:'local'});if(result.error)throw result.error;},
-    loadStory(owner){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.load(owner);},
-    saveStory(owner,story){if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.save(owner,story);},
+    publicStories(){if(local)return localStore().publicStories();return repository?repository.publicStories():Promise.resolve([]);},
+    async signOut(){if(local)return localStore().signOut();if(!sdk)throw new Error('No account client');const result=await sdk.auth.signOut({scope:'local'});if(result.error)throw result.error;},
+    loadStory(owner){if(local)return localStore().load(owner);if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.load(owner);},
+    saveStory(owner,story){if(local)return localStore().save(owner,story);if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.save(owner,story);},
     subscribe(listener){listeners.add(listener);listener(controller.snapshot());return ()=>listeners.delete(listener);}
   });
   signout.onclick=async()=>{
@@ -72,5 +69,6 @@
   window.addEventListener('pagehide',()=>controller.stop(),{once:true});
   // A page restored from the browser back-forward cache needs fresh listeners.
   window.addEventListener('pageshow',event=>{if(event.persisted)location.reload();});
+  if(local)window.addEventListener('focus',()=>void controller.retry());
   void controller.start();
 })();

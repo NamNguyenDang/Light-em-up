@@ -13,10 +13,10 @@
  }
  const originalLabel=button.textContent;
  const entry=CandleEntry.create({
-  openLocalEditor:()=>openProfile(),
+
   resumeIntent:intent,
   isModalOpen:()=>!!document.querySelector('dialog[open]'),
-  openEditor:()=>globalThis.LightEmUpAccount?LightEmUpAccount.openEditor():openProfile(),
+  openEditor:()=>globalThis.LightEmUpAccount?.openEditor(),
   clearIntent,
   signIn:()=>{
    try{sessionStorage.setItem(contextKey,JSON.stringify({...getBrowsingContext(),at:Date.now()}));}catch{}

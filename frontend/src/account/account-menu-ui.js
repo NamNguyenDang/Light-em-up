@@ -3,6 +3,7 @@
  const button=document.getElementById('header-login'),menu=document.getElementById('account-menu'),panel=document.getElementById('encouragement-panel');let signedIn=false;
  button.setAttribute('aria-controls','account-menu');
  function close(focus=false){menu.hidden=true;button.setAttribute('aria-expanded','false');if(focus)button.focus();}
+ if(globalThis.LIGHT_EM_UP_AUTH?.mode==='local')document.getElementById('menu-encouragement').hidden=true;
  const unsubscribe=LightEmUpSession.subscribe(value=>{signedIn=value.status==='signedIn';if(!signedIn){close();panel.hidden=true;button.removeAttribute('aria-expanded');}else button.setAttribute('aria-expanded',String(!menu.hidden));});
  button.onclick=()=>{if(!signedIn){location.assign(new URL('signin.html',location.href).href);return;}menu.hidden=!menu.hidden;button.setAttribute('aria-expanded',String(!menu.hidden));};
  menu.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();close(true);}});

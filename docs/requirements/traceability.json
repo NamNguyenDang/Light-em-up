@@ -478,6 +478,25 @@
         "scripts/check-requirements.py"
       ],
       "evidence_scope": "documentation/process scenario review and structural validation; no runtime or deployment change"
+    },
+    {
+      "fr": "FR-34",
+      "acceptance_ids": [
+        "FR-34-AC1",
+        "FR-34-AC2",
+        "FR-34-AC3",
+        "FR-34-AC4"
+      ],
+      "case_ids": [
+        "TC-FR-34-01"
+      ],
+      "automated_tests": [
+        "tests/browser/local-accounts.test.mjs",
+        "tests/browser/accessibility.test.mjs",
+        "tests/browser/signin.test.mjs",
+        "scripts/check-requirements.py"
+      ],
+      "evidence_scope": "real local-browser IndexedDB/Web Crypto acceptance; deferred provider fixtures separate; live deployment and manual AT reported separately"
     }
   ]
 }

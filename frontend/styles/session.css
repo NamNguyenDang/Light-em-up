@@ -2,3 +2,8 @@
 .session-feedback{max-width:1360px;margin:.75rem auto;padding:.5rem 1rem;display:flex;align-items:center;flex-wrap:wrap;gap:.75rem;color:#f5dfba}
 .session-feedback p{margin:0;color:#c7d3d5;font:1rem/1.5 system-ui,sans-serif;overflow-wrap:anywhere}
 #session-retry{min-width:44px;min-height:44px;font-size:1rem}
+
+/* FR-34: maximum-length registered nicknames must reflow in account controls/cards. */
+#header-login{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.featured-light{overflow-wrap:anywhere}
+.personal-story-content{min-width:0;max-width:100%}
