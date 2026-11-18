@@ -1,5 +1,7 @@
 # Website and SaaS UX audit
 
+Scope note (FR-32): current delivery is browser-local. Account/inbox behavior below describes optional code and controlled fixtures, not activated online functionality or completed user research.
+
 There is no single universal "SaaS UI standard" that this repository can claim to pass. Use separate references for accessibility, human-centred design, interaction behavior and measured performance. SaaS means Software as a Service; it describes delivery, not a visual design certification.
 
 ## Current reference set
