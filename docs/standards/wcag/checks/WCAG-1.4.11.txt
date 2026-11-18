@@ -1,0 +1,12 @@
+WCAG 2.2 1.4.11 (level AA)
+Assessment: Evidence — not a complete conformance pass.
+
+Project implementation/applicability:
+Paired dark/light focus and map indicators with contrast assertions.
+
+Evidence and remaining verification:
+dialog-accessibility-test.py; forced-colors output; manual all-state review.
+
+Source: https://www.w3.org/TR/WCAG22/
+Scope and manual gaps: ../audit.md and ../../findings.md
+Reviewed: 18 November 2026.

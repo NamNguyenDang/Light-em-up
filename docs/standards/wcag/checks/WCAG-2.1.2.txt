@@ -1,0 +1,12 @@
+WCAG 2.2 2.1.2 (level A)
+Assessment: Review — not a complete conformance pass.
+
+Project implementation/applicability:
+Native modal containment; Escape/Close and bounded send requests.
+
+Evidence and remaining verification:
+Exercise every cancel/discard/error and real provider path with keyboard.
+
+Source: https://www.w3.org/TR/WCAG22/
+Scope and manual gaps: ../audit.md and ../../findings.md
+Reviewed: 18 November 2026.

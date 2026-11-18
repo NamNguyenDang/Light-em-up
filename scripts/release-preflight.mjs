@@ -1,14 +1,14 @@
 // Checks served artifacts, not mocked application routes. This is NOT a live acceptance pass.
 import {createRequire} from 'node:module';
 import {pathToFileURL} from 'node:url';
-const require=createRequire(import.meta.url),{configurationStatus}=require('../session-restoration.js');
+const require=createRequire(import.meta.url),{configurationStatus}=require('../frontend/src/account/session-restoration.js');
 export async function inspectRelease(baseURL,{fetcher=fetch,allowLocalhost=false}={}){
  const checks=[];let base;
  try{base=new URL(baseURL);if(base.username||base.password||base.search||base.hash||!(base.protocol==='https:'||(allowLocalhost&&base.protocol==='http:'&&['localhost','127.0.0.1'].includes(base.hostname))))throw new Error();if(!base.pathname.endsWith('/'))base.pathname+='/';}
  catch{return {status:'BLOCKED',release_ready:false,checks:[{name:'origin',pass:false,reason:'A clean deployed HTTPS site root is required.'}]};}
  const get=async path=>{const response=await fetcher(new URL(path,base),{cache:'no-store',redirect:'error',signal:AbortSignal.timeout(10000)});if(!response.ok)throw new Error('Unavailable served artifact');return await response.text();};
  try{
-  const [config,signin,flow,index]=await Promise.all([get('supabase-config.js'),get('signin.html'),get('signin-flow.js'),get('index.html')]);
+  const [config,signin,flow,index]=await Promise.all([get('frontend/config/supabase-config.js'),get('signin.html'),get('frontend/src/account/signin-flow.js'),get('index.html')]);
   // Parse only the expected public string literals; never execute a remote config script.
   const value=name=>{const match=config.match(new RegExp('\\b'+name+'\\s*:\\s*([\'\"])([^\'\"\\\\]*)\\1'));return match?.[2]||'';};
   const url=value('url'),publishableKey=value('publishableKey');

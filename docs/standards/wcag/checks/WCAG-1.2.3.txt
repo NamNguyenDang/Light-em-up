@@ -1,0 +1,12 @@
+WCAG 2.2 1.2.3 (level A)
+Assessment: N/A — not a complete conformance pass.
+
+Project implementation/applicability:
+No synchronized video content.
+
+Evidence and remaining verification:
+Reassess with any video.
+
+Source: https://www.w3.org/TR/WCAG22/
+Scope and manual gaps: ../audit.md and ../../findings.md
+Reviewed: 18 November 2026.

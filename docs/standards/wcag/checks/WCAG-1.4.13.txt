@@ -1,0 +1,12 @@
+WCAG 2.2 1.4.13 (level AA)
+Assessment: Evidence — not a complete conformance pass.
+
+Project implementation/applicability:
+Province tooltip persists across hover, supports focus and Escape.
+
+Evidence and remaining verification:
+runtime/browser tooltip regressions; AT/device review pending.
+
+Source: https://www.w3.org/TR/WCAG22/
+Scope and manual gaps: ../audit.md and ../../findings.md
+Reviewed: 18 November 2026.

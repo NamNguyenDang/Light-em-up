@@ -1,0 +1,12 @@
+WCAG 2.2 2.2.2 (level A)
+Assessment: Review — not a complete conformance pass.
+
+Project implementation/applicability:
+No auto-updating carousel or scrolling feed; reduced-motion CSS.
+
+Evidence and remaining verification:
+Verify transient status duration does not hide essential information.
+
+Source: https://www.w3.org/TR/WCAG22/
+Scope and manual gaps: ../audit.md and ../../findings.md
+Reviewed: 18 November 2026.

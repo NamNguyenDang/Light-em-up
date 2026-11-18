@@ -1,0 +1,12 @@
+WCAG 2.2 2.4.6 (level AA)
+Assessment: Evidence — not a complete conformance pass.
+
+Project implementation/applicability:
+Visible headings, required/optional labels and named dialogs.
+
+Evidence and remaining verification:
+Parsed HTML/axe checks; user comprehension study pending.
+
+Source: https://www.w3.org/TR/WCAG22/
+Scope and manual gaps: ../audit.md and ../../findings.md
+Reviewed: 18 November 2026.
