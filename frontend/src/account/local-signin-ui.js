@@ -18,6 +18,7 @@ const LocalSignInUI=(()=>{
    catch(error){if(stopped)return;phase('failed');if(error.code==='duplicate')invalid(name,'nickname-error','That nickname is already taken. Sign in or choose another.');else if(error.code==='credentials'){$('signin-error').textContent='Nickname or password is incorrect.';name.setAttribute('aria-invalid','true');password.setAttribute('aria-invalid','true');password.focus();}else{$('signin-error').textContent='We could not save or open your local account. Your input is still here. Check browser storage and try again.';submit.focus();}}
    finally{if(!stopped)working(false);}
   };
+  for(const [field,id]of [[name,'nickname-error'],[password,'password-error']])field.addEventListener('input',()=>{field.setAttribute('aria-invalid','false');$(id).textContent='';$('signin-error').textContent='';});
   toggle.onclick=()=>{if(busy)return;registering=!registering;password.value='';clear();mode();name.focus();};
   $('password-toggle').onclick=()=>{const show=password.type==='password';password.type=show?'text':'password';$('password-toggle').textContent=show?'Hide password':'Show password';$('password-toggle').setAttribute('aria-pressed',String(show));};
   cancel.onclick=e=>{if(busy){e.preventDefault();$('signin-status').textContent='Please wait for the current account check to finish.';return;}stopped=true;password.value='';};

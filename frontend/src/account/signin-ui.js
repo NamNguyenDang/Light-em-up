@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
  if(globalThis.LIGHT_EM_UP_AUTH?.mode==='local'){LocalSignInUI.start();return;}
- document.getElementById('local-account-note').hidden=true;document.getElementById('signin-identity-label').textContent='Email (required)';document.getElementById('signin-nickname').type='email';document.getElementById('password-help').textContent='Use at least 8 characters. The account service may require a stronger password.';
+ document.getElementById('local-account-note').hidden=true;document.getElementById('local-account-details').hidden=true;document.getElementById('signin-identity-label').textContent='Email (required)';document.getElementById('signin-nickname').type='email';document.getElementById('password-help').textContent='Use at least 8 characters. The account service may require a stronger password.';
  const $=id=>document.getElementById(id),form=$('signin-form'),email=$('signin-nickname'),password=$('signin-password'),submit=$('signin-submit'),retry=$('signin-retry'),cancel=$('signin-cancel');
  document.body.setAttribute('data-view-state','signIn');
  let registering=false,lastPhase='checking';
