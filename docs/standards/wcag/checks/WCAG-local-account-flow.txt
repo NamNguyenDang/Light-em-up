@@ -8,3 +8,5 @@ Target: WCAG 2.2 AA, no full conformance claim.
 1.4.3 / 1.4.10 / 2.5.8: retained palette; axe, 320–1280px reflow and 24px targets checked on actual local states.
 Evidence: tests/browser/local-accounts.test.mjs; test-results/axe-local-*.json and local-*.png from exact CI run.
 Manual screen-reader announcements, actual browser zoom/text resize and cross-browser coverage remain NOT RUN; automated checks do not prove these.
+
+Actual evidence: run 44309790991, behavior source 21395ca14635091ecde81cae08b4c761f69de367: 8 local axe states/0 violations; keyboard/validation/paste/targets/reflow assertions passed. Final 320px registration/owner screenshots visually reviewed. See docs/tracking/features/FR-34_LOCAL_ACCOUNTS.md for scope, artifact provenance and remaining manual/deployment gaps.
