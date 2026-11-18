@@ -1,0 +1,11 @@
+Usability in context
+Status: Not measured
+
+Evidence:
+Flows have automated tests, but task completion, efficiency and satisfaction are unmeasured.
+
+Next check:
+Measure user tasks rather than equating green tests with usability.
+
+Reference: https://www.iso.org/standard/63500.html
+Reviewed: 18 November 2026.

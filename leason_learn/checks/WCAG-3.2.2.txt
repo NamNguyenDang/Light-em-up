@@ -1,0 +1,12 @@
+WCAG 2.2 3.2.2 (level A)
+Assessment: Review — not a complete conformance pass.
+
+Project implementation/applicability:
+Selection filters results with status feedback; saving is explicit.
+
+Evidence and remaining verification:
+Confirm updates remain understandable with AT.
+
+Source: https://www.w3.org/TR/WCAG22/
+Scope and manual gaps: ../02_wcag22_audit.md and ../05_findings_and_verification.md
+Reviewed: 18 November 2026.

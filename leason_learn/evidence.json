@@ -1,0 +1,83 @@
+{
+  "repository": "NamNguyenDang/Light-em-up",
+  "reviewed_on": "2026-11-18",
+  "baseline_main": "3684475786761e5cc4b173233fd41e39b8f0a43a",
+  "verified_feature_commit": "763b4f6ad21bb8b0012b95d9b14792e9a1c62468",
+  "pre_pr_run": "https://github.com/NamNguyenDang/Light-em-up/actions/runs/44103598084",
+  "conclusion": "success",
+  "artifact_id": 14337182351,
+  "artifact_digest": "sha256:76d924777a9fc2baf4554d6ca88bb35f47bcfc7e6b176b708f05bf1dc4a63bdc",
+  "artifact_retention_days": 14,
+  "axe_scans": [
+    {
+      "file": "axe-dialog.json",
+      "violations": 0
+    },
+    {
+      "file": "axe-signin-connection.json",
+      "violations": 0
+    },
+    {
+      "file": "axe-account-menu.json",
+      "violations": 0
+    },
+    {
+      "file": "axe-signin-unconfigured.json",
+      "violations": 0
+    },
+    {
+      "file": "axe-map-data.json",
+      "violations": 0
+    },
+    {
+      "file": "axe-validation.json",
+      "violations": 0
+    },
+    {
+      "file": "axe-signin-ready.json",
+      "violations": 0
+    },
+    {
+      "file": "axe-community.json",
+      "violations": 0
+    },
+    {
+      "file": "axe-encouragement-composer.json",
+      "violations": 0
+    },
+    {
+      "file": "axe-signin-check-failed.json",
+      "violations": 0
+    },
+    {
+      "file": "axe-signin-credentials.json",
+      "violations": 0
+    },
+    {
+      "file": "axe-encouragement-panel.json",
+      "violations": 0
+    },
+    {
+      "file": "axe-account-story.json",
+      "violations": 0
+    },
+    {
+      "file": "axe-session-error.json",
+      "violations": 0
+    },
+    {
+      "file": "axe-editor-saving.json",
+      "violations": 0
+    },
+    {
+      "file": "axe-editor-save-failed.json",
+      "violations": 0
+    }
+  ],
+  "scope_limitations": [
+    "HTTP SDK fixtures, not real provider registration",
+    "PostgreSQL auth.uid claim fixture, not deployed JWT integration",
+    "Manual AT/real zoom pending",
+    "FR-29 live account journey BLOCKED; not release-ready"
+  ]
+}

@@ -1,0 +1,11 @@
+Human-centred design process
+Status: Partial process evidence; no ISO conformity claim
+
+Evidence:
+User feedback, visual iteration and defect reports recorded; representative usability research not completed.
+
+Next check:
+Run representative task-based studies including assistive-technology users.
+
+Reference: https://www.iso.org/standard/77520.html
+Reviewed: 18 November 2026.

@@ -1,0 +1,11 @@
+Disclosure navigation
+Status: Implemented; manual AT check pending
+
+Evidence:
+Nickname disclosure uses normal buttons/Tab, expanded state and Escape inside the panel.
+
+Next check:
+Review trigger-level Escape and actual assistive-technology behavior.
+
+Reference: https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/
+Reviewed: 18 November 2026.
