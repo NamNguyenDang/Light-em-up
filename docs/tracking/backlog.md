@@ -47,7 +47,9 @@ Each FR targets main through a separate PR and receives a WCAG 2.2 AA cross-chec
 
 | FR-30 | Golden requirements and acceptance traceability | docs/requirements/requirement.md defines expected behavior; linked scenarios and CI traceability; memory and applicable standards reviewed for every FR/DR. | Implemented in this feature; no new live-service acceptance claim. |
 
-| FR-31 | Repository organization and FE/BE separation | Separate browser/runtime, deferred backend, tests and docs; preserve root page URLs and behavior; update imports/links/traceability atomically; add UX workspace. | Implemented in this feature; full migration verification required. |
+| FR-31 | Repository organization and FE/BE separation | Separate browser/runtime, deferred backend, tests and docs; preserve root page URLs and behavior; update imports/links/traceability atomically; add UX workspace. | Merged PR #31; full migration regression passed. |
+
+| FR-32 | UX knowledge and portfolio workspace | Evidence-led case study, research assumptions/plan, journeys, decision rationale, evaluation and provenance; no invented research/outcome claims. | Implemented in this feature; participant research/manual evaluation remain NOT RUN. |
 
 Implementation is merged through FR-26. FR-27 adds the lessons and standards audit. Live service activation is a separate setup step: apply the five numbered SQL migrations, configure public Supabase URL/publishable key and auth redirects, then run real-account tests. No live project was provisioned or modified. Browser SDK fixtures and PostgreSQL claim fixtures test implementation, not live deployment.
 
