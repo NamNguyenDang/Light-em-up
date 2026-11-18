@@ -38,3 +38,11 @@ Confirmed 18 November 2026: no repeated permission is needed to merge passing wo
 ## FR-29 remediation boundary (18 November 2026)
 
 The code portion adds signup/confirmation handling, a clearly labelled local candle option when online services are unconfigured, and served-artifact release preflight. Preflight remains release_ready=false even with valid public config; it only permits real live smoke testing. Do not reinterpret the local fallback as an online candle or mark real signup/persistence verified. The report's empty config/missing signup diagnosis describes the original baseline; track actual current code separately. FR-29 stays open until real configuration/provider/schema/redirect checks and the full deployed-origin account journey pass.
+
+## FR-30: golden behavior is the test oracle (18 November 2026)
+
+The user requested requirement/requirement.md as the golden file for test creation and expected behavior. Read memory before work and check the established standards. Update stable acceptance IDs, scenarios and traceability for every FR/DR; compare actual results with the contract before closure. A test and implementation can agree with each other and still miss the user's expected journey. Never alter requirements just to hide that discrepancy. Missing manual/live cases remain open; valid links or fixture success do not establish acceptance. See skill.md's mandatory requirement-first cycle.
+
+## Online email setup and cost boundary (18 November 2026)
+
+The user prefers the low-cost/free path. Official pricing and auth-email docs were checked: a Supabase Free project is possible, but its default email sender is restricted to project-team addresses. A public confirmation signup journey therefore needs appropriate sender configuration and actual external-recipient verification. Do not infer working public email from a valid URL/key or a fixture response; preflight is not email delivery acceptance. Email providers have separate limits/pricing; repository merge authorization does not authorize paid billing. References are in requirement/README.md.

@@ -35,3 +35,7 @@ This is a single-browser prototype, not a deployed community service. There is n
 - [Verification and acceptance checks](docs/TESTING.md)
 
 The project is intentionally not published to hosting. Open the files locally to review it.
+
+## Golden behavior and verification
+
+See [requirement/requirement.md](requirement/requirement.md) for expected behavior, [test cases](requirement/test-cases.md) for scenarios and [Agent/skill.md](Agent/skill.md) for the memory → requirements → standards → implementation → acceptance workflow. Code merged and live acceptance are different statuses; the online account journey remains blocked until configured and verified.
