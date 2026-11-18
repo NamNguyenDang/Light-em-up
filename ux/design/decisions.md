@@ -18,3 +18,9 @@ These records are grounded in owner feedback, project decisions and implementati
 ## How to add a decision
 
 State the user problem, evidence quality, alternatives, chosen rationale, tradeoffs, affected requirements, actual validation and unresolved question. A new design choice must not be justified only by a personal preference or by an invented industry standard. Keep the [golden contract](../../docs/requirements/requirement.md) updated when an authorized choice changes behavior.
+
+## D-11 — Registered local accounts without email (FR-34)
+
+Owner decision: remove anonymous candles and email collection; register by nickname/password and retain one candle per account. Alternatives considered: anonymous local profile (rejected by owner), email-based online service (deferred), MD5-derived identity/token (rejected because password verification, nickname uniqueness and sessions have different responsibilities). Use atomic normalized nickname lookup, salted PBKDF2, a stable account ID and independent expiring session.
+
+UX consequences: visitors browse freely but authenticate before creating; duplicate registration names the nickname conflict, login uses a generic credential error, and failed saves preserve the draft. Explain local-browser persistence, no recovery/cross-device use, remaining personal-data responsibility and the inability to enforce one human/one account. Existing anonymous candles are not adopted. Validation is an actual local-browser automated journey and accessibility review, not participant research or a measured engagement result. See [FR-34](../../docs/requirements/requirement.md#fr-34--nicknamepassword-local-accounts-active-scope).
