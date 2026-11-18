@@ -45,6 +45,8 @@ Each FR targets main through a separate PR and receives a WCAG 2.2 AA cross-chec
 | FR-28 | Agent guidance | Agent/memory.md and skill.md capture lessons and future PR rules, discoverable through repository instructions. | Merged PR #28. |
 | FR-29 | Usable registration, sign-in and candle journey | Fix/configure real account flow; prove register/confirmation/sign-in/create-light-save/reload/sign-out-in on deployed origin; fail release readiness on missing config/skipped live tests. | Signup/local-demo/preflight code under FR-29; online release remains BLOCKED until real backend configuration and acceptance. |
 
+| FR-30 | Golden requirements and acceptance traceability | requirement/requirement.md defines expected behavior; linked scenarios and CI traceability; memory and applicable standards reviewed for every FR/DR. | Implemented in this feature; no new live-service acceptance claim. |
+
 Implementation is merged through FR-26. FR-27 adds the lessons and standards audit. Live service activation is a separate setup step: apply the five numbered SQL migrations, configure public Supabase URL/publishable key and auth redirects, then run real-account tests. No live project was provisioned or modified. Browser SDK fixtures and PostgreSQL claim fixtures test implementation, not live deployment.
 
 The pre-existing presentation/accessibility series reached main through integration PR #10; the older branch-stacking correction above is historical. Manual screen-reader/real zoom checks remain open across the series; no full WCAG conformance claim is made.

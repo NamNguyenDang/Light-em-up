@@ -39,6 +39,7 @@ jobs:
           psql -h localhost -U postgres -v ON_ERROR_STOP=1 -f supabase/tests/bootstrap.sql
           for migration in supabase/migrations/*.sql; do psql -h localhost -U postgres -v ON_ERROR_STOP=1 -f "$migration"; done
           for test in supabase/tests/*.sql; do if [ "$test" != supabase/tests/bootstrap.sql ]; then psql -h localhost -U postgres -v ON_ERROR_STOP=1 -f "$test"; fi; done
+      - run: python3 scripts/requirement-traceability.py
       - run: npm test
       - run: node scripts/session-test.mjs
       - run: node scripts/signin-test.mjs

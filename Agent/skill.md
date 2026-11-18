@@ -1,6 +1,6 @@
 # Light-em-up development workflow — FR-28
 
-Repository-local instructions for agents working on NamNguyenDang/Light-em-up. This is a checked-in workflow guide, not an installed global ChatGPT skill. Read memory.md, the confirmed backlog and relevant leason_learn checks before changing code.
+Repository-local instructions for agents working on NamNguyenDang/Light-em-up. This is a checked-in workflow guide, not an installed global ChatGPT skill. Read memory.md, requirement/requirement.md, the confirmed backlog and relevant leason_learn checks before changing code.
 
 ## Authorization and delivery
 
@@ -9,6 +9,20 @@ Repository-local instructions for agents working on NamNguyenDang/Light-em-up. T
 - Preserve separate feature history. Use merge commits, not a combined squash of multiple FRs. Verify that dependencies really reached main before building on them.
 - The user will randomly inspect the latest default branch and submit DRs. Treat those reports as actionable defects; reproduce and investigate without waiting for additional merge permission. Their checks supplement our verification, never replace it.
 - Continue authorized backlog work autonomously. Do not end each FR by asking whether to continue. If information or external access is genuinely missing, complete independent work and report the concrete blocker without inventing configuration or weakening safeguards.
+
+## Mandatory requirement-first cycle (FR-30)
+
+Apply this cycle to every new/changed FR and DR, including follow-up fixes:
+
+1. **Read memory first:** consult [memory.md](memory.md) for known mistakes/decisions. Note relevant prevention steps in the work/PR; do not merely list the file as read.
+2. **Read/update the golden contract:** [requirement/requirement.md](../requirement/requirement.md) defines expected behavior. Add or revise stable acceptance IDs for the authorized change before implementation/closure. The backlog records status, not alternate expectations. Do not rewrite a requirement to excuse a defect or silently downgrade a failing case to N/A.
+3. **Define the test scenario:** update [test-cases.md](../requirement/test-cases.md) and [traceability.json](../requirement/traceability.json). State preconditions, actions, observable expected results, failure/retry/boundary/ownership variants and required environment. Existing code is not the oracle for expected behavior. Include the reproduced DR and unaffected regressions.
+4. **Review standards:** check relevant WCAG 2.2 AA criteria, BFF/BaaS boundaries and website/SaaS UX guidance in [leason_learn](../leason_learn/README.md). Record applicability, evidence and justified gaps; do not invent ISO/WCAG/performance certification or add a BFF just to tick a box.
+5. **Implement and compare:** run tests against the golden expected results and inspect actual UI/data/focus/output. `python3 scripts/requirement-traceability.py` checks links only; it never proves behavioral correctness. Resolve discrepancies or track them as defects rather than weakening the assertion.
+6. **Record acceptance:** for each changed acceptance ID, report its test case, actual result, exact commit/run, environment/origin, evidence scope and PASS/FAIL/BLOCKED/NOT RUN. Name missing manual/live/negative/boundary evidence. A required failed/blocked/not-run case leaves acceptance open even if an independently useful code PR merges.
+7. **Carry the lesson forward:** update memory/lessons when a new mistake, cause or durable decision appears. Link the affected requirement, test and FR/DR. Avoid copying personal data, credentials or redundant historical detail.
+
+Before PR opening, inspect the requirement-to-test comparison, memory prevention steps and standards findings alongside exact-head checks. Missing golden/test mappings fail the structural CI gate. Merge permission remains autonomous and repo-scoped; acceptance evidence is not replaced by the user's future spot checks.
 
 ## DR intake and closure
 
