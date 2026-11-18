@@ -29,7 +29,7 @@ const LocalAccounts=(()=>{
  }
  let singleton;
  function current(){if(!singleton)singleton=create();return singleton;}
- function sessionController({onChange=()=>{}}={}){let stopped=false,sequence=0,state={status:'checking',user:null,canRetry:false};const publish=(status,user=null)=>{state=Object.freeze({status,user,canRetry:status==='checkFailed'});onChange(state);return state;};async function check(){if(stopped)return state;const n=++sequence;publish('checking');try{const user=await current().identity();if(!stopped&&n===sequence)publish(user?'signedIn':'signedOut',user);}catch{if(!stopped&&n===sequence)publish('checkFailed');}return state;}let unsubscribe;try{unsubscribe=current().subscribe(()=>void check());}catch{}return {start:check,retry:check,snapshot:()=>state,stop(){stopped=true;sequence++;unsubscribe?.();}};}
+ function sessionController({onChange=()=>{}}={}){let stopped=false,sequence=0,state={status:'checking',user:null,canRetry:false};const publish=(status,user=null)=>{state=Object.freeze({status,user,canRetry:status==='checkFailed'});onChange(state);return state;};async function check(){if(stopped)return state;const n=++sequence;publish('checking');try{const store=current();if(!unsubscribe)unsubscribe=store.subscribe(()=>void check());const user=await store.identity();if(!stopped&&n===sequence)publish(user?'signedIn':'signedOut',user);}catch{if(!stopped&&n===sequence)publish('checkFailed');}return state;}let unsubscribe;try{unsubscribe=current().subscribe(()=>void check());}catch{}return {start:check,retry:check,snapshot:()=>state,stop(){stopped=true;sequence++;unsubscribe?.();}};}
  return Object.freeze({create,current,sessionController,nickname});
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=LocalAccounts;
