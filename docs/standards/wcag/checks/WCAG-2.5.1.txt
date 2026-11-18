@@ -1,0 +1,12 @@
+WCAG 2.2 2.5.1 (level A)
+Assessment: Review — not a complete conformance pass.
+
+Project implementation/applicability:
+Equivalent province dropdown; no required multi-point gesture.
+
+Evidence and remaining verification:
+Real touch testing not completed.
+
+Source: https://www.w3.org/TR/WCAG22/
+Scope and manual gaps: ../audit.md and ../../findings.md
+Reviewed: 18 November 2026.

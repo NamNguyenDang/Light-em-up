@@ -1,0 +1,12 @@
+WCAG 2.2 1.4.4 (level AA)
+Assessment: Review — not a complete conformance pass.
+
+Project implementation/applicability:
+Rem-based typography and approximate doubled-text browser regression.
+
+Evidence and remaining verification:
+Real 200% text-only resize not completed.
+
+Source: https://www.w3.org/TR/WCAG22/
+Scope and manual gaps: ../audit.md and ../../findings.md
+Reviewed: 18 November 2026.

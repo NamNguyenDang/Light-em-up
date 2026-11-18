@@ -2,8 +2,9 @@
   "name": "light-em-up-accessibility-checks",
   "private": true,
   "scripts": {
-    "test": "node scripts/application-state-test.mjs && node scripts/runtime-test.mjs && node scripts/light-level-test.mjs && node scripts/province-test.mjs && node scripts/verify.mjs && python3 scripts/layout-test.py && python3 scripts/dialog-accessibility-test.py",
-    "test:a11y": "node scripts/browser-accessibility-test.mjs"
+    "test": "node tests/unit/application-state.test.mjs && node tests/unit/runtime.test.mjs && node tests/unit/light-level.test.mjs && node tests/unit/province.test.mjs && node tests/static/verify.test.mjs && python3 tests/static/layout_test.py && python3 tests/static/dialog_accessibility_test.py",
+    "test:a11y": "node tests/browser/accessibility.test.mjs",
+    "test:structure": "python3 scripts/check-paths.py && python3 scripts/check-requirements.py"
   },
   "devDependencies": {
     "playwright": "1.56.1",

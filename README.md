@@ -1,41 +1,26 @@
-# Light ’em up
+# Light-em-up
 
-An offline community prototype for people in Sweden looking for full-time work, part-time work or an internship, and people who want to encourage them.
+A local browser experience for sharing a little hope during a job search: explore Sweden, create a browser-local candle/story, choose lit/resting state, edit or hide it. Sample stories are labelled. Data stays in this browser/origin; there is no active online account/shared service.
 
-## Run offline
+## Run locally
 
-Download or clone this repository, then open **index.html** in a modern browser. No installation, build, account or network connection is required. Keep index.html, styles.css, cities.js, demo-data.js, map-layout.js, app.js and the assets folder together. Storage behavior for file URLs varies by browser; use the same browser and file path to revisit your profile. For consistent local storage, optionally serve this directory with `python3 -m http.server 8000` and open http://localhost:8000.
+From the repository root, run `python3 -m http.server 8000` and open http://localhost:8000/. Keep using the same origin/browser for local persistence. Root index.html/signin.html URLs are preserved; no frontend build or backend is required.
 
-## Included
+## Find your way
 
-- Sweden-only geographic SVG map, searchable city filters and equivalent story list.
-- Left map/data and right join panel; stacked responsive mobile layout.
-- 100 clearly labeled fictional profiles across 29 Swedish cities for density review.
-- Nearby-city clustering with counted candle markers and a city chooser.
-- Colorized hand-drawn candle artwork and a matching resting state.
-- Story pagination (12 per page) and wrapping for longer nicknames.
-- One browser-local profile: nickname, city, encouragement and optional employment details.
-- Independent candle and employment states; edit, hide, relight or delete a contribution.
-- Local encouragement reactions, demonstration reporting, export and reset.
-- Demo dashboard with local counts; no fabricated reach metrics.
-- No CDN, external fonts, map tiles or third-party requests.
+| Folder | Contents |
+|---|---|
+| [frontend/](frontend/README.md) | Browser code/styles/data/artwork. |
+| [backend/](backend/README.md) | Deferred optional schema and database tests. |
+| [ux/](ux/README.md) | UX process and portfolio workspace. |
+| [docs/](docs/README.md) | Requirements, tracking, standards, lessons, design history and licenses. |
+| [tests/](tests/README.md) | Executable verification. |
+| [agent/](agent/skill.md) | Working rules and memory, discovered through AGENTS.md. |
 
-## Important boundaries
+Start product work with [golden requirements](docs/requirements/requirement.md), [test scenarios](docs/requirements/test-cases.md) and [backlog](docs/tracking/backlog.md). The [organization map](docs/organization.md) explains the folder migration.
 
-This is a single-browser prototype, not a deployed community service. There is no secure authentication, Google sign-in, email recovery, server database or protected administrator role. The dashboard is visible to anyone using this local copy. Reports are local demonstrations and are not delivered. Never use this prototype for confidential information. No passwords or emails are requested. Sample stories are fictional. The Sweden boundary comes from Natural Earth and is not navigation-grade. City search includes 832 GeoNames place records; it does not cover every settlement. Interface text is currently English.
+## Verify
 
-## Design and Phase 2
+Install Node dependencies with `npm install` and Python HTML validation with `python3 -m pip install lxml==6.0.2`. Run `npm test` and `python3 scripts/check-requirements.py`. Browser tests use Playwright: install its Chromium locally or use an installed Chrome with PLAYWRIGHT_CHANNEL=chrome. CI records the browser version and runs all database/state/browser/axe checks.
 
-- [Feature breakdown](docs/FEATURES.md)
-- [Component architecture and interfaces](docs/ARCHITECTURE.md)
-- [Design v3 — candle and 100-profile density review](docs/DESIGN-V3.md)
-- [Design v2 — map, search and warmer dark theme](docs/DESIGN-V2.md)
-- [Original design v1 specification](docs/DESIGN.md)
-- [Geographic data attribution](docs/ATTRIBUTION.md)
-- [Verification and acceptance checks](docs/TESTING.md)
-
-The project is intentionally not published to hosting. Open the files locally to review it.
-
-## Golden behavior and verification
-
-See [requirement/requirement.md](requirement/requirement.md) for expected behavior, [test cases](requirement/test-cases.md) for scenarios and [Agent/skill.md](Agent/skill.md) for the memory → requirements → standards → implementation → acceptance workflow. Code merged and live acceptance are different statuses; the online account journey remains blocked until configured and verified.
+Supabase integration is retained but unconfigured/deferred. Tests using SDK HTTP responses or PostgreSQL claim fixtures do not prove online signup or shared persistence. No paid service or cloud activation is part of the local product. Manual accessibility/real zoom and future online acceptance gaps remain documented; no full WCAG conformance claim is made.

@@ -1,0 +1,12 @@
+WCAG 2.2 3.3.8 (level AA)
+Assessment: Evidence — not a complete conformance pass.
+
+Project implementation/applicability:
+Password metadata/paste/show password; no cognitive puzzle introduced.
+
+Evidence and remaining verification:
+Sign-in tests; actual provider, password manager and AT checks pending.
+
+Source: https://www.w3.org/TR/WCAG22/
+Scope and manual gaps: ../audit.md and ../../findings.md
+Reviewed: 18 November 2026.
