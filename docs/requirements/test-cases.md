@@ -339,3 +339,12 @@ Covers: FR-32-AC1
 - Actions: navigate from root to the UX case study, assumptions, plan, journeys, decisions, evaluation and evidence; inspect provenance/claim labels; compare the narrative with golden requirements, lessons and actual local output.
 - Expected: a reviewer can trace the problem, constraints, alternatives, decisions and validation gaps without mistaking planned research for findings, fixture screenshots for user acceptance, local use for a real community launch, or AI-assisted work for unsupported individual claims. Session/results templates remain NOT RUN/unmeasured until genuine evidence is added. Internal links and references resolve.
 - Execution references: scripts/check-paths.py and scripts/check-requirements.py; human evidence/claim review is mandatory and is not proven by the structural gate. Existing browser/axe regressions verify no application behavior was changed.
+
+### TC-FR-33-01
+
+Covers: FR-33-AC1
+
+- Preconditions: a new request or DR, golden requirements, memory and standards guidance are available.
+- Actions: review the workflow using a request needing clarification, an agreed request, a material scope change, missing test coverage, a failing test and absent deployment access. Follow all requirement/memory links.
+- Expected: clarification loops before implementation; settled scope is finalized without redundant merge permission; new changes trigger test-gap analysis; failures return to correction; requirement and expected-result verification occurs before PR opening. Missing required evidence leaves acceptance open. Deployment is verified separately from merge and remains BLOCKED/NOT RUN if unavailable. No runtime/auth change is claimed by this documentation delivery.
+- Execution references: scripts/check-paths.py and scripts/check-requirements.py; human scenario/content review is required because structural checks do not prove future workflow adherence.

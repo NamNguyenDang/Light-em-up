@@ -464,6 +464,20 @@
         "tests/browser/accessibility.test.mjs"
       ],
       "evidence_scope": "documentation/claim/provenance review; proposed research and unmeasured metrics are NOT RUN, no new live acceptance"
+    },
+    {
+      "fr": "FR-33",
+      "acceptance_ids": [
+        "FR-33-AC1"
+      ],
+      "case_ids": [
+        "TC-FR-33-01"
+      ],
+      "automated_tests": [
+        "scripts/check-paths.py",
+        "scripts/check-requirements.py"
+      ],
+      "evidence_scope": "documentation/process scenario review and structural validation; no runtime or deployment change"
     }
   ]
 }

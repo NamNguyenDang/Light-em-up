@@ -10,6 +10,23 @@ Repository-local instructions for agents working on NamNguyenDang/Light-em-up. T
 - The user will randomly inspect the latest default branch and submit DRs. Treat those reports as actionable defects; reproduce and investigate without waiting for additional merge permission. Their checks supplement our verification, never replace it.
 - Continue authorized backlog work autonomously. Do not end each FR by asking whether to continue. If information or external access is genuinely missing, complete independent work and report the concrete blocker without inventing configuration or weakening safeguards.
 
+## Way of working (WoW) — request to deployment
+
+Apply this lifecycle to every new FR/DR. The detailed requirement-first checks below remain mandatory.
+
+**New request → [analyze ↔ discuss] → finalize → implement → analyze test coverage → run tests → verify requirements and results → deploy → verify deployed output.**
+
+1. **New request:** record the requested outcome, scope and relevant FR/DR. Read memory before proposing a solution.
+2. **Analyze ↔ discuss:** cross-check the main [golden requirements](../docs/requirements/requirement.md), existing behavior and applicable standards. Explain assumptions, alternatives, constraints and effects in plain language before implementation. Repeat analysis/discussion when a material question or conflict remains. Proceed on settled decisions without requesting redundant permission; a user request to clarify first pauses implementation until the approach is finalized.
+3. **Finalize:** capture the agreed behavior, boundaries, failure states and observable acceptance criteria in the golden requirements and linked cases. Mark deferred work explicitly. Finalization is agreement on behavior, not another merge-approval gate.
+4. **Implement:** build only the finalized scope and retain the agreed architecture, privacy and accessibility constraints. Material discoveries that change the expected behavior return to analysis/discussion and finalization.
+5. **Analyze test coverage:** compare the actual diff with every affected acceptance criterion. Add missing scenarios for new/changed behavior, adverse states, boundaries, persistence and account isolation as applicable; retain unaffected regressions. Documentation-only changes use content/link/process review rather than invented runtime tests.
+6. **Run tests:** execute applicable new and regression tests on the exact candidate commit. Record the environment, results and evidence; distinguish fixtures from actual local/live behavior. Failures return to implementation and coverage analysis.
+7. **Verify:** compare observable results with both the test-case expectations and the main requirements, plus applicable WCAG 2.2 AA/architecture/UX checks. Passing tests alone do not prove complete coverage. Missing required cases or FAIL/BLOCKED/NOT RUN results leave the affected acceptance open; do not weaken requirements to make tests pass. Complete this review before opening the PR.
+8. **Deploy:** merge passing work through its separate FR/DR PR, then use the authorized existing deployment mechanism where available. Record merge, deployment and acceptance separately. Verify the served revision and relevant smoke journey after deployment; a merge or green CI is not proof that the live site changed. If deployment access/configuration is absent, report deployment BLOCKED/NOT RUN without fabricating success or activating paid/cloud services. Browser-local delivery remains the current scope.
+
+For this workflow change, review against [FR-33-AC1](../docs/requirements/requirement.md#fr-33--request-to-deployment-workflow) and [TC-FR-33-01](../docs/requirements/test-cases.md#tc-fr-33-01).
+
 ## Mandatory requirement-first cycle (FR-30)
 
 Apply this cycle to every new/changed FR and DR, including follow-up fixes:

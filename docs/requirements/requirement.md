@@ -199,3 +199,8 @@ This specification records expected behavior, not a blanket completion claim. FR
 
 - **FR-32-AC1**: Provide a navigable ux workspace with a case-study draft, assumptions/research plan, task/state journeys, evidence-backed design decisions, evaluation/metrics, blank session template and portfolio-review checklist. Distinguish owner feedback, implemented/automated evidence, proposed research and unmeasured outcomes. Preserve source/provenance, individual-role/AI-assistance honesty and the current local/deferred-backend boundary; never fabricate participants, quotes, outcome uplift or full standards conformity.
 - Acceptance scenario: [TC-FR-32-01](test-cases.md#tc-fr-32-01). Evidence: documentation/link/provenance review and unchanged runtime regressions; no user-study completion claim.
+
+### FR-33 — Request-to-deployment workflow
+
+- **FR-33-AC1**: agent/skill.md defines new request, iterative analysis/discussion against the golden requirements, finalized scope, implementation, test-gap analysis, test execution, requirement/result verification and deployment with served-output verification. Scope changes/failures loop back appropriately. Existing repo-only autonomous merge authorization persists; merge, deployment and acceptance remain distinct. Missing required evidence cannot be reported as a pass.
+- Acceptance scenario: [TC-FR-33-01](test-cases.md#tc-fr-33-01). Evidence: human process/content review and structural checks; no runtime/authentication/deployment change is implied.
