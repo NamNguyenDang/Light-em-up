@@ -58,3 +58,5 @@ The pre-existing presentation/accessibility series reached main through integrat
 Current scope decision (18 November 2026): browser-local use is approved. Cloud activation/online account acceptance is DEFERRED and unverified, not resolved. This does not prevent local-only use or independent documentation/UX work.
 
 | FR-33 | Request-to-deployment WoW | Analyze/discuss against golden requirements, finalize, implement, review test gaps, test, verify and deploy with separate served-output evidence. | Documentation implemented; no authentication or deployment change. |
+
+| FR-34 | Nickname/password local accounts | No email or anonymous candle; atomic nickname uniqueness, salted password verification, separate sessions and one owner candle. | Finalized; implementation and acceptance in progress. |

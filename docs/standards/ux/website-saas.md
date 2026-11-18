@@ -36,3 +36,7 @@ Core Web Vitals evaluation goals: Largest Contentful Paint (LCP) at most 2.5 sec
 ## Small practical user study
 
 Recruit people representative of the intended audience, including keyboard and assistive-technology users. Ask them to find a province, interpret a light level, create a candle, recover a failed edit, find Lina's encouragement and report/block an unwanted sender. Record task completion, errors, time, comprehension and satisfaction with consent; do not collect sensitive story content. Iterate on observed problems, then repeat. Automated test success cannot substitute for this evidence.
+
+## FR-34 account UX change
+
+Use nickname/password and explicit local scope instead of anonymous creation or an unavailable online email journey. Duplicates have a nickname-specific registration error; login uses one generic credential error. Preserve retry input, password-manager autocomplete, paste and show/hide without cognitive puzzles. Explain storage loss/no recovery and one account versus one human. No new research or task-success metrics are claimed.

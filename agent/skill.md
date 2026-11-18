@@ -57,6 +57,10 @@ Before PR opening, inspect the requirement-to-test comparison, memory prevention
 - Keep native dialog/details/button semantics where possible. Test initial/error/close/return focus, Escape/cancel and draft preservation. Side-effecting script modules must bootstrap once.
 - A PR description must state concrete behavior, why it changed, tests/evidence and material limits. Report actual implementation, deployment and user acceptance as separate statuses.
 
+## Registered local account rules (FR-34)
+
+Active accounts use nickname/password without email or anonymous candle creation. One account owns one candle; do not claim one verified person or global uniqueness. Keep PBKDF2 verifier, stable account ID and expiring random session separate. Check duplicates atomically and verify ownership on every private read/write. Test actual IndexedDB/Web Crypto journeys without auth mocks, including concurrent tabs, expired sessions, storage failures and draft retry. Do not export verifiers/tokens or claim browser storage encrypts stories. Existing provider/anonymous component fixtures are historical regression evidence, not active local acceptance.
+
 ## Current local scope and deferred online acceptance
 
 The user chose browser-local operation. Do not activate cloud services or billing. Keep backend integration explicitly deferred. FR-29 online acceptance stays open/deferred; it is not a blocker to an independently verified local-only change and must not be reported as fixed.
@@ -70,7 +74,7 @@ The user chose browser-local operation. Do not activate cloud services or billin
 
 ## Architecture and UX
 
-- Current design: direct Supabase BaaS (Backend as a Service), browser adapters, PostgreSQL RLS (Row Level Security) and RPCs (Remote Procedure Calls). It does not deploy a separate BFF (Backend for Frontend) server. Do not describe browser JavaScript as a trusted server boundary.
+- Deferred online design: direct Supabase BaaS (Backend as a Service), browser adapters, PostgreSQL RLS (Row Level Security) and RPCs (Remote Procedure Calls). It does not deploy a separate BFF (Backend for Frontend) server. Do not describe browser JavaScript as a trusted server boundary.
 - Evaluate BFF deliberately for multiple service aggregation, private server credentials or separately evolving clients; document value/cost and security boundaries first. Keep ownership enforced server-side even if a BFF is added.
 - Prefer the chosen low-cost implementation. No paid service, live backend provisioning or public rollout is implied by merge authorization.
 - Website/SaaS UX has several references, not one universal screen-layout certification: WCAG accessibility, human-centred usability guidance, APG interaction patterns and measured performance. Never claim ISO conformance or achieved performance without evidence.

@@ -1,13 +1,15 @@
 'use strict';
 (()=>{
- const $=id=>document.getElementById(id),form=$('signin-form'),email=$('signin-email'),password=$('signin-password'),submit=$('signin-submit'),retry=$('signin-retry'),cancel=$('signin-cancel');
+ if(globalThis.LIGHT_EM_UP_AUTH?.mode==='local'){LocalSignInUI.start();return;}
+ document.getElementById('local-account-note').hidden=true;document.getElementById('signin-identity-label').textContent='Email (required)';document.getElementById('signin-nickname').type='email';document.getElementById('password-help').textContent='Use at least 8 characters. The account service may require a stronger password.';
+ const $=id=>document.getElementById(id),form=$('signin-form'),email=$('signin-nickname'),password=$('signin-password'),submit=$('signin-submit'),retry=$('signin-retry'),cancel=$('signin-cancel');
  document.body.setAttribute('data-view-state','signIn');
  let registering=false,lastPhase='checking';
  function modeUI(){document.title=registering?'Create account — Light’em up':'Sign in — Light’em up';$('signin-title').textContent=registering?'Create account':'Sign in';$('account-description').textContent=registering?'Create an account with email and password. Email confirmation may be required.':'Welcome back to Light’em up.';password.autocomplete=registering?'new-password':'current-password';$('password-help').hidden=!registering;$('account-mode-toggle').textContent=registering?'Already registered? Sign in':'Create an account';submit.textContent=registering?'Create account':'Sign in';}
  let storage;try{storage=window.sessionStorage;}catch{}
  let model=ApplicationState.transition(ApplicationState.initial(),{type:'NAVIGATE',view:'signIn'});
  const messages={registration:'We could not create an account. Check your details or sign in if you already registered, then try again.',weakPassword:'Choose a stronger password and try again.',credentials:'The email or password is incorrect. Please try again.',unconfirmed:'Please confirm your email before signing in.',connection:'We couldn’t complete sign-in. Please try again.',provider:'Google sign-in could not be opened. Please try again.',cancelled:'Sign-in was cancelled or could not be completed. You can try again.'};
- function clearErrors(){for(const [field,id]of [[email,'email-error'],[password,'password-error']]){field.setAttribute('aria-invalid','false');$(id).textContent='';}$('signin-error').textContent='';}
+ function clearErrors(){for(const [field,id]of [[email,'nickname-error'],[password,'password-error']]){field.setAttribute('aria-invalid','false');$(id).textContent='';}$('signin-error').textContent='';}
  function render(value){
    lastPhase=value.phase;if(value.phase==='confirmation'){registering=false;password.value='';}modeUI();
    document.body.setAttribute('data-signin-state',value.phase);
@@ -29,7 +31,7 @@
  cancel.href=flow.cancelTarget;cancel.onclick=event=>{event.preventDefault();password.value='';flow.cancel();};
  form.onsubmit=async event=>{
    event.preventDefault();clearErrors();
-   if(!email.value.trim()||email.validity.typeMismatch){email.setAttribute('aria-invalid','true');$('email-error').textContent='Enter a valid email address.';email.focus();return;}
+   if(!email.value.trim()||email.validity.typeMismatch){email.setAttribute('aria-invalid','true');$('nickname-error').textContent='Enter a valid email address.';email.focus();return;}
    if(!password.value){password.setAttribute('aria-invalid','true');$('password-error').textContent='Enter your password.';password.focus();return;}
    if(registering&&password.value.length<8){password.setAttribute('aria-invalid','true');$('password-error').textContent='Use at least 8 characters for your new password.';password.focus();return;}
    await (registering?flow.register:flow.signIn)({email:email.value.trim(),password:password.value});

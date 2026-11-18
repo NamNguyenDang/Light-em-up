@@ -17,6 +17,8 @@ const results=[];
 try{
   browser=await chromium.launch({headless:true,channel:process.env.PLAYWRIGHT_CHANNEL||undefined,...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}: {})});
   const page=await browser.newPage({viewport:{width:1280,height:900}});
+  // Historical editor component fixture; active no-anonymous acceptance is local-accounts.test.mjs.
+  await page.route('**/supabase-config.js',r=>r.fulfill({contentType:'text/javascript',body:"globalThis.LIGHT_EM_UP_AUTH={mode:'legacy-fixture'};"}));
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   const open=async()=>{await page.goto(url);await page.waitForSelector('#province-areas path');};
   const scan=async label=>{await page.addScriptTag({path:require.resolve('axe-core/axe.min.js')});const result=await page.evaluate(()=>axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']}}));await fs.writeFile(path.join(root,`test-results/axe-${label}.json`),JSON.stringify(result,null,2));assert.equal(result.violations.length,0,`${label}: ${result.violations.map(v=>v.id+': '+v.nodes.map(n=>n.target).join(', ')).join('; ')}`);};

@@ -17,3 +17,5 @@ The browser UI, styles, artwork and data live here. The entry pages remain at re
 | assets/ | Images, map artwork and browser vendor library/license. |
 
 Serve the repository root with `python3 -m http.server 8000` and open http://localhost:8000/. A local static server serves files; it does not create an online account backend. Local candles stay in this browser/origin, with explicit session-only fallback if storage fails. Do not describe local data as shared or synced.
+
+FR-34: active configuration mode is local. Nickname accounts and one candle per account use IndexedDB/Web Crypto in this browser/site; session tokens stay in sessionStorage. No email or anonymous candle creation is active. Clearing site data removes accounts/candles; no password recovery or cross-device use. Local login is profile separation, not encrypted storage or trusted server authorization. Cross-device encouragement/inbox integration remains deferred.
