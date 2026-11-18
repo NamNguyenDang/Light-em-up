@@ -60,3 +60,5 @@ Current scope decision (18 November 2026): browser-local use is approved. Cloud 
 | FR-33 | Request-to-deployment WoW | Analyze/discuss against golden requirements, finalize, implement, review test gaps, test, verify and deploy with separate served-output evidence. | Documentation implemented; no authentication or deployment change. |
 
 | FR-34 | Nickname/password local accounts | No email or anonymous candle; atomic nickname uniqueness, salted password verification, separate sessions and one owner candle. | Implemented; actual local account acceptance and full CI passed (run 44309790991). See [evidence](features/FR-34_LOCAL_ACCOUNTS.md); manual AT/public deployment remain NOT RUN. |
+
+| FR-35 | DR: unexplained account failure and password policy | 8–128 letters/numbers for new registration, explicit failure summaries and legacy-login compatibility. | Implementation/verification in progress; see FR-35 criteria. |
