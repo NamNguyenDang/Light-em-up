@@ -48,7 +48,7 @@ try{
   assert.equal(await page.locator('body').getAttribute('data-dialog-state'),'profile');
   assert.equal(await page.locator('body').getAttribute('data-story-state'),'editing');
   await page.keyboard.press('Escape');
-  await page.waitForFunction(()=>document.body.getAttribute('data-dialog-state')==='none');
+  await page.waitForFunction(()=>document.body?.getAttribute('data-dialog-state')==='none');
   assert.equal(await page.locator('#province-select').inputValue(),'Skåne');
   assert.equal(await page.locator('#page-status').textContent(),provincePage);
   assert(await page.locator('#login').evaluate(n=>n===document.activeElement));
@@ -57,7 +57,7 @@ try{
   await page.locator('#rules').click();
   assert.equal(await page.locator('body').getAttribute('data-dialog-state'),'info');
   await page.keyboard.press('Escape');
-  await page.waitForFunction(()=>document.body.getAttribute('data-dialog-state')==='none');
+  await page.waitForFunction(()=>document.body?.getAttribute('data-dialog-state')==='none');
   assert.equal(await page.locator('#city-search').inputValue(),'Kiruna');
   assert.equal(await page.locator('#stories-title').textContent(),cityHeading);
   assert(await page.locator('#rules').evaluate(n=>n===document.activeElement));
@@ -90,7 +90,7 @@ try{
   await page.evaluate(()=>{document.querySelector('#profile-form').dispatchEvent(new Event('submit',{cancelable:true}));});assert.equal(await page.evaluate(()=>testWrites),1);
   await page.keyboard.press('Escape');assert(await page.locator('#profile-dialog').isVisible());
   await page.evaluate(()=>rejectSave(new Error('fixture failure')));
-  await page.waitForFunction(()=>document.body.getAttribute('data-story-state')==='saveFailed');assert.equal(await page.locator('[name=nickname]').inputValue(),'Save retry candle');assert(await page.locator('#save-profile').evaluate(n=>n===document.activeElement));await scan('editor-save-failed');
+  await page.waitForFunction(()=>document.body?.getAttribute('data-story-state')==='saveFailed');assert.equal(await page.locator('[name=nickname]').inputValue(),'Save retry candle');assert(await page.locator('#save-profile').evaluate(n=>n===document.activeElement));await scan('editor-save-failed');
   await page.screenshot({path:path.join(root,'test-results/editor-save-failed.png'),fullPage:true});
   await page.evaluate(()=>{persist=testPersist;});await page.locator('#save-profile').click();await page.locator('#profile-dialog').waitFor({state:'hidden'});assert.equal(await page.locator('#featured-story h3').textContent(),'Save retry candle');
   // Approximation only: manual browser text-only resize remains required.
