@@ -10,7 +10,7 @@ const server=http.createServer(async(req,res)=>{try{const file=path.resolve(root
 await new Promise(r=>server.listen(0,'127.0.0.1',r));const base=`http://127.0.0.1:${server.address().port}/`;
 await fs.mkdir(path.join(root,'test-results'),{recursive:true});let browser;
 try{
- browser=await chromium.launch({headless:true});const context=await browser.newContext({viewport:{width:1280,height:900},permissions:['clipboard-read','clipboard-write']});const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ browser=await chromium.launch({headless:true,channel:process.env.PLAYWRIGHT_CHANNEL||undefined});const context=await browser.newContext({viewport:{width:1280,height:900},permissions:['clipboard-read','clipboard-write']});const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
  const wait=phase=>page.waitForFunction(p=>document.body.getAttribute('data-signin-state')===p,phase);
  const scan=async label=>{await page.addScriptTag({path:require.resolve('axe-core/axe.min.js')});const result=await page.evaluate(()=>axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']}}));await fs.writeFile(path.join(root,`test-results/axe-signin-${label}.json`),JSON.stringify(result,null,2));assert.equal(result.violations.length,0,result.violations.map(v=>v.id).join(', '));};
  await page.goto(base+'signin.html');await wait('unavailable');assert(await page.locator('#signin-submit').isDisabled());await scan('unconfigured');
