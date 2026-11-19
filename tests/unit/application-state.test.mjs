@@ -51,3 +51,14 @@ console.log('PASS: independent navigation/auth/story state, guarded transitions,
  assert.throws(()=>model.transition(s,{type:'SESSION_SYNC',status:'notConfigured'}),/Invalid session state/);
  console.log('PASS FR-36: verified snapshot reconciliation, signed-out clearing and unchanged ordinary transition guards. Model fixture only.');
 }
+
+{
+ const model=(await import('node:module')).createRequire(import.meta.url)('../../frontend/src/shared/app-state.js');
+ const signedOut=model.initial();assert.equal(model.transition(signedOut,{type:'ACCOUNT_STORY_RESTORED',id:'fixture',persistence:'browser'}),signedOut);
+ const signedIn=model.transition(signedOut,{type:'SESSION_SYNC',status:'signedIn',user:{id:'verified-fixture'}});
+ const restored=model.transition(signedIn,{type:'ACCOUNT_STORY_RESTORED',id:'owned-fixture',persistence:'browser'});
+ assert.equal(restored.story.status,'saved');assert.equal(restored.story.id,'owned-fixture');assert.equal(restored.story.persistence,'browser');
+ assert.throws(()=>model.transition(signedIn,{type:'ACCOUNT_STORY_RESTORED',id:'',persistence:'browser'}),/restored story/);
+ assert.throws(()=>model.transition(signedIn,{type:'ACCOUNT_STORY_RESTORED',id:'fixture',persistence:'sessionOnly'}),/account story persistence/);
+ console.log('PASS FR-36: verified account story restoration rehydrates saved state; visitors cannot restore account ownership. Model fixture only.');
+}

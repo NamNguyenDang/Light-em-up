@@ -35,6 +35,6 @@ Run `npm run test:accounts` for real local account acceptance (no auth/network m
 
 Normal mode is `USER`: no application diagnostic panel or logging. Open `index.html?userMode=USERDEBUG` on your local server to enable a visible browser-state panel and bounded, redacted console/history events. It shows session, UI authentication, navigation, story and candle readiness plus build/origin/page; it excludes credentials, account details and story content. The mode follows the sign-in return in the same tab.
 
-Use **Refresh state** to inspect the current snapshot. **Switch to USER**, or `index.html?userMode=USER`, removes the panel and clears diagnostic history without signing out. `userMode` can also be set to `USER`/`USERDEBUG` in frontend/config/supabase-config.js. This flag does not grant authentication. Browser-generated errors are separate from application diagnostic logging.
+Use **Refresh state** to inspect the current snapshot. **Switch to USER**, or `index.html?userMode=USER`, removes the panel and clears diagnostic history without signing out. Configuration in frontend/config/supabase-config.js supplies the default `userMode`; an explicit URL flag or saved runtime choice takes precedence. This flag does not grant authentication. Browser-generated errors are separate from application diagnostic logging.
 
 Run `npm run test:session-state` to verify login → nickname → owned editor → persistence, negative/fault states and both diagnostic modes.

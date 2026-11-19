@@ -57,6 +57,13 @@ const ApplicationState=(()=>{
       case 'SAVE_FAILED':
         if(story.status!=='saving')return current;
         next={...current,story:{...story,status:'saveFailed',error:event.error||'Unable to save your story.'}};break;
+      case 'ACCOUNT_STORY_RESTORED':{
+        if(authentication.status!=='signedIn')return current;
+        if(typeof event.id!=='string'||!event.id)throw new TypeError('A restored story requires an ID');
+        requireValue(event.persistence,['browser','server'],'account story persistence');
+        next={...current,story:{status:'saved',id:event.id,persistence:event.persistence,error:null}};
+        break;
+      }
       case 'LOCAL_STORY_CLEARED':
         next={...current,navigation:{...navigation,dialog:navigation.dialog==='profile'?null:navigation.dialog},story:{status:'none',id:null,persistence:null,error:null}};break;
       // Only the verified session adapter reconciles snapshots; ordinary UI transitions remain guarded.
