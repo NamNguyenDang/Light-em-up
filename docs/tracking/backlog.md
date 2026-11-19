@@ -65,4 +65,4 @@ Current scope decision (18 November 2026): browser-local use is approved. Cloud 
 
 | FR-36 | DR: login/UI state and USERDEBUG | Verified identity synchronizes nickname/candle readiness; isolate view faults and expose safe USER/USERDEBUG state diagnostics. | OPEN: user confirms the login/UI failure persists after PR #36 and sees no debug panel. Existing automated evidence does not close this browser-specific DR. Obtain actual served-state evidence; prior test expansion stopped at user request. |
 
-| FR-37 | Offline test fixture and local log folder | Requested existing RegrestionTest8 account; loopback helper writes allowlisted USERDEBUG sign-in/state JSONL files; USER off and failure isolation. | Finalized; implementation and exact-head verification in progress. |
+| FR-37 | Offline test fixture and local log folder | Requested existing RegrestionTest8 account; loopback helper writes allowlisted USERDEBUG sign-in/state JSONL files; USER off and failure isolation. | Implemented; real fixture/helper/event-file flow passed in run 44541785598. Final exact-head gate in delivery PR. FR-36 original user-browser DR remains OPEN. |
