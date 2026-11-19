@@ -87,3 +87,7 @@ Keep UX material under ux/. Distinguish owner/stakeholder feedback, implementati
 ## Continuity
 
 Read agent/memory.md at task start. Update it when a decision or defect changes future practice; keep facts concise and dated. Refer to the audit/backlog for detail. Never turn repository-local notes into claims of global assistant memory or broaden merge authorization beyond this repository.
+
+## Session-state diagnostics (FR-36)
+
+When handling login/candle DRs, compare persisted session, header label, application authentication snapshot and own-editor readiness on the same served origin. A UI/observer/logging failure cannot reclassify verified authentication. USERDEBUG is opt-in and only logs allowlisted state enums/booleans and build/origin/page; never log identity, input, credentials, story content, query values or raw exceptions. USER disables application diagnostics and clears the bounded trace. Verify both modes and the complete login-to-editor output chain, including negative/fault cases. Distinguish reproduced failure conditions from an unconfirmed cause in the user's browser.

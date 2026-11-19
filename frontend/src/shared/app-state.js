@@ -57,8 +57,23 @@ const ApplicationState=(()=>{
       case 'SAVE_FAILED':
         if(story.status!=='saving')return current;
         next={...current,story:{...story,status:'saveFailed',error:event.error||'Unable to save your story.'}};break;
+      case 'ACCOUNT_STORY_RESTORED':{
+        if(authentication.status!=='signedIn')return current;
+        if(typeof event.id!=='string'||!event.id)throw new TypeError('A restored story requires an ID');
+        requireValue(event.persistence,['browser','server'],'account story persistence');
+        next={...current,story:{status:'saved',id:event.id,persistence:event.persistence,error:null}};
+        break;
+      }
       case 'LOCAL_STORY_CLEARED':
         next={...current,navigation:{...navigation,dialog:navigation.dialog==='profile'?null:navigation.dialog},story:{status:'none',id:null,persistence:null,error:null}};break;
+      // Only the verified session adapter reconciles snapshots; ordinary UI transitions remain guarded.
+      case 'SESSION_SYNC':{
+        requireValue(event.status,['checking','signedIn','signedOut','checkFailed'],'session state');
+        const user=event.user;
+        if(event.status==='signedIn'&&(!user||typeof user.id!=='string'||!user.id))throw new TypeError('A verified session requires a user ID');
+        next={...current,authentication:{status:event.status,user:event.status==='signedIn'?{id:user.id,nickname:typeof user.nickname==='string'?user.nickname:''}:null,error:event.status==='checkFailed'?'Unable to check your session.':null}};
+        break;
+      }
       case 'AUTH_CHANGED':{
         requireValue(event.status,Object.keys(authTransitions),'authentication state');
         if(!authTransitions[authentication.status].includes(event.status))return current;

@@ -7,7 +7,7 @@ const LocalAccounts=(()=>{
  function passwordIssue(password){if(typeof password!=='string'||password.length<8||password.length>128)return 'length';return /^[A-Za-z0-9]+$/.test(password)?null:'characters';}
  function create({database=globalThis.indexedDB,crypto=globalThis.crypto,storage=globalThis.sessionStorage,now=Date.now}={}){
   let connection;const listeners=new Set();
-  function changed(){for(const fn of listeners)fn();}
+  function changed(){for(const fn of listeners)try{const result=fn();if(result?.catch)result.catch(()=>globalThis.UserDebug?.record('view.error'));}catch{globalThis.UserDebug?.record('view.error');}}
   async function db(){const activeDB=database||globalThis.indexedDB;if(!activeDB||!crypto?.subtle||!crypto?.getRandomValues)throw fail('storage');if(!connection)connection=new Promise((resolve,reject)=>{const r=activeDB.open(DB,1);r.onupgradeneeded=()=>{const d=r.result;const a=d.createObjectStore('accounts',{keyPath:'id'});a.createIndex('nickname','key',{unique:true});d.createObjectStore('sessions',{keyPath:'digest'});d.createObjectStore('candles',{keyPath:'owner'});};r.onsuccess=()=>{r.result.onversionchange=()=>{r.result.close();connection=null;};resolve(r.result);};r.onerror=()=>{connection=null;reject(fail('storage'));};r.onblocked=()=>{connection=null;reject(fail('storage'));};});return connection;}
   const bytes=n=>crypto.getRandomValues(new Uint8Array(n));
   const hex=b=>Array.from(b,x=>x.toString(16).padStart(2,'0')).join('');
@@ -18,9 +18,17 @@ const LocalAccounts=(()=>{
   async function write(store,value,add=false){const d=await db();return new Promise((resolve,reject)=>{const tx=d.transaction(store,'readwrite');tx.objectStore(store)[add?'add':'put'](value);tx.oncomplete=()=>resolve(value);tx.onabort=()=>reject(fail(tx.error?.name==='ConstraintError'?'duplicate':'storage'));tx.onerror=()=>{};});}
   function token(){try{const t=storage.getItem(SESSION);if(!t)return null;if(!/^[a-f0-9]{64}$/.test(t)){storage.removeItem(SESSION);return null;}return t;}catch{throw fail('storage');}}
   async function identity(){await db();const t=token();if(!t)return null;const s=await read('sessions',await digest(t));if(!s||!Number.isFinite(s.expiresAt)||s.expiresAt<=now()){storage.removeItem(SESSION);return null;}const a=await read('accounts',s.accountId);return a?{id:a.id,nickname:a.nickname}:null;}
-  async function begin(a){const t=hex(bytes(32)),old=token();await write('sessions',{digest:await digest(t),accountId:a.id,expiresAt:now()+TTL});try{storage.setItem(SESSION,t);}catch{await revoke(t);throw fail('storage');}if(old)await revoke(old);changed();return {id:a.id,nickname:a.nickname};}
+  async function begin(a){
+   const t=hex(bytes(32)),old=token();
+   await write('sessions',{digest:await digest(t),accountId:a.id,expiresAt:now()+TTL});
+   let verified;
+   try{storage.setItem(SESSION,t);if(storage.getItem(SESSION)!==t)throw fail('storage');verified=await identity();if(verified?.id!==a.id)throw fail('storage');if(old)await revoke(old);}
+   catch{await revoke(t);try{if(old)storage.setItem(SESSION,old);else storage.removeItem(SESSION);}catch{}throw fail('storage');}
+   changed();return verified;
+  }
+  async function discardRegistration(id){const d=await db();await new Promise((resolve,reject)=>{const tx=d.transaction(['accounts','sessions'],'readwrite');tx.objectStore('accounts').delete(id);const sessions=tx.objectStore('sessions'),r=sessions.getAll();r.onsuccess=()=>{for(const item of r.result)if(item.accountId===id)sessions.delete(item.digest);};tx.oncomplete=resolve;tx.onabort=()=>reject(fail('storage'));});}
   async function revoke(t){if(!t)return;const key=await digest(t),d=await db();await new Promise((resolve,reject)=>{const tx=d.transaction('sessions','readwrite');tx.objectStore('sessions').delete(key);tx.oncomplete=resolve;tx.onabort=()=>reject(fail('storage'));});}
-  async function register(name,password){const n=nickname(name);if(passwordIssue(password))throw fail('password');if(await read('accounts',n.key,'nickname'))throw fail('duplicate');const salt=hex(bytes(16)),a={id:hex(bytes(16)),key:n.key,nickname:n.display,salt,verifier:await derive(password,salt),algorithm:'PBKDF2-SHA256',iterations:ITERATIONS};await write('accounts',a,true);return begin(a);}
+  async function register(name,password){const n=nickname(name);if(passwordIssue(password))throw fail('password');if(await read('accounts',n.key,'nickname'))throw fail('duplicate');const salt=hex(bytes(16)),a={id:hex(bytes(16)),key:n.key,nickname:n.display,salt,verifier:await derive(password,salt),algorithm:'PBKDF2-SHA256',iterations:ITERATIONS};await write('accounts',a,true);try{return await begin(a);}catch(error){await discardRegistration(a.id);throw error;}}
   async function signIn(name,password){let n;try{n=nickname(name);}catch{throw fail('credentials');}if(typeof password!=='string'||password.length>128)throw fail('credentials');const a=await read('accounts',n.key,'nickname');const candidate=await derive(password,a?.salt||'00'.repeat(16));let difference=0;const expected=a?.verifier||'00'.repeat(32);for(let i=0;i<64;i++)difference|=candidate.charCodeAt(i)^expected.charCodeAt(i);if(!a||difference)throw fail('credentials');return begin(a);}
   async function signOut(){const t=token();await revoke(t);try{storage.removeItem(SESSION);}catch{throw fail('storage');}changed();}
   // Authorization and candle operation share one transaction, avoiding a logout/write race.
@@ -30,7 +38,18 @@ const LocalAccounts=(()=>{
  }
  let singleton;
  function current(){if(!singleton)singleton=create();return singleton;}
- function sessionController({onChange=()=>{}}={}){let stopped=false,sequence=0,state={status:'checking',user:null,canRetry:false};const publish=(status,user=null)=>{state=Object.freeze({status,user,canRetry:status==='checkFailed'});onChange(state);return state;};async function check(){if(stopped)return state;const n=++sequence;publish('checking');try{const store=current();if(!unsubscribe)unsubscribe=store.subscribe(()=>void check());const user=await store.identity();if(!stopped&&n===sequence)publish(user?'signedIn':'signedOut',user);}catch{if(!stopped&&n===sequence)publish('checkFailed');}return state;}let unsubscribe;try{unsubscribe=current().subscribe(()=>void check());}catch{}return {start:check,retry:check,snapshot:()=>state,stop(){stopped=true;sequence++;unsubscribe?.();}};}
+ function sessionController({onChange=()=>{}}={}){
+  let stopped=false,sequence=0,unsubscribe,state=Object.freeze({status:'checking',user:null,canRetry:false});
+  function publish(status,user=null){state=Object.freeze({status,user,canRetry:status==='checkFailed'});try{onChange(state);}catch{try{globalThis.UserDebug?.record('view.error');}catch{}}return state;}
+  async function check(){
+   if(stopped)return state;const request=++sequence;publish('checking');let user;
+   try{const store=current();if(!unsubscribe)unsubscribe=store.subscribe(()=>void check());user=await store.identity();}
+   catch{if(!stopped&&request===sequence)publish('checkFailed');return state;}
+   if(!stopped&&request===sequence)publish(user?'signedIn':'signedOut',user);
+   return state;
+  }
+  return Object.freeze({start:check,retry:check,snapshot:()=>state,stop(){stopped=true;sequence++;unsubscribe?.();}});
+ }
  return Object.freeze({create,current,sessionController,nickname,passwordIssue});
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=LocalAccounts;

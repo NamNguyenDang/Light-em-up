@@ -514,6 +514,25 @@
         "scripts/check-requirements.py"
       ],
       "evidence_scope": "real local auth/error output; labelled legacy-data and storage-fault fixtures; manual AT/public deployment separate"
+    },
+    {
+      "fr": "FR-36",
+      "acceptance_ids": [
+        "FR-36-AC1",
+        "FR-36-AC2",
+        "FR-36-AC3",
+        "FR-36-AC4"
+      ],
+      "case_ids": [
+        "TC-FR-36-01"
+      ],
+      "automated_tests": [
+        "tests/browser/session-state.test.mjs",
+        "tests/unit/application-state.test.mjs",
+        "tests/browser/local-accounts.test.mjs",
+        "scripts/check-requirements.py"
+      ],
+      "evidence_scope": "actual served local login/state journey; labelled view/storage faults; redacted debug output; manual AT/public deployment separate"
     }
   ]
 }

@@ -14,7 +14,7 @@ const CandleEntry=(()=>{
    if(waiting){waiting=false;run();}
   }
   function stop(){stopped=true;waiting=false;onBusy(false);}
-  return Object.freeze({activate,update,stop});
+  return Object.freeze({activate,update,stop,snapshot:()=>Object.freeze({session:session.status,waiting,intent,stopped})});
  }
  return Object.freeze({create});
 })();

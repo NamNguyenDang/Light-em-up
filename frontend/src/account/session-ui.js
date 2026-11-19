@@ -15,7 +15,7 @@
     document.body.setAttribute('data-session-state',value.status);
     // Optional FR-11 bridge: this feature also works before FR-11 is merged.
     if(typeof dispatchApplication==='function'&&value.status!=='notConfigured'){
-      dispatchApplication({type:'AUTH_CHANGED',status:value.status,user:value.user});
+      dispatchApplication({type:'SESSION_SYNC',status:value.status,user:value.user});
     }
     feedback.hidden=value.status==='notConfigured';
     retry.hidden=!(value.canRetry||(value.status==='checking'&&retryAttempt));
@@ -29,8 +29,16 @@
     }
     const text={checking:'Checking your session…',signedOut:'You’re browsing as a visitor.',signedIn:value.user?`Welcome back, ${value.user.nickname}.`:'',checkFailed:'We couldn’t check your session. You can still browse the community.',notConfigured:''};
     message.textContent=text[value.status];
-    for(const listener of listeners)listener(value);
+    for(const listener of listeners)deliver(listener,value);
+    globalThis.UserDebug?.record('session.change');
   }
+  function viewFailure(value){
+    globalThis.UserDebug?.record('view.error');
+    const current=controller.snapshot();if(current.status!==value.status||current.user?.id!==value.user?.id)return;
+    feedback.hidden=false;retry.hidden=false;retry.disabled=false;
+    message.textContent=current.status==='signedIn'?'You are signed in, but a page section could not refresh. Check your session again.':'A page section could not refresh. Check your session again.';
+  }
+  function deliver(listener,value){try{const result=listener(value);if(result?.catch)result.catch(()=>viewFailure(value));}catch{viewFailure(value);}}
   const controller=SessionRestoration.create({
     config:globalThis.LIGHT_EM_UP_AUTH||{},
     clientFactory:(...args)=>{const client=globalThis.supabase.createClient(...args);sdk=client;repository=StoryRepository.create(client);return client;},
@@ -48,7 +56,9 @@
     async signOut(){if(local)return localStore().signOut();if(!sdk)throw new Error('No account client');const result=await sdk.auth.signOut({scope:'local'});if(result.error)throw result.error;},
     loadStory(owner){if(local)return localStore().load(owner);if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.load(owner);},
     saveStory(owner,story){if(local)return localStore().save(owner,story);if(controller.snapshot().user?.id!==owner||!repository)throw new Error('No verified account');return repository.save(owner,story);},
-    subscribe(listener){listeners.add(listener);listener(controller.snapshot());return ()=>listeners.delete(listener);}
+    snapshot:()=>controller.snapshot(),
+    refresh:()=>controller.retry(),
+    subscribe(listener){listeners.add(listener);deliver(listener,controller.snapshot());return ()=>listeners.delete(listener);}
   });
   signout.onclick=async()=>{
     if(signout.disabled)return;

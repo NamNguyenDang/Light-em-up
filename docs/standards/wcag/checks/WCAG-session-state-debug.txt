@@ -1,0 +1,7 @@
+FR-36 / DR session-state and diagnostic accessibility review
+Target: WCAG 2.2 AA; no full conformance claim.
+2.1.1 / 2.4.3 / 2.4.7 / 2.4.11: keyboard login/editor and refresh/mode controls; switching USER removes the focused panel and returns focus to a visible account/sign-in control. Debug UI stays in document flow, never an overlay.
+1.3.1 / 1.4.10 / 2.5.8: named debug section/preformatted state, wrapped text, 44px controls and 320px reflow.
+3.3.1 / 3.3.3 / 4.1.3: keep operational session/storage/story-load errors visible with retry; diagnostic mode never suppresses necessary user feedback. Do not announce every debug transition through a live region.
+Evidence: tests/browser/session-state.test.mjs, screenshots/axe and requirement comparison in the exact-head delivery PR. Manual screen-reader/actual zoom remain NOT RUN.
+Architecture/privacy: frontend consistency/observability only; no BFF/backend activation. USER has no application diagnostics; USERDEBUG explicitly logs only allowlisted enums/booleans and build/origin/page, never private identity/content/credentials or raw errors. Diagnostics do not authorize access.

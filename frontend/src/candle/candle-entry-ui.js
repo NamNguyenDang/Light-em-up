@@ -24,8 +24,9 @@
   },
   onBusy:busy=>{button.disabled=busy;button.setAttribute('aria-busy',String(busy));}
  });
- button.onclick=()=>entry.activate();
- const unsubscribe=globalThis.LightEmUpSession?.subscribe(value=>{const offline=value.status==='notConfigured';document.getElementById('offline-service-note').hidden=!offline;button.textContent=offline?'Try a local candle':originalLabel;entry.update(value);});
+ globalThis.LightEmUpCandleEntry=Object.freeze({snapshot:()=>entry.snapshot()});
+ button.onclick=()=>{entry.activate();globalThis.UserDebug?.record('candle.entry');};
+ const unsubscribe=globalThis.LightEmUpSession?.subscribe(value=>{const offline=value.status==='notConfigured';document.getElementById('offline-service-note').hidden=!offline;button.textContent=originalLabel;entry.update(value);globalThis.UserDebug?.record('candle.entry');});
  if(!unsubscribe)entry.update({status:'checkFailed',user:null});
  window.addEventListener('pagehide',()=>{unsubscribe?.();entry.stop();},{once:true});
 })();

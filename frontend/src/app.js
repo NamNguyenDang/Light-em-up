@@ -7,14 +7,16 @@ let serverStories=[];
 const PAGE_SIZE=12;let storageOK=true,accountStoryMode=false;
 let localDemoProfile=null;
 let editorGeneration=0;
-function setAccountStory(story,enabled){if($('#profile-dialog')?.open){if(accountStoryMode&&globalThis.LightEmUpAccount)LightEmUpAccount.draft.write(LightEmUpAccount.owner(),form);editorGeneration++;setProfileSaving(false);$('#profile-dialog').close();} if(enabled&&!accountStoryMode)localDemoProfile=state.profile;accountStoryMode=enabled;state.profile=enabled?story:LOCAL_ACCOUNTS?null:localDemoProfile;dispatchApplication({type:'LOCAL_STORY_CLEARED'});render();}
+function setAccountStory(story,enabled){if($('#profile-dialog')?.open){if(accountStoryMode&&globalThis.LightEmUpAccount)LightEmUpAccount.draft.write(LightEmUpAccount.owner(),form);editorGeneration++;setProfileSaving(false);$('#profile-dialog').close();} if(enabled&&!accountStoryMode)localDemoProfile=state.profile;accountStoryMode=enabled;state.profile=enabled?story:LOCAL_ACCOUNTS?null:localDemoProfile;dispatchApplication({type:'LOCAL_STORY_CLEARED'});if(enabled&&story?.id)dispatchApplication({type:'ACCOUNT_STORY_RESTORED',id:story.id,persistence:LOCAL_ACCOUNTS?'browser':'server'});render();}
 
 try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved&&typeof saved==='object'){if(saved.profile&&typeof saved.profile.nickname==='string'&&cities.some(c=>c.name===saved.profile.city))state.profile=saved.profile;state.reactions=Array.isArray(saved.reactions)?saved.reactions.filter(x=>typeof x==='string'):[];state.reports=Array.isArray(saved.reports)?saved.reports.filter(x=>typeof x==='string'):[];state.opens=Number.isSafeInteger(saved.opens)&&saved.opens>=0?saved.opens:0;}}catch{storageOK=false;}
 if(LOCAL_ACCOUNTS){state.profile=null;state.reactions=[];state.reports=[];localDemoProfile=null;}
 state.opens++;
 let applicationState=ApplicationState.initial({hasLocalStory:!!state.profile});
+function getApplicationDebugState(){return {view:applicationState.navigation.view,dialog:applicationState.navigation.dialog||'none',authentication:applicationState.authentication.status,story:applicationState.story.status,accountStoryMode};}
 function dispatchApplication(event){
   applicationState=ApplicationState.transition(applicationState,event);
+  globalThis.UserDebug?.record('application.transition');
   document.body.setAttribute('data-view-state',applicationState.navigation.view);
   document.body.setAttribute('data-dialog-state',applicationState.navigation.dialog||'none');
   document.body.setAttribute('data-auth-state',applicationState.authentication.status);
