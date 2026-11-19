@@ -1,0 +1,6 @@
+FR-37 offline fixture and local event files
+Target: WCAG 2.2 AA, no full conformity claim.
+Existing native nickname/password form, error/status semantics, password manager/paste and owned editor remain intact. The fixture never automatically authenticates a visitor.
+USERDEBUG state output remains in document flow, readable/wrapped at 320px, with named section and keyboard refresh/USER controls. File-logging availability is a state field, not a blocking dialog or repeated live announcement. Operational login failures stay visible regardless of logging mode.
+Required evidence: actual helper-backed fixture login/editor/save/reload, keyboard and 320px screenshot/axe in tests/browser/offline-fixture-logs.test.mjs; full existing form/state regressions. Manual screen reader/real zoom remain NOT RUN.
+Architecture/privacy: loopback static dev server plus optional redacted log sink, not a BFF/shared auth backend. Strict reconstructed schema contains no private credentials, identity/content/query values or raw exceptions; USER is off. Browser storage/session still enforce the local profile boundary.

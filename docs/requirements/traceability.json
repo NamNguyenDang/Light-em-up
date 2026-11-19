@@ -533,6 +533,24 @@
         "scripts/check-requirements.py"
       ],
       "evidence_scope": "actual served local login/state journey; labelled view/storage faults; redacted debug output; manual AT/public deployment separate"
+    },
+    {
+      "fr": "FR-37",
+      "acceptance_ids": [
+        "FR-37-AC1",
+        "FR-37-AC2",
+        "FR-37-AC3"
+      ],
+      "case_ids": [
+        "TC-FR-37-01"
+      ],
+      "automated_tests": [
+        "tests/browser/offline-fixture-logs.test.mjs",
+        "tests/static/local_logging_test.py",
+        "tests/browser/local-accounts.test.mjs",
+        "scripts/check-requirements.py"
+      ],
+      "evidence_scope": "real loopback helper, requested shared offline regression fixture and redacted event files; original user-browser DR remains OPEN"
     }
   ]
 }

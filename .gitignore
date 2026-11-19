@@ -2,3 +2,6 @@
 *.zip
 node_modules/
 test-results/
+logs/*.jsonl
+logs/*.log
+__pycache__/

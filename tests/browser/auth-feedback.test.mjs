@@ -21,29 +21,29 @@ try{
  const scan=async label=>{await page.addScriptTag({path:require.resolve('axe-core/axe.min.js')});const result=await page.evaluate(()=>axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']}}));await fs.writeFile(path.join(root,`test-results/axe-auth-feedback-${label}.json`),JSON.stringify(result,null,2));assert.equal(result.violations.length,0,result.violations.map(v=>v.id).join(', '));};
  const logout=async()=>{await page.locator('#header-login').click();await page.locator('#signout').click();await session('signedOut');};
  const signInPage=async()=>{await page.goto(base+'signin.html');await phase('ready');};
- await signInPage();await page.locator('#account-mode-toggle').click();
+ await signInPage();const initialAccounts=await count();await page.locator('#account-mode-toggle').click();
  await submit('Regression8','x'.repeat(7));await phase('failed');
  assert.match(await page.locator('#signin-error').innerText(),/Account not created.*8–128/);
  assert.equal(await page.locator('#signin-error').getAttribute('role'),'alert');
  assert.equal(await page.locator('#signin-password').getAttribute('aria-invalid'),'true');
  assert.match(await page.locator('#signin-password').getAttribute('aria-describedby'),/password-error.*signin-error/);
  assert(await page.locator('#signin-password').evaluate(n=>n===document.activeElement));
- assert.equal(await count(),0);assert.equal(await page.evaluate(()=>sessionStorage.getItem('light-em-up-local-session')),null);
+ assert.equal(await count(),initialAccounts);assert.equal(await page.evaluate(()=>sessionStorage.getItem('light-em-up-local-session')),null);
  assert.equal(await page.locator('#signin-password').inputValue(),'x'.repeat(7));assert(await page.locator('#signin-submit').isEnabled());
  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await scan('short-password');await page.screenshot({path:path.join(root,'test-results/auth-feedback-short-320.png'),fullPage:true});
  for(const value of ['a'.repeat(8)+'*^','a'.repeat(8)+' ','<script>alert(1)</script>']){
-  await submit('Regression8',value);await phase('failed');assert.match(await page.locator('#signin-error').innerText(),/Account not created.*letters and numbers only/);assert.equal(await count(),0);assert.equal(await page.locator('#signin-password').inputValue(),value);
+  await submit('Regression8',value);await phase('failed');assert.match(await page.locator('#signin-error').innerText(),/Account not created.*letters and numbers only/);assert.equal(await count(),initialAccounts);assert.equal(await page.locator('#signin-password').inputValue(),value);
  }
- await scan('symbols');await submit('Regression8','a'.repeat(129));await phase('failed');assert.match(await page.locator('#signin-error').innerText(),/Account not created.*8–128/);assert.equal(await count(),0);
+ await scan('symbols');await submit('Regression8','a'.repeat(129));await phase('failed');assert.match(await page.locator('#signin-error').innerText(),/Account not created.*8–128/);assert.equal(await count(),initialAccounts);
  await submit('','a'.repeat(8));await phase('failed');assert.match(await page.locator('#signin-error').innerText(),/Account not created.*1–40/);assert(await page.locator('#signin-nickname').evaluate(n=>n===document.activeElement));
  // Exactly 8 characters succeeds and signs back in with the same case-sensitive value.
- await submit('Regression8','Abcd1234');await page.waitForURL('**/index.html');await session('signedIn');assert.equal(await count(),1);assert.equal(await page.locator('#header-login').innerText(),'Regression8');await logout();
+ await submit('Regression8','Abcd1234');await page.waitForURL('**/index.html');await session('signedIn');assert.equal(await count(),initialAccounts+1);assert.equal(await page.locator('#header-login').innerText(),'Regression8');await logout();
  await signInPage();await submit('Regression8','abcd1234');await phase('failed');const wrong=await page.locator('#signin-error').innerText();assert.match(wrong,/Sign-in failed.*Nickname or password is incorrect/);await scan('wrong-credentials');
  await submit('UnregisteredName','Abcd1234');await phase('failed');assert.equal(await page.locator('#signin-error').innerText(),wrong);
  await submit('Regression8','');await phase('failed');assert.match(await page.locator('#signin-error').innerText(),/Sign-in failed.*Enter your password/);await submit('Regression8','Abcd1234');await page.waitForURL('**/index.html');await session('signedIn');await logout();
  // Exactly 13 characters now register; a duplicate must explicitly say no account was created.
- await signInPage();await page.locator('#account-mode-toggle').click();await submit('Regression13','p'.repeat(12)+'3');await page.waitForURL('**/index.html');await session('signedIn');assert.equal(await count(),2);await logout();
- await signInPage();await page.locator('#account-mode-toggle').click();await submit(' regression13 ','p'.repeat(12)+'3');await phase('failed');assert.match(await page.locator('#signin-error').innerText(),/Account not created.*already taken/);assert.equal(await count(),2);await scan('duplicate');
+ await signInPage();await page.locator('#account-mode-toggle').click();await submit('Regression13','p'.repeat(12)+'3');await page.waitForURL('**/index.html');await session('signedIn');assert.equal(await count(),initialAccounts+2);await logout();
+ await signInPage();await page.locator('#account-mode-toggle').click();await submit(' regression13 ','p'.repeat(12)+'3');await phase('failed');assert.match(await page.locator('#signin-error').innerText(),/Account not created.*already taken/);assert.equal(await count(),initialAccounts+2);await scan('duplicate');
  await page.locator('#account-mode-toggle').click();await submit('REGRESSION13','p'.repeat(12)+'3');await page.waitForURL('**/index.html');await session('signedIn');await logout();
  // API enforces identical new-registration rules, including the 128-character upper boundary.
  const api=await page.evaluate(async()=>{const store=LocalAccounts.current(),out=[];for(const [name,value]of [['ApiShort','q'.repeat(7)],['ApiLong','q'.repeat(129)],['ApiSymbol','q'.repeat(8)+'*^'],['ApiSpace','q'.repeat(8)+' ']])try{await store.register(name,value);out.push('allowed');}catch(e){out.push(e.code);}await store.register('ApiMax','q'.repeat(128));await store.signOut();const user=await store.signIn('ApiMax','q'.repeat(128));await store.signOut();return {out,name:user.nickname};});assert.deepEqual(api.out,['password','password','password','password']);assert.equal(api.name,'ApiMax');

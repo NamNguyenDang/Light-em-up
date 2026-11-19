@@ -1,0 +1,29 @@
+# FR-37 — Requested offline test account and file logs
+
+User stopped the expanded FR-36 test investigation and requested an existing RegrestionTest8 account with a specified shared test credential, plus a log folder for sign-in events. Original FR-36 user-browser failure remains OPEN: a passing fixture or merge does not close it, and absence of a cloud backend is not a verified cause.
+
+Local setup: `python3 scripts/serve-local.py`, then use the USERDEBUG URL printed by that process. The fixed test fixture is seeded into local IndexedDB when offlineTestAccount is enabled, without automatic login or replacement of an existing nickname/candle. Application seed data has only a random salt and PBKDF2-SHA256 verifier. The known fixture input is used only in the dedicated test; it is not stored in event files or this report.
+
+In USERDEBUG the helper receives an allowlisted state schema and appends JSONL files under logs/ (UTC dates). USER sends no new diagnostic events. Snapshot fields include fileLogging (off/checking/connected/unavailable) and headerIdentityShown (Boolean), so the transition from sign-in page to landing state is visible without logging a nickname/token/password. Unknown sensitive payload fields are discarded; invalid/foreign/oversized requests are rejected. Real event files are ignored by git. Ordinary static servers retain browser diagnostics without file output. Logging failure never authorizes or denies an account.
+
+Acceptance: [FR-37 criteria](../../requirements/requirement.md#fr-37--requested-offline-fixture-account-and-local-event-files) and [TC-FR-37-01](../../requirements/test-cases.md#tc-fr-37-01). Required real-helper/browser flow is existing fixture login → nickname → candle editor → save/reload/logout, plus USER off, redaction, seed collision preservation and unwritable-sink behavior. Exact-head CI and actual output review must be recorded in the delivery PR. No cloud auth backend, public deployment or full manual accessibility acceptance is implied.
+
+
+## Black-box acceptance evidence
+
+Behavior source: 099132dafdd0140a013cc501a6ac53a2a714e8d1. Full [CI run 44541785598](https://github.com/NamNguyenDang/Light-em-up/actions/runs/44541785598) passed on Ubuntu 24.04 / runner Chrome / Node 22 / Python 3.12. Actual Python helper and browser APIs were used; no mocked authentication or cloud backend.
+
+| Input/action | Expected and actual output | Result |
+|---|---|---|
+| Open fresh local helper | Requested shared fixture exists; visitor is not auto-authenticated | PASS |
+| Sign in with requested fixture | Nickname header, signedIn session/UI, ready owned editor; Add opens without login redirect | PASS |
+| Save and reload | One saved owned candle persists | PASS |
+| USERDEBUG sign-in | One real JSONL file; 50 redacted events in the test, including sign-in success and landing header/editor-ready states | PASS |
+| Inspect logs | No credential/token/ID/nickname/verifier/content values; private extras discarded; foreign/oversized posts rejected | PASS |
+| Switch USER | No new diagnostic writes; login/editor remain usable | PASS |
+| Existing nickname/candle collision | Original identity and saved story preserved | PASS |
+| Unwritable log folder | fileLogging=unavailable; requested fixture still logs in and opens editor | PASS |
+
+Artifact [14537798738](https://github.com/NamNguyenDang/Light-em-up/actions/runs/44541785598/artifacts/14537798738), digest sha256:ad8b0cf94b29f1e2f4d4fb3fc4e279dc38750d1914fcb607f58ac96f45618448, contains actual redacted JSONL, acceptance JSON, screenshot and axe results; 14-day workflow retention applies. 36 axe scans / zero violations, including the helper-backed owner state. The 320px screenshot was visually inspected: nickname, owned candle, signedIn UI/session, saved story, headerIdentityShown=true, ownStoryReady=true and fileLogging=connected are visible without horizontal overflow. This is implementation evidence, not participant research or full WCAG conformance.
+
+All golden criteria map to TC-FR-37-01 and actual helper/browser/schema tests. Subsequent final documentation head must pass CI before PR opening. The original FR-36 user-browser DR remains OPEN; user acceptance and manual screen-reader/real zoom/public deployment are NOT RUN.
