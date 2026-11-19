@@ -46,6 +46,8 @@ jobs:
       - run: node tests/unit/release-preflight.test.mjs
       - run: node tests/unit/candle-entry.test.mjs
       - run: node tests/unit/draft.test.mjs
+      - run: python3 tests/static/local_logging_test.py
+      - run: node tests/browser/offline-fixture-logs.test.mjs
       - run: node tests/browser/session-state.test.mjs
       - run: node tests/browser/auth-feedback.test.mjs
       - run: node tests/browser/local-accounts.test.mjs

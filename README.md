@@ -38,3 +38,9 @@ Normal mode is `USER`: no application diagnostic panel or logging. Open `index.h
 Use **Refresh state** to inspect the current snapshot. **Switch to USER**, or `index.html?userMode=USER`, removes the panel and clears diagnostic history without signing out. Configuration in frontend/config/supabase-config.js supplies the default `userMode`; an explicit URL flag or saved runtime choice takes precedence. This flag does not grant authentication. Browser-generated errors are separate from application diagnostic logging.
 
 Run `npm run test:session-state` to verify login → nickname → owned editor → persistence, negative/fault states and both diagnostic modes.
+
+### Offline regression account and log files (FR-37)
+
+Run `python3 scripts/serve-local.py`, then open the exact USERDEBUG URL it prints (default `http://127.0.0.1:8000/index.html?userMode=USERDEBUG`). Sign in with the requested shared offline fixture **RegrestionTest8** and the supplied test password; registration is not required. Account/candle data remains local to that browser and origin. The seed contains a salted verifier, not a plaintext password; `offlineTestAccount: false` prevents new seeding without deleting an existing account. Existing nickname collisions are never overwritten.
+
+The helper writes redacted events to [logs/](logs/README.md). Look for `signin.phase` and `session.change`, with `session`, `uiAuth`, `headerIdentityShown` and `ownStoryReady`. The panel's `fileLogging` reports connected/unavailable/off. USER stops new diagnostics. A normal static server cannot write files here, but login does not depend on logging. This setup is offline-capable and uses Python's standard library; no cloud backend is configured. The original user-browser login DR stays open until that environment's failure is verified.
