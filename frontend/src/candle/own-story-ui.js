@@ -6,15 +6,18 @@
  function show(text,failed=false){status.textContent=text;retry.hidden=!failed;}
  async function load(){
   const request=++generation,identity=owner;show('Loading your story…');
-  try{const story=await LightEmUpSession.loadStory(identity);if(stopped||request!==generation)return;ready=true;setAccountStory(story,true);show(story?'Your story is ready.':'You can add your first candle.');}
-  catch{if(stopped||request!==generation)return;ready=false;show('We could not load your story. Please retry before editing.',true);}
+  try{const story=await LightEmUpSession.loadStory(identity);if(stopped||request!==generation)return;ready=true;setAccountStory(story,true);show(story?'Your story is ready.':'You can add your first candle.');globalThis.UserDebug?.record('story.load');}
+  catch{if(stopped||request!==generation)return;ready=false;show('We could not load your story. Please retry before editing.',true);globalThis.UserDebug?.record('story.load');}
  }
  const unsubscribe=LightEmUpSession.subscribe(value=>{
   if(value.status==='checking')return;
   const next=value.status==='signedIn'?value.user.id:null;
   if(next===owner)return;
-  generation++;ready=false;setAccountStory(null,!!next);owner=next;
-  if(owner)loadPromise=load();else show('');
+  generation++;ready=false;owner=next;
+  // Establish identity/load before projecting the view: rendering must not lose ownership.
+  loadPromise=owner?load():Promise.resolve();
+  setAccountStory(null,!!owner);if(!owner)show('');
+  globalThis.UserDebug?.record('story.load');
  });
  retry.onclick=async()=>{retry.disabled=true;await(loadPromise=load());retry.disabled=false;if(retry.hidden)document.getElementById('header-login').focus();else retry.focus();};
  globalThis.LightEmUpAccount=Object.freeze({

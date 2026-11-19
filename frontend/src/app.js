@@ -13,8 +13,10 @@ try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved&&typeof s
 if(LOCAL_ACCOUNTS){state.profile=null;state.reactions=[];state.reports=[];localDemoProfile=null;}
 state.opens++;
 let applicationState=ApplicationState.initial({hasLocalStory:!!state.profile});
+function getApplicationDebugState(){return {view:applicationState.navigation.view,dialog:applicationState.navigation.dialog||'none',authentication:applicationState.authentication.status,story:applicationState.story.status,accountStoryMode};}
 function dispatchApplication(event){
   applicationState=ApplicationState.transition(applicationState,event);
+  globalThis.UserDebug?.record('application.transition');
   document.body.setAttribute('data-view-state',applicationState.navigation.view);
   document.body.setAttribute('data-dialog-state',applicationState.navigation.dialog||'none');
   document.body.setAttribute('data-auth-state',applicationState.authentication.status);

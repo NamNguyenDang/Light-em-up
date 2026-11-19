@@ -1,0 +1,7 @@
+/* USER has no diagnostic element. USERDEBUG uses normal document flow, never an overlay. */
+#user-debug{max-width:80rem;margin:1rem auto;padding:1rem;background:#102630;color:#f5dfba;border:1px solid #59717a;border-radius:1rem;overflow-wrap:anywhere}
+#user-debug h2{font:700 1.25rem/1.4 system-ui;margin:0 0 .5rem}
+#user-debug p{font:1rem/1.5 system-ui}
+#user-debug pre{font:.875rem/1.5 monospace;white-space:pre-wrap;overflow-wrap:anywhere;max-width:100%;margin:1rem 0}
+#user-debug button{min-height:44px;min-width:44px;margin:.25rem .5rem .25rem 0}
+#user-debug summary{min-height:44px;padding:.75rem 0;cursor:pointer}

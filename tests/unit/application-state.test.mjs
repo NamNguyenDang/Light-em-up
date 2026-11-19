@@ -38,3 +38,16 @@ assert.throws(()=>transition(state,{type:'AUTH_CHANGED',status:'unknown'}),Range
 assert.throws(()=>transition(state,{type:'UNKNOWN'}),RangeError);
 assert.equal(transition(initial(),{type:'SAVE_SUCCEEDED',id:'unexpected',persistence:'server'}).story.status,'none','Ignore stale async completion');
 console.log('PASS: independent navigation/auth/story state, guarded transitions, immutable snapshots, save retry/session-only persistence, stale close/save events, local profile isolation and session identity validation.');
+
+// FR-36: an authoritative session snapshot reconciles UI state without weakening normal guards.
+{
+ const model=(await import('node:module')).createRequire(import.meta.url)('../../frontend/src/shared/app-state.js');
+ let s=model.transition(model.initial(),{type:'AUTH_CHANGED',status:'signingIn'});
+ s=model.transition(s,{type:'SESSION_SYNC',status:'signedIn',user:{id:'verified-fixture',nickname:'Fixture'}});
+ assert.equal(s.authentication.status,'signedIn');assert.equal(s.authentication.user.nickname,'Fixture');
+ s=model.transition(s,{type:'SESSION_SYNC',status:'signedOut'});assert.equal(s.authentication.user,null);
+ assert.equal(model.transition(s,{type:'AUTH_CHANGED',status:'signedIn',user:{id:'unverified-ui-event'}}),s);
+ assert.throws(()=>model.transition(s,{type:'SESSION_SYNC',status:'signedIn',user:null}),/verified session/);
+ assert.throws(()=>model.transition(s,{type:'SESSION_SYNC',status:'notConfigured'}),/Invalid session state/);
+ console.log('PASS FR-36: verified snapshot reconciliation, signed-out clearing and unchanged ordinary transition guards. Model fixture only.');
+}

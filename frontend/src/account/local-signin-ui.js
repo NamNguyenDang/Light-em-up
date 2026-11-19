@@ -1,10 +1,11 @@
 'use strict';
 const LocalSignInUI=(()=>{
  function start(){
+  document.body.dataset.viewState='signIn';
   const $=id=>document.getElementById(id),name=$('signin-nickname'),password=$('signin-password'),form=$('signin-form'),submit=$('signin-submit'),toggle=$('account-mode-toggle'),cancel=$('signin-cancel'),retry=$('signin-retry');
   let registering=false,busy=false,stopped=false,store;
   const target=SignInFlow.returnTarget(location.href);const back=new URL(target);if(back.hash==='#add-candle')back.hash='';cancel.href=back.href;
-  function phase(value,text=''){document.body.dataset.signinState=value;$('signin-status').textContent=text;}
+  function phase(value,text=''){document.body.dataset.signinState=value;$('signin-status').textContent=text;globalThis.UserDebug?.record('signin.phase');}
   function mode(){document.title=registering?'Create account — Light’em up':'Sign in — Light’em up';$('signin-title').textContent=registering?'Create account':'Sign in';$('account-description').textContent=registering?'Choose a nickname and password. No email needed.':'Welcome back. Use your registered nickname.';password.autocomplete=registering?'new-password':'current-password';$('password-help').hidden=!registering;toggle.textContent=registering?'Already registered? Sign in':'Create an account';submit.textContent=registering?'Create account':'Sign in';}
   function clear(){for(const [field,id]of [[name,'nickname-error'],[password,'password-error']]){field.setAttribute('aria-invalid','false');$(id).textContent='';}$('signin-error').textContent='';}
   function invalid(field,id,text){phase('failed');field.setAttribute('aria-invalid','true');$(id).textContent=text;$('signin-error').textContent=(registering?'Account not created. ':'Sign-in failed. ')+text;field.focus();}
@@ -14,7 +15,7 @@ const LocalSignInUI=(()=>{
   form.onsubmit=async e=>{e.preventDefault();if(busy||stopped||!store)return;clear();let n;try{n=LocalAccounts.nickname(name.value);}catch{invalid(name,'nickname-error','Use 1–40 characters: letters, numbers, spaces, dot, underscore or hyphen. Include a letter or number.');return;}
    const passwordIssue=registering?LocalAccounts.passwordIssue(password.value):(!password.value||password.value.length>128?'length':null);if(passwordIssue){invalid(password,'password-error',registering?(passwordIssue==='characters'?'Use letters and numbers only (A–Z, a–z, 0–9); no symbols or spaces.':'Use 8–128 characters for your password.'):'Enter your password (up to 128 characters).');return;}
    working(true);phase('signingIn',registering?'Creating your account…':'Signing in…');
-   try{await store[registering?'register':'signIn'](n.display,password.value);if(stopped){await store.signOut();return;}done();}
+   try{const authenticated=await store[registering?'register':'signIn'](n.display,password.value);const persisted=await store.identity();if(!persisted||persisted.id!==authenticated.id)throw new Error('Session was not retained');if(stopped){await store.signOut();return;}done();}
    catch(error){if(stopped)return;phase('failed');if(error.code==='duplicate')invalid(name,'nickname-error','That nickname is already taken. Sign in or choose another.');else if(error.code==='credentials'){$('signin-error').textContent='Sign-in failed. Nickname or password is incorrect.';name.setAttribute('aria-invalid','true');password.setAttribute('aria-invalid','true');password.focus();}else{$('signin-error').textContent='We could not save or open your local account. Your input is still here. Check browser storage and try again.';submit.focus();}}
    finally{if(!stopped)working(false);}
   };

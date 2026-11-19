@@ -62,3 +62,5 @@ Current scope decision (18 November 2026): browser-local use is approved. Cloud 
 | FR-34 | Nickname/password local accounts | No email or anonymous candle; atomic nickname uniqueness, salted password verification, separate sessions and one owner candle. | Implemented; actual local account acceptance and full CI passed (run 44309790991). See [evidence](features/FR-34_LOCAL_ACCOUNTS.md); manual AT/public deployment remain NOT RUN. |
 
 | FR-35 | DR: unexplained account failure and password policy | 8–128 letters/numbers for new registration, explicit failure summaries and legacy-login compatibility. | Implemented; real-browser feedback regression passed on 9ce74c2. Final exact-head full-CI evidence is required in the separate DR delivery PR; public deployment/manual AT are NOT RUN. |
+
+| FR-36 | DR: login/UI state and USERDEBUG | Verified identity synchronizes nickname/candle readiness; isolate view faults and expose safe USER/USERDEBUG state diagnostics. | Finalized; acceptance gate required before separate DR PR. |
