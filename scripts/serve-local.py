@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Loopback-only static app server and redacted USERDEBUG JSONL sink. No auth backend."""
 import argparse
+import hashlib
 import json
 import re
 import threading
@@ -73,6 +74,21 @@ class LocalHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         if urlsplit(self.path).path == '/__local/logging':
             self.json_response(200, {'enabled': True, 'folder': 'logs'})
+        elif urlsplit(self.path).path in {'/', '/index.html', '/signin.html'}:
+            name = 'signin.html' if urlsplit(self.path).path == '/signin.html' else 'index.html'
+            html = (ROOT / name).read_text(encoding='utf8')
+            def versioned(match):
+                asset = match.group(2)
+                digest = hashlib.sha256((ROOT / asset).read_bytes()).hexdigest()[:12]
+                return f'{match.group(1)}="{asset}?localBuild={digest}"'
+            # Existing browser caches may hold older session scripts. Give each current asset its own URL.
+            html = re.sub(r'(src|href)="(frontend/[^"?]+\.(?:js|css))"', versioned, html)
+            body = html.encode('utf8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html; charset=utf-8')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
         else:
             super().do_GET()
 

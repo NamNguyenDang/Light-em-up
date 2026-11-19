@@ -13,3 +13,5 @@ The server is a loopback-only static development server plus a log sink, not an 
 | index.html after restore | session/uiAuth are signedIn, headerIdentityShown and ownStoryReady are true |
 
 The page field distinguishes the credential-page success from the landing-page restoration. A later checking state is normal while a new document verifies its session; inspect the subsequent completed state. File timestamps are server UTC arrival times.
+
+The helper disables caching and versions entry-page JavaScript/CSS URLs by content hash, so this offline test loads current session code rather than a mixture of cached versions.
