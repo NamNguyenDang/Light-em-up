@@ -585,6 +585,25 @@
         "tests/static/local_logging_test.py"
       ],
       "evidence_scope": "Actual helper and isolated registered local account; no user-browser or remote-backend acceptance."
+    },
+    {
+      "fr": "FR-40",
+      "acceptance_ids": [
+        "FR-40-AC1",
+        "FR-40-AC2",
+        "FR-40-AC3"
+      ],
+      "case_ids": [
+        "TC-FR-40-01",
+        "TC-FR-40-02"
+      ],
+      "automated_tests": [
+        "tests/browser/story-updates.test.mjs",
+        "tests/unit/story-updates.test.mjs",
+        "tests/unit/runtime.test.mjs",
+        "scripts/check-paths.py"
+      ],
+      "evidence_scope": "Actual local story save/display/order; labelled clock/storage fault probes; UX owner feedback, not participant outcomes."
     }
   ]
 }

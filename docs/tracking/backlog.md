@@ -63,10 +63,12 @@ Current scope decision (18 November 2026): browser-local use is approved. Cloud 
 
 | FR-35 | DR: unexplained account failure and password policy | 8–128 letters/numbers for new registration, explicit failure summaries and legacy-login compatibility. | Implemented; real-browser feedback regression passed on 9ce74c2. Final exact-head full-CI evidence is required in the separate DR delivery PR; public deployment/manual AT are NOT RUN. |
 
-| FR-36 | DR: login/UI state and USERDEBUG | Verified identity synchronizes nickname/candle readiness; isolate view faults and expose safe USER/USERDEBUG state diagnostics. | OPEN: user confirms the login/UI failure persists after PR #36 and sees no debug panel. Existing automated evidence does not close this browser-specific DR. Obtain actual served-state evidence; prior test expansion stopped at user request. |
+| FR-36 | DR: login/UI state and USERDEBUG | Verified identity synchronizes nickname/candle readiness; isolate view faults and expose safe USER/USERDEBUG state diagnostics. | RESOLVED by user confirmation on 20 November 2026 after PR #39: login works; user reports previously not starting the local server. This is their explanation, not independently captured forensic evidence; earlier investigation remains historical. |
 
 | FR-37 | Offline test fixture and local log folder | Requested existing RegrestionTest8 account; loopback helper writes allowlisted USERDEBUG sign-in/state JSONL files; USER off and failure isolation. | Implemented; real fixture/helper/event-file flow passed in run 44541785598. Final exact-head gate in delivery PR. FR-36 original user-browser DR remains OPEN. |
 
 | FR-38 | Wireframe baseline and transition audit | ux/wireframe visitor/owner designs, sign-in/create-account popups, mapped tests and implementation-gap DRs. | Design/test delivery implemented; prototype and actual local transitions passed in run 44708086211. DR-38-01 production popup parity and FR-36 remain OPEN. |
 
 | FR-39 | Verified-login debug toast and trace | Local verifier → return → restored header/editor; debug-only success toast; actual helper evidence for requested account inputs. | Implemented; new real-helper acceptance passed in run 44735327193. Final exact-head CI required in PR; original user-browser FR-36 remains OPEN. |
+
+| FR-40 | Story recency and UX learning | Persist meaningful story-update times, show them, sort latest first, and capture why visible activity matters. | Implemented; actual helper/browser acceptance passed in run 44739955439. Final exact-head full gate required in delivery PR; local clock/research/manual-accessibility limits retained. |

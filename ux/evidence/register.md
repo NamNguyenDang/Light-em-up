@@ -11,6 +11,8 @@
 | E-07 | [Golden requirements/cases](../../docs/requirements/README.md) and structural migration checks. | Expected-behavior contract + verification links. | Valid links alone do not prove behavior. |
 | E-08 | [Current local screenshot provenance](screenshot-provenance.json) and [capture guide](screenshots.md). | Automated browser output with labelled sample data. | Not a usability session or product-impact evidence. |
 
+| E-09 | [Owner feedback: visible story activity](../lessons/FR-40-visible-story-activity.md); 20 November 2026. | Stakeholder feedback + design decision; automated evidence recorded separately. | No participant study or measured emotional/engagement outcome; active data remains browser-local. |
+
 ## Claim discipline
 
 Use four labels consistently: **observed stakeholder feedback**, **implemented/automated evidence**, **assumption/proposed research**, and **unmeasured/not run**. Keep a source for a quote or metric. If you cannot locate evidence, present the statement as a question/assumption or remove it. Do not add fictitious participant identities, transcripts, quotes, benchmarks or impact numbers.

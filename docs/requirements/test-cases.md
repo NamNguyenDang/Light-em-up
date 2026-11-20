@@ -411,3 +411,21 @@ Covers: FR-39-AC1, FR-39-AC2, FR-39-AC3
 - Actions: try requested account before test registration; register it solely in isolated test storage, logout, wrong-password retry then correct login from visitor header; verify toast, nickname/model/editor and history source pages. Save/reload, verify no repeated toast, logout and test USER success with no diagnostic output. Inject sessionStorage write failure, spoofed/expired handoff for a visitor, missing/unwritable logging sink and throwing diagnostic observer. Inspect file events in their actual ordered subsequence, forbid private values, inspect 320px/keyboard/status and axe.
 - Expected: absent/wrong/storage-failed login stays failed with no success toast or false session. Real verifier/readback success → return → independently restored nickname → ready editor gives one debug-only success; normal restoration cannot replay it. Explicit service/view events survive navigation with correct source page/build and appear redacted in helper files. Diagnostics never become auth. No account is silently seeded/reset, no backend success or user's browser state is fabricated. Manual AT/zoom/public deployment remain NOT RUN.
 - Execution references: tests/browser/login-debug.test.mjs, tests/browser/session-state.test.mjs, tests/static/local_logging_test.py.
+
+### TC-FR-40-01
+
+Covers: FR-40-AC1, FR-40-AC2
+
+- Preconditions: actual root app served over localhost, real IndexedDB/Web Crypto, isolated synthetic accounts, no auth/DB mocks in principal flow. Deterministic clock/legacy/bad-data/transaction-abort probes are labelled separately.
+- Actions: create two owned stories at separate times; verify service-stamped create/update values and newest-first cards; update the older account's status/message and verify it moves first. Save unchanged, cancel, reload, inspect the disabled local reaction action, change filter/page and logout/login; timestamps must not advance. Verify update from a later page resets pagination, filter/focus preserved, hidden candles excluded and owner still sees its timestamp. Inject a legacy missing timestamp, malformed timestamp and an aborted save; inspect stable equal-date ordering and unknown-last. Check readable zone/time datetime, 320px focus/reflow, screenshots and axe.
+- Expected: only committed meaningful changes advance stored recency, created_at stays immutable, injected timestamps ignored, aborted save preserves values. Actual cards show accurate known/unknown update state, samples never masquerade as live updates; sorting occurs before pagination with deterministic ties. Existing map/auth/ownership regressions pass. Browser clock timestamps are not server-attested time.
+- Execution references: tests/browser/story-updates.test.mjs, tests/unit/story-updates.test.mjs and tests/unit/runtime.test.mjs.
+
+### TC-FR-40-02
+
+Covers: FR-40-AC3
+
+- Preconditions: user's actual board-recency feedback and confirmation that login now works after starting the local server; no participant study or measured emotional outcome.
+- Actions: read UX lesson, evidence entry, requirement/test mapping and latest memory/backlog status; check provenance and current-scope language.
+- Expected: explains why invisible recency can make activity hard to perceive, captures the chosen timestamp/newest-first behavior and honest sample/unknown states, and proposes future validation without claiming research/engagement gains. User confirmation is recorded; lack of a server is their reported explanation, not fabricated diagnosis.
+- Execution references: scripts/check-paths.py and scripts/check-requirements.py plus human content review; structural checks are not UX research evidence.
