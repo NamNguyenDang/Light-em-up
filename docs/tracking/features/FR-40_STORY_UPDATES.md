@@ -16,4 +16,21 @@ WCAG 2.2 AA cross-check: time semantics and readable text (1.3.1), existing smal
 
 UX feedback is stakeholder evidence, not a participant study or measured improvement in emotional connection. User now confirms the local login issue works after starting the server; their explanation is recorded without retroactive forensic proof.
 
-Status: implementation complete; CI behavioral/exact-head evidence will be linked in the separate delivery PR. Artifacts: story-updates-acceptance.json, axe-story-updates-320.json and desktop/320px screenshots. Public deployment/online activation remain NOT RUN.
+Status: implementation complete; actual behavioral acceptance passed on 956199d99cc15f1e9e6d6d1f2bb2af3857f867a3 in run 44739955439. The separate delivery PR must link a passing final exact-head full CI gate. Artifacts: story-updates-acceptance.json, axe-story-updates-320.json and desktop/320px screenshots. Public deployment/online activation remain NOT RUN.
+
+## Recorded input/output verification
+
+[Behavioral run 44739955439](https://github.com/NamNguyenDang/Light-em-up/actions/runs/44739955439), source 956199d99cc15f1e9e6d6d1f2bb2af3857f867a3:
+
+| Input | Expected / observed |
+|---|---|
+| Create Alpha, then Beta | UTC creation/update persisted; Beta first — PASS. |
+| Update Alpha's status/message from a later page | Original creation retained, newer update stored, Alpha first; selected city and edit focus retained — PASS. |
+| Unchanged save / cancel / read / reload / login | Existing update time retained — PASS. |
+| Hide/show own story | Public exclusion/return with committed update, owner timestamp retained — PASS. |
+| Legacy/malformed date storage probes | Unknown stays unknown/last; genuine legacy update has known update but unknown creation — PASS. |
+| Caller-provided future metadata / aborted transaction | Caller date ignored; aborted change keeps prior story/date and shows retry error — PASS. |
+| Display/order units and actual 320px UI | Stable ties/unknown-last; time datetime and device-zone text; reflow/focus and axe — PASS. |
+| Emotional benefit / shared live community / manual AT / deployment | UNMEASURED / NOT IMPLEMENTED / NOT RUN / NOT RUN. |
+
+The first run 44739591849 stopped because the test attempted to select a status inside closed optional details. The driver was corrected to expand the editor section via its visible summary; no product defect or assertion was waived. Actual output/axe/screenshots remain scoped implementation evidence, not participant findings.
