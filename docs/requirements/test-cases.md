@@ -384,3 +384,21 @@ Covers: FR-37-AC1, FR-37-AC2, FR-37-AC3
 - Actions: open sign-in without registering, use the user-requested RegrestionTest8 shared fixture, verify nickname/session/editor, save/reload/logout. Reopen database and confirm seed does not replace a saved candle; test flag-off fresh database and an existing nickname collision without overwriting it. Inspect written sign-in/session/readiness events and header-match Boolean; try extra sensitive fields, malformed enums, oversized/foreign-origin events and verify only redacted schema reaches disk. Switch USER and verify no new diagnostic posts; test missing/unwritable sink without changing auth. Run keyboard/320px/axe checks on the actual helper flow.
 - Expected: requested existing offline account works through real password verification, one owned candle persists, no automatic login or destructive seeding. JSONL files appear locally only through the helper with no credential/identity/content/query values. USER stops new diagnostic writes; logging failure cannot grant/deny a real session. The original user's browser DR remains OPEN pending its actual served-state evidence.
 - Execution references: tests/browser/offline-fixture-logs.test.mjs, tests/static/local_logging_test.py, tests/browser/local-accounts.test.mjs, scripts/check-requirements.py. No public deployment or full manual assistive-technology conformance is inferred.
+
+### TC-FR-38-01
+
+Covers: FR-38-AC1, FR-38-AC2
+
+- Preconditions: serve ux/wireframe/index.html; isolated browser context; synthetic preview input only. The prototype is not authentication.
+- Actions: compare visitor/empty-owner/saved-owner states; open sign-in from visitor Add; check focus/background inertness, missing fields, switch to create retaining nickname/clearing password, 7/8-character boundary, forced failure/retry, show/hide, simulated success and Escape/cancel focus restoration. Repeat popup views at 320px and run axe; capture screenshots.
+- Expected: approved page states and both labelled native dialogs exist; associated errors focus invalid fields, no false success, no lost nickname on switching, passwords clear on close, focus returns to invoker, no horizontal overflow. Preview changes are explicitly simulated; no browser credentials/session are persisted. Manual AT/real zoom remain NOT RUN.
+- Execution references: tests/browser/wireframe-transition.test.mjs.
+
+### TC-FR-38-02
+
+Covers: FR-38-AC3
+
+- Preconditions: actual Python local server, fresh IndexedDB/sessionStorage, no auth mocking, requested shared offline fixture. Separate prototype context.
+- Actions: enter from visitor Add your candle; record popup/navigation presentation; sign in, verify nickname/hidden visitor invitation and one editor without another login; save/reload/edit/logout. Repeat create-account transition with a synthetic unique nickname. Compare actual output to wireframe state contract.
+- Expected: verified identity unlocks owned editor, nickname replaces Log in, one candle persists and private panel clears on logout. Auth entry should be a popup retaining browsing context; current dedicated page is a FAIL/OPEN design-parity DR, not a pass. Record the presentation audit independently from functional transition assertions; unexpected failures fail the run. Original user-browser FR-36 remains OPEN.
+- Execution references: tests/browser/wireframe-transition.test.mjs and tests/browser/offline-fixture-logs.test.mjs. Report JSON distinguishes audit completion from application parity. No public release or user-browser acceptance is inferred.
