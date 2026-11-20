@@ -551,6 +551,23 @@
         "scripts/check-requirements.py"
       ],
       "evidence_scope": "real loopback helper, requested shared offline regression fixture and redacted event files; original user-browser DR remains OPEN"
+    },
+    {
+      "fr": "FR-38",
+      "acceptance_ids": [
+        "FR-38-AC1",
+        "FR-38-AC2",
+        "FR-38-AC3"
+      ],
+      "case_ids": [
+        "TC-FR-38-01",
+        "TC-FR-38-02"
+      ],
+      "automated_tests": [
+        "tests/browser/wireframe-transition.test.mjs",
+        "tests/browser/offline-fixture-logs.test.mjs"
+      ],
+      "evidence_scope": "Prototype simulation and actual local transition tested separately; popup design parity reported as OPEN DR; no original-user or deployment closure."
     }
   ]
 }

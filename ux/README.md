@@ -15,3 +15,5 @@ This workspace makes the design reasoning inspectable, not just the finished scr
 | [Portfolio checklist](portfolio/review-checklist.md) | What you can support with evidence and what you must verify before publishing. |
 
 The [golden requirements](../docs/requirements/requirement.md) remain the behavior authority. [Standards](../docs/standards/README.md) are quality references; [lessons](../docs/lessons/README.md) retain mistakes. UX narratives must not silently change acceptance criteria or transform fixture results into user research.
+
+- [Approved page-state wireframes and auth popup designs](wireframe/README.md).
