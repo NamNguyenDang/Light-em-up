@@ -27,7 +27,7 @@ class LocalLoggingTests(unittest.TestCase):
         self.assertEqual(result['state']['session'], 'signedIn')
 
     def test_invalid_mode_origin_page_enum_and_boolean_rejected(self):
-        for key, invalid in [('mode', 'USER'), ('origin', 'https://example.invalid'), ('page', '?private=NEVER_WRITE'), ('session', 'NEVER_WRITE'), ('headerIdentityShown', 'NEVER_WRITE')]:
+        for key, invalid in [('mode', 'USER'), ('origin', 'https://example.invalid'), ('page', '?private=NEVER_WRITE'), ('session', 'NEVER_WRITE'), ('loginStage', 'NEVER_WRITE'), ('headerIdentityShown', 'NEVER_WRITE')]:
             with self.subTest(key=key):
                 value = self.sample()
                 value['state'][key] = invalid
