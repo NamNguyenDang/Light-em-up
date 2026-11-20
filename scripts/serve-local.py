@@ -11,8 +11,9 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parent.parent
-EVENTS = {'mode.changed', 'session.change', 'signin.phase', 'application.transition', 'candle.entry', 'story.load', 'view.error', 'manual.refresh'}
+EVENTS = {'mode.changed', 'session.change', 'signin.phase', 'application.transition', 'candle.entry', 'story.load', 'view.error', 'manual.refresh', 'auth.attempt', 'auth.verified', 'auth.rejected', 'signin.return', 'login.restored', 'login.ready', 'login.returnFailed', 'signin.failed'}
 ENUMS = {
+    'loginStage': {'none', 'authenticating', 'verified', 'returning', 'restored', 'ready', 'failed', 'unknown'},
     'session': {'checking', 'signedOut', 'signedIn', 'signingIn', 'signingOut', 'checkFailed', 'notConfigured', 'unknown'},
     'uiAuth': {'checking', 'signedOut', 'signedIn', 'signingIn', 'signingOut', 'checkFailed', 'notConfigured', 'unknown'},
     'view': {'community', 'dashboard', 'signIn', 'unknown'},

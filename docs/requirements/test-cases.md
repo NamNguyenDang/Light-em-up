@@ -402,3 +402,12 @@ Covers: FR-38-AC3
 - Actions: enter from visitor Add your candle; record popup/navigation presentation; sign in, verify nickname/hidden visitor invitation and one editor without another login; save/reload/edit/logout. Repeat create-account transition with a synthetic unique nickname. Compare actual output to wireframe state contract.
 - Expected: verified identity unlocks owned editor, nickname replaces Log in, one candle persists and private panel clears on logout. Auth entry should be a popup retaining browsing context; current dedicated page is a FAIL/OPEN design-parity DR, not a pass. Record the presentation audit independently from functional transition assertions; unexpected failures fail the run. Original user-browser FR-36 remains OPEN.
 - Execution references: tests/browser/wireframe-transition.test.mjs and tests/browser/offline-fixture-logs.test.mjs. Report JSON distinguishes audit completion from application parity. No public release or user-browser acceptance is inferred.
+
+### TC-FR-39-01
+
+Covers: FR-39-AC1, FR-39-AC2, FR-39-AC3
+
+- Preconditions: actual Python helper and root entry pages, isolated browser storage, no auth mocks, USER/USERDEBUG. User-provided account inputs only in the dedicated test, not logs/reports/seed data.
+- Actions: try requested account before test registration; register it solely in isolated test storage, logout, wrong-password retry then correct login from visitor header; verify toast, nickname/model/editor and history source pages. Save/reload, verify no repeated toast, logout and test USER success with no diagnostic output. Inject sessionStorage write failure, spoofed/expired handoff for a visitor, missing/unwritable logging sink and throwing diagnostic observer. Inspect file events in their actual ordered subsequence, forbid private values, inspect 320px/keyboard/status and axe.
+- Expected: absent/wrong/storage-failed login stays failed with no success toast or false session. Real verifier/readback success → return → independently restored nickname → ready editor gives one debug-only success; normal restoration cannot replay it. Explicit service/view events survive navigation with correct source page/build and appear redacted in helper files. Diagnostics never become auth. No account is silently seeded/reset, no backend success or user's browser state is fabricated. Manual AT/zoom/public deployment remain NOT RUN.
+- Execution references: tests/browser/login-debug.test.mjs, tests/browser/session-state.test.mjs, tests/static/local_logging_test.py.

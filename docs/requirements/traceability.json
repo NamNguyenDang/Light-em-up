@@ -568,6 +568,23 @@
         "tests/browser/offline-fixture-logs.test.mjs"
       ],
       "evidence_scope": "Prototype simulation and actual local transition tested separately; popup design parity reported as OPEN DR; no original-user or deployment closure."
+    },
+    {
+      "fr": "FR-39",
+      "acceptance_ids": [
+        "FR-39-AC1",
+        "FR-39-AC2",
+        "FR-39-AC3"
+      ],
+      "case_ids": [
+        "TC-FR-39-01"
+      ],
+      "automated_tests": [
+        "tests/browser/login-debug.test.mjs",
+        "tests/browser/session-state.test.mjs",
+        "tests/static/local_logging_test.py"
+      ],
+      "evidence_scope": "Actual helper and isolated registered local account; no user-browser or remote-backend acceptance."
     }
   ]
 }
