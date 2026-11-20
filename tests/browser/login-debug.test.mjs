@@ -20,7 +20,7 @@ try {
  // Absent is not an existing fixture. Do not auto-provision to turn failed login into success.
  await page.goto(base+'signin.html?userMode=USERDEBUG');await phase('ready');await fill();await phase('failed');assert((await page.locator('#signin-error').innerText()).includes('incorrect'));assert.equal(await page.evaluate(()=>LocalAccounts.current().identity()),null);assert.equal(await page.evaluate(()=>sessionStorage.getItem('light-em-up-debug-login-return')),null);
  // Explicit registration only in this isolated test browser; not seed/application data.
- await page.locator('#account-mode-toggle').click();await fill();await page.waitForURL('**/index.html');await session('signedIn');await ready();assert.notEqual(await page.locator('#toast').innerText(),success);await logout();
+ await page.locator('#account-mode-toggle').click();await fill();await page.waitForURL('**/index.html');await session('signedIn');await ready();assert.notEqual(await page.locator('#toast').innerText(),success);assert.equal(await page.evaluate(()=>UserDebug.history().filter(e=>e.event==='signin.return').at(-1)?.state.loginStage),'none');await logout();
  await page.locator('#header-login').click();await phase('ready');await fill('Wrong123');await phase('failed');assert.equal(await page.evaluate(()=>UserDebug.snapshot().loginStage),'failed');assert.equal(await page.evaluate(()=>sessionStorage.getItem('light-em-up-debug-login-return')),null);
  // Storage readback failure cannot emit verifier success or a success handoff.
  await page.evaluate(()=>{window.originalSet=Storage.prototype.setItem;Storage.prototype.setItem=function(key,value){if(key==='light-em-up-local-session')return;return originalSet.call(this,key,value);};});

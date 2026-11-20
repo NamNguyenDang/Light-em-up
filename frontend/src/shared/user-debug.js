@@ -47,7 +47,7 @@
   if(event==='auth.attempt'){loginStage='authenticating';toastPending=false;safely(()=>sessionStorage.removeItem(HANDOFF),null);}
   if(event==='auth.verified'){loginStage='verified';safely(()=>sessionStorage.setItem(HANDOFF,String(Date.now())),null);}
   if(event==='auth.rejected'||event==='signin.failed'){loginStage='failed';safely(()=>sessionStorage.removeItem(HANDOFF),null);}
-  if(event==='signin.return'&&loginStage==='verified')loginStage='returning';
+  if(event==='signin.return')loginStage=loginStage==='verified'?'returning':'none';
   const current=snapshot();if(['restored','ready'].includes(loginStage)&&['signedOut','checkFailed'].includes(current.session)){loginStage='none';toastPending=false;const toast=document.getElementById('toast');if(toast?.textContent==='Login successful. Local session verified.')toast.textContent='';}
   append(event);
   if(page()==='index.html'&&loginStage==='returning'){
