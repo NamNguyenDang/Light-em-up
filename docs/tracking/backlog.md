@@ -69,4 +69,4 @@ Current scope decision (18 November 2026): browser-local use is approved. Cloud 
 
 | FR-38 | Wireframe baseline and transition audit | ux/wireframe visitor/owner designs, sign-in/create-account popups, mapped tests and implementation-gap DRs. | Design/test delivery implemented; prototype and actual local transitions passed in run 44708086211. DR-38-01 production popup parity and FR-36 remain OPEN. |
 
-| FR-39 | Verified-login debug toast and trace | Local verifier → return → restored header/editor; debug-only success toast; actual helper evidence for requested account inputs. | In progress; original FR-36 user-browser DR remains OPEN. |
+| FR-39 | Verified-login debug toast and trace | Local verifier → return → restored header/editor; debug-only success toast; actual helper evidence for requested account inputs. | Implemented; new real-helper acceptance passed in run 44735327193. Final exact-head CI required in PR; original user-browser FR-36 remains OPEN. |

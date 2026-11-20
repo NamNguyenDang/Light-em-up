@@ -1,6 +1,6 @@
 # FR-39 — Is login actually successful?
 
-Status: implementation and verification in progress. The original FR-36 user-browser DR remains OPEN. The supplied account is not a default seed; a passing isolated test after explicit test registration does not prove it exists in another browser, tab or origin. No account/password is silently created/reset by this change.
+Status: implemented; new behavioral test passed on 3f1faab70407c82c5c2b2c65f81afd489b6da7c3 in run 44735327193. The delivery PR must additionally reference a passing final exact-head full CI run. The original FR-36 user-browser DR remains OPEN. The supplied account is not a default seed; a passing isolated test after explicit test registration does not prove it exists in another browser, tab or origin. No account/password is silently created/reset by this change.
 
 ## Run and inspect
 
@@ -29,3 +29,17 @@ There is **no separate login-success page**. The visible route is index.html (vi
 TC-FR-39-01 / tests/browser/login-debug.test.mjs runs the actual helper, IndexedDB/Web Crypto and supplied test inputs. It first proves absent-account failure, then explicitly registers in isolated test storage and checks real sign-in. Wrong password, session write/readback failure, expired/spoofed marker, reload, USER, unavailable file sink and throwing observer are separate negative/fault cases. CI artifacts include login-debug-acceptance.json, login-debug-logs/, axe-login-debug-320.json and a screenshot.
 
 WCAG 2.2 AA cross-check: existing polite role=status toast, persistent readable debug result, no focus movement, 320px reflow, visible keyboard focus/44px controls and WCAG-tagged axe scan. Screen reader announcement timing, real zoom/text resize and broader browser checks remain NOT RUN; no full conformance claim. No BFF or trusted server boundary is introduced. Merge, deployment and original user-browser acceptance remain separate.
+
+## Input/output result
+
+| Input | Expected / observed |
+|---|---|
+| Requested account absent in fresh browser | Rejected, no session/return marker/success toast — PASS. |
+| Same input after explicit isolated test registration | Password/session readback accepted; returned header nickname, ready owned editor and one debug toast — PASS. |
+| Wrong password / session write failure | Rejected with visible failure, no success marker — PASS. |
+| USER / reload / expired marker / visitor-forged marker | No diagnostic success replay; a marker cannot authenticate — PASS. |
+| Logging unavailable / throwing observer | Real authentication still succeeds independently — PASS. |
+| Helper events / history | Service-to-UI events observed; captured signin.html/index.html pages retained; private data absent — PASS. |
+| User's actual stored account/browser | UNVERIFIED; no access to that browser's IndexedDB/sessionStorage. |
+
+Recorded run: [44735327193](https://github.com/NamNguyenDang/Light-em-up/actions/runs/44735327193). [DR-39-01](../defects/DR-39-01-trace-source-page.md) records the corrected source-page history defect. Regression artifacts contain scoped actual results and the accessibility scan, not proof of a remote backend or deployed/user-browser acceptance.
