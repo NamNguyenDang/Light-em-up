@@ -148,7 +148,7 @@
  const field=(kind,name)=>root.querySelector('#wf-'+kind+'-'+name);
  function clear(kind){field(kind,'alert').textContent='';for(const suffix of ['name-error','password-error'])field(kind,suffix).textContent='';for(const suffix of ['nickname','password'])field(kind,suffix).setAttribute('aria-invalid','false');}
  function open(kind,button){if(button){invoker=button;intent=button.dataset.intent||'account';}clear(kind);dialogs[kind].showModal();field(kind,'nickname').focus();}
- function switchMode(from,to){const name=field(from,'nickname').value;switching=true;dialogs[from].close();field(to,'nickname').value=name;open(to);queueMicrotask(()=>{switching=false;});}
+ function switchMode(from,to){const name=field(from,'nickname').value;field(from,'password').value='';switching=true;dialogs[from].close();field(to,'nickname').value=name;open(to);queueMicrotask(()=>{switching=false;});}
  function error(kind,suffix,message){field(kind,'alert').textContent=(kind==='create'?'Account not created. ':'Sign-in failed. ')+message;field(kind,suffix==='nickname'?'name-error':'password-error').textContent=message;field(kind,suffix).setAttribute('aria-invalid','true');field(kind,suffix).focus();}
  root.querySelectorAll('[data-explain]').forEach(button=>button.addEventListener('click',()=>{output.textContent=button.dataset.explain;button.closest('.wf-account')?.removeAttribute('open');}));
  root.querySelectorAll('[data-open-auth]').forEach(button=>button.addEventListener('click',()=>open(button.dataset.openAuth,button)));
