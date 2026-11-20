@@ -148,20 +148,22 @@
  const field=(kind,name)=>root.querySelector('#wf-'+kind+'-'+name);
  function clear(kind){field(kind,'alert').textContent='';for(const suffix of ['name-error','password-error'])field(kind,suffix).textContent='';for(const suffix of ['nickname','password'])field(kind,suffix).setAttribute('aria-invalid','false');}
  function open(kind,button){if(button){invoker=button;intent=button.dataset.intent||'account';}clear(kind);dialogs[kind].showModal();field(kind,'nickname').focus();}
- function switchMode(from,to){const name=field(from,'nickname').value;field(from,'password').value='';switching=true;dialogs[from].close();field(to,'nickname').value=name;open(to);queueMicrotask(()=>{switching=false;});}
+ function resetPassword(kind){field(kind,'password').value='';field(kind,'password').type='password';const button=dialogs[kind].querySelector('[data-show-password]');button.setAttribute('aria-pressed','false');button.textContent='Show password';}
+ function switchMode(from,to){const name=field(from,'nickname').value;resetPassword(from);switching=true;dialogs[from].close();field(to,'nickname').value=name;open(to);queueMicrotask(()=>{switching=false;});}
  function error(kind,suffix,message){field(kind,'alert').textContent=(kind==='create'?'Account not created. ':'Sign-in failed. ')+message;field(kind,suffix==='nickname'?'name-error':'password-error').textContent=message;field(kind,suffix).setAttribute('aria-invalid','true');field(kind,suffix).focus();}
  root.querySelectorAll('[data-explain]').forEach(button=>button.addEventListener('click',()=>{output.textContent=button.dataset.explain;button.closest('.wf-account')?.removeAttribute('open');}));
  root.querySelectorAll('[data-open-auth]').forEach(button=>button.addEventListener('click',()=>open(button.dataset.openAuth,button)));
  for(const kind of ['signin','create']){
   const dialog=dialogs[kind],form=root.querySelector('#wf-'+kind+'-form');
-  dialog.querySelectorAll('[data-close-auth]').forEach(button=>button.onclick=()=>dialog.close());
+  dialog.querySelectorAll('[data-close-auth]').forEach(button=>button.onclick=()=>{resetPassword(kind);dialog.close();});
   dialog.querySelector('[data-switch-auth]').onclick=e=>switchMode(kind,e.currentTarget.dataset.switchAuth);
-  dialog.addEventListener('close',()=>{field(kind,'password').value='';field(kind,'password').type='password';dialog.querySelector('[data-show-password]').setAttribute('aria-pressed','false');dialog.querySelector('[data-show-password]').textContent='Show password';if(!switching&&!Object.values(dialogs).some(d=>d.open))invoker?.focus();});
+  dialog.addEventListener('cancel',()=>resetPassword(kind));
+  dialog.addEventListener('close',()=>{resetPassword(kind);if(!switching&&!Object.values(dialogs).some(d=>d.open))invoker?.focus();});
   form.onsubmit=e=>{e.preventDefault();clear(kind);const nickname=field(kind,'nickname').value.normalize('NFKC').trim(),password=field(kind,'password').value;
    if(!nickname||nickname.length>40){error(kind,'nickname','Enter a nickname (1–40 characters).');return;}
    if(!password||(kind==='create'&&!/^[A-Za-z0-9]{8,128}$/.test(password))){error(kind,'password',kind==='create'?'Use 8–128 letters or numbers; no symbols or spaces.':'Enter your password.');return;}
    if(root.querySelector('#wf-force-auth-error').checked){error(kind,kind==='create'?'nickname':'password',kind==='create'?'That nickname is already taken.':'Nickname or password is incorrect.');return;}
-   const summary=root.querySelector('.wf-account summary');summary.replaceChildren();const mark=document.createElement('span');mark.className='wf-number';mark.textContent='3';mark.setAttribute('aria-hidden','true');summary.append(mark,document.createTextNode(' '+nickname+' ▾'));root.querySelector('#wf-saved-candle h5').textContent=nickname;dialog.close();output.textContent='SIMULATED SUCCESS: the right wireframe shows the nickname and owned candle panel. '+(intent==='candle'?'The real app must now open the owned editor without another login.':'The real app must keep the community page and browsing context.');
+   const summary=root.querySelector('.wf-account summary');summary.replaceChildren();const mark=document.createElement('span');mark.className='wf-number';mark.textContent='3';mark.setAttribute('aria-hidden','true');summary.append(mark,document.createTextNode(' '+nickname+' ▾'));root.querySelector('#wf-saved-candle h5').textContent=nickname;resetPassword(kind);dialog.close();output.textContent='SIMULATED SUCCESS: the right wireframe shows the nickname and owned candle panel. '+(intent==='candle'?'The real app must now open the owned editor without another login.':'The real app must keep the community page and browsing context.');
   };
  }
  root.querySelectorAll('[data-show-password]').forEach(button=>button.onclick=()=>{const input=root.querySelector('#'+button.dataset.showPassword),show=input.type==='password';input.type=show?'text':'password';button.textContent=show?'Hide password':'Show password';button.setAttribute('aria-pressed',String(show));});

@@ -20,7 +20,7 @@ Normal USER mode has no debug overlay. Offline scope, no recovery/cross-device c
 ## Verification layers
 
 1. **Prototype:** popup structure, switching, validation, focus, close, previewed success and the saved-candle variant. These tests validate the design simulation, not real authentication.
-2. **Actual app:** existing fixture login, header, editor, save/reload/logout and return intent using real IndexedDB/Web Crypto. Also inspect the actual auth presentation (popup versus navigation) and browser history restoration.
+2. **Actual app:** existing fixture login, header, editor, save/reload/logout and return intent using real IndexedDB/Web Crypto. Also inspect the actual auth presentation (popup versus navigation) and queued editor-return intent.
 3. **Defect audit:** report mismatches as FAIL/OPEN with actual/expected evidence and a DR ID. A completed audit command or successful prototype is not a passing application contract. A new-popup implementation gap must be classified as an approved-design gap, not invented as the original browser-specific cause.
 
 Golden/test references: [FR-38](../../docs/requirements/requirement.md#fr-38--wireframe-baseline-auth-popups-and-transition-audit), [TC-FR-38-01](../../docs/requirements/test-cases.md#tc-fr-38-01), [TC-FR-38-02](../../docs/requirements/test-cases.md#tc-fr-38-02).

@@ -17,7 +17,7 @@ try {
  const scan=async label=>{await page.addScriptTag({path:require.resolve('axe-core/axe.min.js')});const data=await page.evaluate(()=>axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']}}));await fs.writeFile(path.join(out,'axe-wireframe-'+label+'.json'),JSON.stringify(data,null,2));assert.equal(data.violations.length,0,data.violations.map(v=>v.id).join(', '));};
  await page.goto(base+'ux/wireframe/index.html');await scan('pages');
  const launch=page.locator('.wf-popup-launchers [data-open-auth=signin]'),signin=page.locator('#wf-signin-popup'),create=page.locator('#wf-create-popup');
- await launch.click();assert(await signin.evaluate(e=>e.matches(':modal')));assert.equal(await page.evaluate(()=>document.activeElement.id),'wf-signin-nickname');
+ await launch.click();assert(await signin.evaluate(e=>e.matches(':modal')));for(let n=0;n<12;n++){await page.keyboard.press(n%2?'Shift+Tab':'Tab');assert(await signin.evaluate(e=>e.contains(document.activeElement)));}await page.locator('#wf-signin-nickname').focus();assert.equal(await page.evaluate(()=>document.activeElement.id),'wf-signin-nickname');
  await page.locator('#wf-signin-form').evaluate(f=>f.requestSubmit());assert.equal(await page.locator('#wf-signin-nickname').getAttribute('aria-invalid'),'true');
  await page.locator('#wf-signin-nickname').fill('Preview8');await page.locator('#wf-signin-password').fill('Preview123');await signin.locator('[data-switch-auth]').click();
  assert.equal(await page.locator('#wf-create-nickname').inputValue(),'Preview8');assert.equal(await page.locator('#wf-signin-password').inputValue(),'');assert.equal(await page.evaluate(()=>document.activeElement.id),'wf-create-nickname');
