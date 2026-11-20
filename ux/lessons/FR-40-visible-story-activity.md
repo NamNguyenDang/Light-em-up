@@ -26,3 +26,9 @@ Implemented behavior is verified against [FR-40 requirements](../../docs/require
 Future research proposal: ask people to identify the most recently updated story, explain the shown time and distinguish a sample from a real saved story; ask how active the board feels before/after without implying an improvement. Record genuine observations before claiming an outcome. Avoid pressure-inducing last-seen indicators or notifications about personal presence.
 
 Lesson: visual warmth alone does not explain whether a board has changed. Pair it with truthful, readable activity cues, then validate whether those cues help people understand the experience.
+
+## Follow-up correction — FR-41 / DR-41-01
+
+The owner then supplied a screenshot of the default fictional sample card, which still had no timestamp. FR-40's real-record-only display/test scope did not cover what they were reviewing. The clarified behavior gives samples fixed, explicitly labelled Demo update dates while preserving actual saved dates/unknown states for real stories. This supersedes the omission of sample dates above, without turning synthetic timestamps into genuine activity. The owner also clarified the information hierarchy: Situation and Seeking are visible; Role and Company are optional disclosure content.
+
+Lesson for verification: test the default visitor/sample screenshot state as well as a newly created owner story. A technically correct persistence test can still miss the requested visible experience. See [DR-41-01](../../docs/tracking/defects/DR-41-01-sample-story-timestamps.md) and [TC-FR-41-01](../../docs/requirements/test-cases.md#tc-fr-41-01). The screenshot is stakeholder feedback, not a representative user study; no emotional improvement is measured.

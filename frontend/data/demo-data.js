@@ -1001,3 +1001,7 @@ const samples=[
     "sample": true
   }
 ];
+
+// Fixed fictional update times for the sample-card UI, not real people/activity.
+// Do not use Date.now(): reloading must not manufacture fresh board updates.
+samples.forEach((person,index)=>{person.updated_at=new Date(Date.UTC(2026,10,1,12)-index*60*60*1000).toISOString();});

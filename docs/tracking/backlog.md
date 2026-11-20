@@ -72,3 +72,5 @@ Current scope decision (18 November 2026): browser-local use is approved. Cloud 
 | FR-39 | Verified-login debug toast and trace | Local verifier → return → restored header/editor; debug-only success toast; actual helper evidence for requested account inputs. | Implemented; new real-helper acceptance passed in run 44735327193. Final exact-head CI required in PR; original user-browser FR-36 remains OPEN. |
 
 | FR-40 | Story recency and UX learning | Persist meaningful story-update times, show them, sort latest first, and capture why visible activity matters. | Implemented; actual helper/browser acceptance passed in run 44739955439. Final exact-head full gate required in delivery PR; local clock/research/manual-accessibility limits retained. |
+
+| FR-41 | DR: sample-card dates and field visibility | Explicit labelled sample timestamps; Situation/Seeking visible, Role/Company under See more; test the default screenshot state. | In progress; DR-41-01 tracks the output/requirement mismatch. |

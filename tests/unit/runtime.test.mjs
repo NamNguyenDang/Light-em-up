@@ -60,7 +60,7 @@ form.elements.nickname.value='Test';form.elements.city.value='No such place';for
 form.elements.nickname.value='<b>Hopeful neighbour</b>';form.elements.city.value='Stockholm';form.elements.message.value='Still here.';form.onsubmit({preventDefault(){}});assert.equal(b.run('state.profile.nickname'),'<b>Hopeful neighbour</b>');assert.equal(b.run('entries().length'),101);
 b.run("selectCity('Stockholm')");assert.match(b.nodes['page-status'].textContent,/of 31/);form.elements.lit.checked=false;form.elements.status.value='Found work';form.onsubmit({preventDefault(){}});assert.equal(b.run('state.profile.lit'),false);assert.equal(b.run('state.profile.status'),'Found work');
 form.elements.visible.checked=false;form.onsubmit({preventDefault(){}});assert.equal(b.run('entries().length'),100);assert.match(b.nodes['page-status'].textContent,/of 30/);
-const support=b.nodes.stories.children[0].children[4];support.onclick();assert.equal(b.run('state.reactions.length'),1);assert(b.nodes.stories.children[0].children[4].disabled);
+const support=b.nodes.stories.children[0].children.find(n=>n.attributes?.['data-focus-key']?.startsWith('reaction-'));support.onclick();assert.equal(b.run('state.reactions.length'),1);assert(b.nodes.stories.children[0].children.find(n=>n.attributes?.['data-focus-key']?.startsWith('reaction-')).disabled);
 b=boot();assert.equal(b.run('state.profile.visible'),false);assert.equal(b.run('state.reactions.length'),1);assert.equal(b.run('state.profile.status'),'Found work');
 b.nodes['all-stories'].onclick();assert.match(b.nodes['page-status'].textContent,/1–12 of 100/);
 b.nodes['reset'].onclick();assert.equal(b.run('state.profile'),null);assert.equal(b.run('state.reactions.length'),0);assert.equal(b.run('samples.length'),100);

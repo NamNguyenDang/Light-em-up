@@ -418,7 +418,7 @@ Covers: FR-40-AC1, FR-40-AC2
 
 - Preconditions: actual root app served over localhost, real IndexedDB/Web Crypto, isolated synthetic accounts, no auth/DB mocks in principal flow. Deterministic clock/legacy/bad-data/transaction-abort probes are labelled separately.
 - Actions: create two owned stories at separate times; verify service-stamped create/update values and newest-first cards; update the older account's status/message and verify it moves first. Save unchanged, cancel, reload, inspect the disabled local reaction action, change filter/page and logout/login; timestamps must not advance. Verify update from a later page resets pagination, filter/focus preserved, hidden candles excluded and owner still sees its timestamp. Inject a legacy missing timestamp, malformed timestamp and an aborted save; inspect stable equal-date ordering and unknown-last. Check readable zone/time datetime, 320px focus/reflow, screenshots and axe.
-- Expected: only committed meaningful changes advance stored recency, created_at stays immutable, injected timestamps ignored, aborted save preserves values. Actual cards show accurate known/unknown update state, samples never masquerade as live updates; sorting occurs before pagination with deterministic ties. Existing map/auth/ownership regressions pass. Browser clock timestamps are not server-attested time.
+- Expected: only committed meaningful changes advance stored recency, created_at stays immutable, injected timestamps ignored, aborted save preserves values. Actual cards show accurate known/unknown update state, samples use the labelled fixed demo dates added by FR-41 and never masquerade as live updates; sorting occurs before pagination with deterministic ties. Existing map/auth/ownership regressions pass. Browser clock timestamps are not server-attested time.
 - Execution references: tests/browser/story-updates.test.mjs, tests/unit/story-updates.test.mjs and tests/unit/runtime.test.mjs.
 
 ### TC-FR-40-02
@@ -429,3 +429,12 @@ Covers: FR-40-AC3
 - Actions: read UX lesson, evidence entry, requirement/test mapping and latest memory/backlog status; check provenance and current-scope language.
 - Expected: explains why invisible recency can make activity hard to perceive, captures the chosen timestamp/newest-first behavior and honest sample/unknown states, and proposes future validation without claiming research/engagement gains. User confirmation is recorded; lack of a server is their reported explanation, not fabricated diagnosis.
 - Execution references: scripts/check-paths.py and scripts/check-requirements.py plus human content review; structural checks are not UX research evidence.
+
+### TC-FR-41-01
+
+Covers: FR-41-AC1, FR-41-AC2, FR-41-AC3
+
+- Preconditions: actual app/default visitor data via local helper, fresh local account storage, synthetic test account, no auth mocks; supplied screenshot shows sample-1 with missing date and Situation/Seeking hidden in details.
+- Actions: inspect every visible sample while details are collapsed, including first/last page; compare all 100 dates across reload; check descending order and fictional/demo labels. Register/save a real story with all four fields; inspect visible Situation/Seeking and Updated time, hidden Role/Company until keyboard expansion, collapse/focus retention on rerender and HTML-like text as literal text. Check sample empty-field defaults and See more empty fallback, unknown actual dates, 320px/desktop screenshots and axe.
+- Expected: default visitor board visibly meets the requested output. Sample times are deterministic demo metadata, actual dates remain service-stamped and unknown actual dates stay unknown. Core fields/date remain readable without disclosure; only Role/Company are inside See more. No timing reset on reload, no XSS/auto-focus loss/overflow and no fake live activity claim. Manual AT/real zoom remain NOT RUN.
+- Execution references: tests/browser/story-card.test.mjs, tests/browser/story-updates.test.mjs and tests/unit/runtime.test.mjs; review docs/tracking/defects/DR-41-01-sample-story-timestamps.md and UX lesson for scope/evidence correction.

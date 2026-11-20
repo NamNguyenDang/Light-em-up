@@ -604,6 +604,23 @@
         "scripts/check-paths.py"
       ],
       "evidence_scope": "Actual local story save/display/order; labelled clock/storage fault probes; UX owner feedback, not participant outcomes."
+    },
+    {
+      "fr": "FR-41",
+      "acceptance_ids": [
+        "FR-41-AC1",
+        "FR-41-AC2",
+        "FR-41-AC3"
+      ],
+      "case_ids": [
+        "TC-FR-41-01"
+      ],
+      "automated_tests": [
+        "tests/browser/story-card.test.mjs",
+        "tests/browser/story-updates.test.mjs",
+        "tests/unit/runtime.test.mjs"
+      ],
+      "evidence_scope": "Actual default visitor sample board and registered account card; labelled fixed demo metadata, no measured live activity or manual AT claim."
     }
   ]
 }
