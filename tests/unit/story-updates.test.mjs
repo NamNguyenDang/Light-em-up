@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const app=fs.readFileSync(new URL('../../frontend/src/app.js',import.meta.url),'utf8'),context=vm.createContext({});
+vm.runInContext(app.split('\n').filter(l=>/^function (storyUpdateTime|compareStoryUpdates)\(/.test(l)).join('\n'),context);
+const sort=rows=>JSON.parse(vm.runInContext(`JSON.stringify(${JSON.stringify(rows)}.sort(compareStoryUpdates))`,context));
+const old='2026-11-19T09:00:00.000Z',latest='2026-11-20T10:00:00.000Z';
+assert.deepEqual(sort([{id:'unknown'},{id:'old',updated_at:old},{id:'new',updated_at:latest}]).map(p=>p.id),['new','old','unknown']);
+assert.deepEqual(sort([{id:'tie-a',updated_at:latest},{id:'tie-b',updated_at:latest},{id:'missing'},{id:'invalid',updated_at:'not-a-date'}]).map(p=>p.id),['tie-a','tie-b','missing','invalid']);
+for(const value of [null,42,'2026-02-30T10:00:00.000Z','today','',{}])assert.equal(vm.runInContext(`storyUpdateTime({updated_at:${JSON.stringify(value)}})`,context),null);
+assert.equal(vm.runInContext(`storyUpdateTime({updated_at:'${latest}'})`,context),Date.parse(latest));
+console.log('PASS FR-40: descending valid saved timestamps, stable ties/unknowns and malformed-date handling; pure ordering/validation unit checks.');

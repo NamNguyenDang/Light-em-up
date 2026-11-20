@@ -47,6 +47,8 @@ jobs:
       - run: node tests/unit/candle-entry.test.mjs
       - run: node tests/unit/draft.test.mjs
       - run: python3 tests/static/local_logging_test.py
+      - run: node tests/unit/story-updates.test.mjs
+      - run: node tests/browser/story-updates.test.mjs
       - run: node tests/browser/login-debug.test.mjs
       - run: node tests/browser/wireframe-transition.test.mjs
       - run: node tests/browser/offline-fixture-logs.test.mjs
