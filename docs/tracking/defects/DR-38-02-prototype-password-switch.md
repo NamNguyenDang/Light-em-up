@@ -1,6 +1,6 @@
 # DR-38-02 — Prototype password not cleared on mode switch
 
-- Status: fix implemented; re-verification pending.
+- Status: CLOSED for the prototype; regression passed on 9fa0a0606d20c30482f51efb1c2917bac2d53924 in run 44708086211.
 - Scope: FR-38 popup prototype only; not production auth or a diagnosis of FR-36.
 - Reproduction: enter synthetic sign-in password → switch to Create account → inspect hidden sign-in password immediately.
 - Expected: password cleared before next dialog opens; nickname preserved.

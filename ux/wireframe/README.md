@@ -9,3 +9,5 @@ Open [index.html](index.html). It is a self-contained grayscale **design simulat
 - The error-preview checkbox deliberately simulates an account failure. Success is an explicitly labelled preview, never evidence that real login worked.
 
 See [state-contract.md](state-contract.md) for transition inputs/outputs and test mapping. The actual app currently uses signin.html for entry; an audit must report that presentation gap rather than pretending a modal is implemented. The original FR-36 user-browser DR remains open.
+
+[Verification, evidence and open defects](verification.md). Run `npm run test:wireframe` for the design/transition checks.
