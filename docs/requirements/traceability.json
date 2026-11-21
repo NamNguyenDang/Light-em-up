@@ -621,6 +621,27 @@
         "tests/unit/runtime.test.mjs"
       ],
       "evidence_scope": "Actual default visitor sample board and registered account card; labelled fixed demo metadata, no measured live activity or manual AT claim."
+    },
+    {
+      "fr": "FR-42",
+      "acceptance_ids": [
+        "FR-42-AC1",
+        "FR-42-AC2",
+        "FR-42-AC3",
+        "FR-42-AC4"
+      ],
+      "case_ids": [
+        "TC-FR-42-01",
+        "TC-FR-42-02"
+      ],
+      "automated_tests": [
+        "tests/static/nordic_map_test.py",
+        "scripts/build-nordic-map.py",
+        "tests/unit/province.test.mjs",
+        "tests/unit/runtime.test.mjs",
+        ".github/workflows/accessibility.yml"
+      ],
+      "evidence_scope": "Local source/data/unit and static render checks; Accessibility regression explicitly waived by owner for PR42 only, browser/manual/live gaps remain NOT RUN."
     }
   ]
 }

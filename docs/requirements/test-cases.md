@@ -438,3 +438,21 @@ Covers: FR-41-AC1, FR-41-AC2, FR-41-AC3
 - Actions: inspect every visible sample while details are collapsed, including first/last page; compare all 100 dates across reload; check descending order and fictional/demo labels. Register/save a real story with all four fields; inspect visible Situation/Seeking and Updated time, hidden Role/Company until keyboard expansion, collapse/focus retention on rerender and HTML-like text as literal text. Check sample empty-field defaults and See more empty fallback, unknown actual dates, 320px/desktop screenshots and axe.
 - Expected: default visitor board visibly meets the requested output. Sample times are deterministic demo metadata, actual dates remain service-stamped and unknown actual dates stay unknown. Core fields/date remain readable without disclosure; only Role/Company are inside See more. No timing reset on reload, no XSS/auto-focus loss/overflow and no fake live activity claim. Manual AT/real zoom remain NOT RUN.
 - Execution references: tests/browser/story-card.test.mjs, tests/browser/story-updates.test.mjs and tests/unit/runtime.test.mjs; review docs/tracking/defects/DR-41-01-sample-story-timestamps.md and UX lesson for scope/evidence correction.
+
+### TC-FR-42-01
+
+Covers: FR-42-AC1, FR-42-AC2, FR-42-AC3
+
+- Preconditions: pinned Natural Earth 1:50m extracts, unchanged existing Sweden assets/data, local app/source, no tile service.
+- Actions: regenerate context/inset SVGs; verify source polygon/ring/vertex counts, project known points through the established transform, check Bornholm/Åland/Arctic/Atlantic feature coverage, and compare Sweden hashes. Inspect combined map render and source ordering/decoration semantics. Run npm test, map data/static tests and path/traceability checks. Browser hover/click/tab/mobile and screen-reader scans remain independently reported.
+- Expected: muted geometry behind unchanged Sweden, explicit separate Åland, intact selected source components/holes, regional-crop and inset-scale disclosure, readable geographic labels/source references and no new activity targets or hidden sovereignty claims. Source data is generalized, not a legal/cadastral map or a guarantee every tiny island is represented.
+- Execution references: tests/static/nordic_map_test.py, scripts/build-nordic-map.py, tests/unit/province.test.mjs and tests/unit/runtime.test.mjs. Omitted browser/accessibility checks are NOT RUN, not inferred from static/raster review.
+
+### TC-FR-42-02
+
+Covers: FR-42-AC4
+
+- Preconditions: explicit owner instruction to skip Accessibility regression for PR42 only; no permanent workflow disabling is authorized.
+- Actions: inspect changed paths/workflow bytes, use native commit-level CI skip for the feature head/PR and merge, inspect published workflow runs/status, and record the exception in memory/delivery notes.
+- Expected: no Accessibility regression execution for this requested delivery, no workflow file changes weakening later gates, no claim of passing skipped jobs. Local checks and public deployment/manual gaps are listed separately.
+- Execution references: .github/workflows/accessibility.yml and docs/tracking/features/FR-42_NORDIC_MAP.md; GitHub run/ref inspection verifies the native skip, not an automated assertion that future policies are obeyed.
