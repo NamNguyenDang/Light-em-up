@@ -2,9 +2,10 @@
   "name": "light-em-up-accessibility-checks",
   "private": true,
   "scripts": {
-    "test": "node tests/unit/application-state.test.mjs && node tests/unit/runtime.test.mjs && node tests/unit/light-level.test.mjs && node tests/unit/province.test.mjs && node tests/static/verify.test.mjs && python3 tests/static/layout_test.py && python3 tests/static/dialog_accessibility_test.py",
+    "test": "node tests/unit/application-state.test.mjs && node tests/unit/runtime.test.mjs && node tests/unit/light-level.test.mjs && node tests/unit/province.test.mjs && node tests/static/verify.test.mjs && python3 tests/static/layout_test.py && python3 tests/static/dialog_accessibility_test.py && python3 tests/static/nordic_map_test.py",
     "test:a11y": "node tests/browser/accessibility.test.mjs",
     "test:structure": "python3 scripts/check-paths.py && python3 scripts/check-requirements.py",
+    "test:nordic": "python3 tests/static/nordic_map_test.py",
     "test:story-card": "node tests/browser/story-card.test.mjs",
     "test:story-updates": "node tests/unit/story-updates.test.mjs && node tests/browser/story-updates.test.mjs",
     "test:login-debug": "node tests/browser/login-debug.test.mjs",

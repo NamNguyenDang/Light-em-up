@@ -1,0 +1,84 @@
+{
+  "source": {
+    "repository": "nvkelso/natural-earth-vector",
+    "commit": "ca96624a56bd078437bca8184e78163e5039ad19",
+    "path": "geojson/ne_50m_admin_0_countries.geojson",
+    "blob": "9d99f26dc470fcdbd08b062c813005acbdf73ccb",
+    "scale": "1:50m",
+    "retrieved": "2026-11-21",
+    "license": "Natural Earth public domain"
+  },
+  "dataSha256": "2d0207ab1a89961acd55ae9cdb364dbdf111528871bf45dd8dd6e5fe6f0b80ca",
+  "projection": "x=23*lon-186.5; y=2657.6-38*lat",
+  "mainViewBox": [
+    0,
+    0,
+    440,
+    680
+  ],
+  "features": {
+    "Norway": {
+      "polygons": 32,
+      "rings": 32,
+      "vertices": 1985
+    },
+    "Åland": {
+      "polygons": 3,
+      "rings": 3,
+      "vertices": 52
+    },
+    "Finland": {
+      "polygons": 8,
+      "rings": 8,
+      "vertices": 519
+    },
+    "Greenland": {
+      "polygons": 17,
+      "rings": 17,
+      "vertices": 2240
+    },
+    "Faroe Islands": {
+      "polygons": 5,
+      "rings": 5,
+      "vertices": 63
+    },
+    "Denmark": {
+      "polygons": 12,
+      "rings": 12,
+      "vertices": 298
+    }
+  },
+  "insets": {
+    "svalbard": {
+      "polygons": 9,
+      "rings": 9,
+      "vertices": 576,
+      "independentScale": true
+    },
+    "jan-mayen": {
+      "polygons": 1,
+      "rings": 1,
+      "vertices": 12,
+      "independentScale": true
+    },
+    "greenland": {
+      "polygons": 17,
+      "rings": 17,
+      "vertices": 2240,
+      "independentScale": true
+    },
+    "faroe-islands": {
+      "polygons": 5,
+      "rings": 5,
+      "vertices": 63,
+      "independentScale": true
+    }
+  },
+  "unchangedSweden": {
+    "frontend/assets/sweden-terrain.svg": "c94d52a67e5cc70ac645218b1da91c99970599f3f93b5794b148c03261450271",
+    "frontend/data/provinces.js": "31daec0e7dbacc7adb15653e872ef52748adb808833a685a95e037ecd61e8f09",
+    "frontend/data/provinces.json": "28334ef38eab6eec56e3b9403e7bf8a0ddd381b271c7fbeae67e5a1708ba25d1",
+    "frontend/data/cities.js": "d5218fe6abc9d576b6fad68e89e030abd60af0a8e2283a8f458af1b5641fe4c8",
+    "frontend/src/community/map-layout.js": "ac0b191e54ec8ddea441526aa60b02574e03fef54a5da482e8bfea8b864b23b1"
+  }
+}

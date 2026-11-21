@@ -19,3 +19,5 @@ The [golden requirements](../docs/requirements/requirement.md) remain the behavi
 - [Approved page-state wireframes and auth popup designs](wireframe/README.md).
 
 - [UX lesson: visible story activity and newest-first ordering](lessons/FR-40-visible-story-activity.md).
+
+- [Nordic context decision and island/coverage review](design/FR-42-nordic-context.md).

@@ -74,3 +74,5 @@ Current scope decision (18 November 2026): browser-local use is approved. Cloud 
 | FR-40 | Story recency and UX learning | Persist meaningful story-update times, show them, sort latest first, and capture why visible activity matters. | Implemented; actual helper/browser acceptance passed in run 44739955439. Final exact-head full gate required in delivery PR; local clock/research/manual-accessibility limits retained. |
 
 | FR-41 | DR: sample-card dates and field visibility | Explicit labelled sample timestamps; Situation/Seeking visible, Role/Company under See more; test the default screenshot state. | Implemented; default-board/registered-card tests and full regressions passed in run 44754698324. DR-41-01 correction verified; final exact-head gate in delivery PR. |
+
+| FR-42 | Nordic map context | Muted neighboring land behind unchanged Sweden; pinned source, retained island geometry/coverage views and scoped owner CI waiver. | Implemented; local source/data/unit and static render checks pass. Accessibility regression WAIVED/NOT RUN for PR42 only; browser/manual/deployment gaps documented. |

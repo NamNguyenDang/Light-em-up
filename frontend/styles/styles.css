@@ -148,3 +148,13 @@ select,input:not([type=checkbox]),textarea{min-height:44px}
 .received-event{padding:1rem 0;border-bottom:1px solid #54717c;overflow-wrap:anywhere}.received-event h4{font-size:1.2rem;margin:0 0 .5rem}.received-event time{font: .875rem/1.5 system-ui,sans-serif}.received-event summary{min-height:44px;padding:.75rem 0}
 
 .received-event button{margin:.5rem .5rem .5rem 0}.received-event label{display:block;margin-top:.5rem}.received-event select{width:100%;min-height:44px}
+
+/* FR-42: context cannot intercept Sweden's existing province/city interactions. */
+#nordic-context{pointer-events:none;opacity:.88}
+.nordic-map-info{margin:.75rem 0 1rem;border-top:1px solid #315564;padding-top:.25rem}
+.nordic-map-info p{font-size:.875rem;line-height:1.6;color:#b9c9c2}
+.nordic-island-views{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem;margin:.75rem 0}
+.nordic-island-views figure{min-width:0;margin:0}
+.nordic-island-views img{display:block;width:100%;height:auto;max-width:100%}
+.nordic-island-views figcaption{font-size:.875rem;padding:.35rem 0;color:#f5dfba}
+@media(max-width:24rem){.nordic-island-views{grid-template-columns:minmax(0,1fr)}}
